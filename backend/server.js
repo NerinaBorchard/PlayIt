@@ -1,9 +1,17 @@
 const express = require("express");
-//CREATE APP
+const path = require("path");
+
 const app = express();
-//SERVE A STATIC PAGE IN THE PUBLIC DIRECTORY
-app.use(express.static("public"));
-//PORT TO LISTEN TO
-app.listen(3000, () => {
-console.log("Listening on localhost:3000");
+
+// Serve static files from the frontend/public directory
+app.use(express.static(path.join(__dirname, '../../frontend/public')));
+
+// Serve index.html for all other routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/public', 'index.html'));
+});
+
+// Start the server
+app.listen(3001, () => {
+    console.log("Listening on http://localhost:3001");
 });
