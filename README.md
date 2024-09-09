@@ -5,4 +5,4 @@
 ## Description
 A web application that allows users to share and discover playlists. Built with React.
 
-![alt text](image.png)
+![alt text](frontend/public/assets/images/image.png)
