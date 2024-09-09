@@ -58,7 +58,7 @@ class SignInPage extends Component {
                 flex: 1,
             },
             image: {
-                width: '70%',
+                width: '100%',
                 height: '100%',
                 objectFit: 'cover',
             },
@@ -187,7 +187,7 @@ class SignInPage extends Component {
                 {/* Right half with the image */}
                 <div style={styles.right}>
                     <img
-                        src="/assets/images/Splash2.jpg"
+                        src="/assets/images/Splash4.jpg"
                         alt="Sign In"
                         style={styles.image}
                     />

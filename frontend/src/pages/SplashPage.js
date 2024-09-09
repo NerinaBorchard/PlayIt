@@ -220,7 +220,7 @@ class SplashPage extends Component {
                 {/* Left half with the image */}
                 <div style={styles.left}>
                     <img
-                        src="/assets/images/Splash2.jpg"
+                        src="/assets/images/Splash4.jpg"
                         alt="Splash"
                         style={styles.image}
                     />
