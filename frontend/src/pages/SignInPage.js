@@ -16,7 +16,7 @@ class SignInPage extends Component {
     }
 
     handleSignIn = () => {
-        this.setState({ redirectTo: '/dashboard' }); // Redirect to dashboard after signing in
+        this.setState({ redirectTo: '/home' }); // Redirect to dashboard after signing in
     }
 
     handleForgotPassword = () => {

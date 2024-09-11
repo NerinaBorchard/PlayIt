@@ -140,7 +140,7 @@ class SignUpPage extends Component {
 
     handleSignUp = () => {
         // Handle Sign Up action
-        this.setState({ redirectTo: '/dashboard' }); // Redirect to dashboard after signing up
+        this.setState({ redirectTo: '/home' }); // Redirect to dashboard after signing up
     }
 
     togglePasswordVisibility = () => {
