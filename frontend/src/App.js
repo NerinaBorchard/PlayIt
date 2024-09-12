@@ -71,8 +71,9 @@ import SignUpPage from './pages/SignUpPage';
 import Home from './pages/Home';
 import Playlist from './pages/PlaylistPage';
 import Song from './pages/SongPage';
-// import Profile from './pages/ProfilePage';
+import Profile from './pages/ProfilePage';
 import PlaylistView from './pages/PlaylistView';
+import EditProfilePage from './pages/EditProfilePage';
 
 class App extends Component {
   render() {
@@ -85,7 +86,8 @@ class App extends Component {
           <Route path="/home" element={<Home />} />
           <Route path="/playlists" element={<Playlist />} />
           <Route path="/songs" element={<Song />} />
-          {/* <Route path="/profile" element={<Profile />} /> */}
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/editProfile" element={<EditProfilePage />} />
           {/* <Route path="/playlistView/:id" element={<PlaylistView />} /> */}
 
           <Route path="/playlistView" element={<PlaylistView />} />

@@ -96,7 +96,7 @@ const styles = {
   },
   submitButton: {
     padding: '10px 15px',
-    backgroundColor: '#1DB954',
+    background: 'linear-gradient(90deg, rgba(255,3,3,1) 0%, rgba(222,69,31,1) 35%, rgba(255,175,0,1) 100%)',
     color: '#fff',
     border: 'none',
     borderRadius: '5px',
