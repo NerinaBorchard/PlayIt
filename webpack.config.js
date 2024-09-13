@@ -3,18 +3,20 @@ const path = require('path');
 module.exports = {
     entry: './frontend/src/index.js',
     output: {
-        path: path.resolve(__dirname, '../frontend/public'),
         path: path.resolve(__dirname, 'frontend', 'public'),
         filename: 'bundle.js',
     },
-    mode: 'development',
+    mode: 'development', // You can use 'production' for production builds
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.(js|jsx)$/, // Handle both .js and .jsx files
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env', '@babel/preset-react'],
+                    },
                 },
             },
             {
@@ -34,5 +36,8 @@ module.exports = {
                 ],
             },
         ],
+    },
+    resolve: {
+        extensions: ['.js', '.jsx'], // Resolve .js and .jsx extensions
     },
 };

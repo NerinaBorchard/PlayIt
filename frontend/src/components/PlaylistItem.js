@@ -42,16 +42,17 @@ const styles = {
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
   coverImage: {
-    width: '100px',
-    height: '100px',
+    width: '150px',
+    height: '150px',
     borderRadius: '8px',
     objectFit: 'cover',
   },
   info: {
+    marginTop: '10px',
     marginLeft: '20px',
   },
   name: {
-    margin: '0 0 5px',
+    margin: '0 0 15px',
     fontSize: '20px',
     color: '#333',
   },
@@ -65,9 +66,10 @@ const styles = {
     marginBottom: '10px',
     textAlign: 'center',
     width: 'fit-content',
+    margin: '0 0 15px',
   },
   description: {
-    margin: '0 0 10px',
+    margin: '0 0 15px',
     fontSize: '16px',
     color: '#555',
   },

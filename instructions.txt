@@ -1,0 +1,11 @@
+// Nerina Borchard 21537144
+
+docker-compose build
+docker-compose up
+
+
+# Build the Docker image
+docker build -t my-app .
+
+# Run the Docker container
+docker run -p 3000:3000 my-app

@@ -3,7 +3,7 @@ import NavBar from '../components/NavBar';
 import SongComponent from '../components/Song';
 import PlaylistComponent from '../components/Playlist';
 import { Link } from 'react-router-dom';
-import { FiEdit2 } from 'react-icons/fi'; // Import edit icon
+import { FiEdit2 } from 'react-icons/fi'; 
 
 class ProfilePage extends Component {
   render() {

@@ -1,55 +1,85 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 
-const SongForm = () => {
-  const [title, setTitle] = useState('');
-  const [artist, setArtist] = useState('');
-  const [coverUrl, setCoverUrl] = useState('');
+class SongForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: '',
+      artist: '',
+      coverUrl: '',
+      songLink: '',
+    };
+  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here
-    console.log({ title, artist, coverUrl });
+  handleChange = (e) => {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
   };
 
-  return (
-    <div style={styles.formContainer}>
-      <h2>Add New Song</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Song Title</label>
-          <input 
-            type="text" 
-            value={title} 
-            onChange={(e) => setTitle(e.target.value)} 
-            style={styles.input} 
-            required
-          />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Artist</label>
-          <input 
-            type="text" 
-            value={artist} 
-            onChange={(e) => setArtist(e.target.value)} 
-            style={styles.input} 
-            required
-          />
-        </div>
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Cover Image URL</label>
-          <input 
-            type="url" 
-            value={coverUrl} 
-            onChange={(e) => setCoverUrl(e.target.value)} 
-            style={styles.input} 
-            required
-          />
-        </div>
-        <button type="submit" style={styles.submitButton}>Add Song</button>
-      </form>
-    </div>
-  );
-};
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { title, artist, coverUrl, songLink } = this.state;
+    // Handle form submission logic here
+    console.log({ title, artist, coverUrl, songLink });
+  };
+
+  render() {
+    const { title, artist, coverUrl, songLink } = this.state;
+
+    return (
+      <div style={styles.formContainer}>
+        <h2>Add New Song</h2>
+        <form onSubmit={this.handleSubmit}>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Song Title</label>
+            <input 
+              type="text" 
+              name="title" 
+              value={title} 
+              onChange={this.handleChange} 
+              style={styles.input} 
+              required
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Artist</label>
+            <input 
+              type="text" 
+              name="artist" 
+              value={artist} 
+              onChange={this.handleChange} 
+              style={styles.input} 
+              required
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Spotify Song Link</label>
+            <input 
+              type="url" 
+              name="songLink" 
+              value={songLink} 
+              onChange={this.handleChange} 
+              style={styles.input} 
+              required
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Cover Image URL</label>
+            <input 
+              type="url" 
+              name="coverUrl" 
+              value={coverUrl} 
+              onChange={this.handleChange} 
+              style={styles.input} 
+              required
+            />
+          </div>
+          <button type="submit" style={styles.submitButton}>Add Song</button>
+        </form>
+      </div>
+    );
+  }
+}
 
 const styles = {
   formContainer: {

@@ -1,14 +1,4 @@
-import React from 'react';
-
-const ProfilePreviewComponent = ({ user }) => (
-  <div style={styles.container}>
-    <img src={user.profileImage} alt={user.username} style={styles.profileImage} />
-    <div>
-      <p style={styles.username}>{user.username}</p>
-      <p style={styles.name}>{user.name}</p>
-    </div>
-  </div>
-);
+import React, { Component } from 'react';
 
 const styles = {
   container: {
@@ -31,5 +21,21 @@ const styles = {
     color: '#555',
   },
 };
+
+class ProfilePreviewComponent extends Component {
+  render() {
+    const { profileImage, username, name } = this.props.user;
+
+    return (
+      <div style={styles.container}>
+        <img src={profileImage} alt={username} style={styles.profileImage} />
+        <div>
+          <p style={styles.username}>{username}</p>
+          <p style={styles.name}>{name}</p>
+        </div>
+      </div>
+    );
+  }
+}
 
 export default ProfilePreviewComponent;

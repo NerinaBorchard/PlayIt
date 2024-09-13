@@ -1,85 +1,130 @@
+import React, { Component } from 'react';
+import ContextMenu from './ContextMenu';
+import { FaEllipsisV } from 'react-icons/fa'; 
 
-// import React from 'react';
+class SongItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showMenu: false,
+      menuPosition: { x: 0, y: 0 },
+    };
+  }
 
-// const SongItem = ({ image, title, artist }) => {
-//   return (
-//     <div style={styles.songItem}>
-//       <img src={image} alt={title} style={styles.songImage} />
-//       <div style={styles.songDetails}>
-//         <h3 style={styles.songTitle}>{title}</h3>
-//         <p style={styles.songArtist}>{artist}</p>
-//       </div>
-//     </div>
-//   );
-// };
+  handleContextMenu = (e) => {
+    e.preventDefault();
+    this.setState({
+      menuPosition: { x: e.clientX, y: e.clientY },
+      showMenu: true,
+    });
+  };
 
-// const styles = {
-//   songItem: {
-//     display: 'flex',
-//     alignItems: 'center',
-//     backgroundColor: '#fff',
-//     borderRadius: '8px',
-//     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-//     overflow: 'hidden',
-//     padding: '10px',
-//   },
-//   songImage: {
-//     width: '50px',
-//     height: '50px',
-//     objectFit: 'cover',
-//     marginRight: '15px',
-//   },
-//   songDetails: {
-//     flex: '1',
-//   },
-//   songTitle: {
-//     margin: '0 0 5px',
-//     overflow: 'hidden',
-//     textOverflow: 'ellipsis',
-//     whiteSpace: 'nowrap',
-//   },
-//   songArtist: {
-//     margin: '0',
-//     color: '#777',
-//   },
-// };
+  handleCloseMenu = () => {
+    this.setState({ showMenu: false });
+  };
 
-// export default SongItem;
+  handleDelete = () => {
+    const { onDelete } = this.props;
+    onDelete();
+    this.handleCloseMenu();
+  };
 
+  handleAddToPlaylist = () => {
+    console.log('Add to Playlist');
+    this.handleCloseMenu();
+  };
 
-// src/components/SongItem.js
-import React from 'react';
+  render() {
+    const { song } = this.props;
+    const { showMenu, menuPosition } = this.state;
 
-const SongItem = ({ song, onDelete }) => (
-  <div style={{
-    display: 'flex', 
-    alignItems: 'center', 
-    marginBottom: '10px', 
-    padding: '10px', 
-    borderRadius: '8px', 
+    return (
+      <div
+        onContextMenu={this.handleContextMenu}
+        style={styles.songItem}
+      >
+        <img src={song.image} alt={song.title} style={styles.image} />
+        <div style={styles.details}>
+          <h2 style={styles.title}>{song.title}</h2>
+          <p style={styles.artist}>{song.artist}</p>
+          <a href={song.link} style={styles.link}>Listen on Spotify</a>
+        </div>
+        <div
+          style={styles.menuIcon}
+          onClick={(e) => {
+            e.stopPropagation(); 
+            this.handleContextMenu(e);
+          }}
+        >
+          <FaEllipsisV />
+        </div>
+        {showMenu && (
+          <ContextMenu
+            x={menuPosition.x}
+            y={menuPosition.y}
+            onClose={this.handleCloseMenu}
+            onDelete={this.handleDelete}
+            onAddToPlaylist={this.handleAddToPlaylist}
+          />
+        )}
+        {showMenu && <div style={styles.overlay} onClick={this.handleCloseMenu} />}
+      </div>
+    );
+  }
+}
+
+const styles = {
+  songItem: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '10px',
+    border: '1px solid #ddd',
+    borderRadius: '8px',
     backgroundColor: '#f9f9f9',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-  }}>
-    <img 
-      src={song.image} 
-      alt={song.title} 
-      style={{ width: '50px', height: '50px', marginRight: '10px', borderRadius: '4px' }} 
-    />
-    <div style={{ flex: 1 }}>
-      <h4 style={{ margin: 0 }}>{song.title}</h4>
-      <p style={{ margin: 0, color: '#555' }}>{song.artist}</p>
-    </div>
-    <button onClick={onDelete} style={{
-      backgroundColor: '#FF6347', 
-      color: '#fff', 
-      border: 'none', 
-      padding: '5px 10px', 
-      borderRadius: '4px', 
-      cursor: 'pointer'
-    }}>
-      Delete
-    </button>
-  </div>
-);
+    position: 'relative',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+  },
+  image: {
+    width: '60px',
+    height: '60px',
+    borderRadius: '4px',
+    marginRight: '15px',
+  },
+  details: {
+    flex: 1,
+  },
+  title: {
+    margin: '0',
+    fontSize: '16px',
+    fontWeight: 'bold',
+  },
+  artist: {
+    margin: '5px 0',
+    fontSize: '14px',
+    color: '#555',
+  },
+  link: {
+    background: 'linear-gradient(90deg, rgba(255,3,3,1) 0%, rgba(222,69,31,1) 35%, rgba(255,175,0,1) 100%)',
+    WebkitBackgroundClip: 'text',
+    backgroundClip: 'text',
+    color: 'transparent',
+    textDecoration: 'none',
+  },
+  menuIcon: {
+    marginLeft: '10px',
+    cursor: 'pointer',
+    fontSize: '20px',
+    color: '#333',
+  },
+  overlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    zIndex: 999,
+  },
+};
 
 export default SongItem;
