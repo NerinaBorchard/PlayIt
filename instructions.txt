@@ -1,7 +1,0 @@
-// Nerina Borchard 21537144
-
-docker-compose build
-docker-compose up
-
-
-
