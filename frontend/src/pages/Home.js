@@ -113,7 +113,7 @@ class HomePage extends Component {
         padding: '15px',
         width: '200px',
         textAlign: 'center',
-        borderRadius: '8px',
+        borderRadius: '5px',
         backgroundColor: '#fff',
         transition: 'transform 0.3s',
       },
