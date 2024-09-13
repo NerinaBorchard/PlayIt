@@ -49,7 +49,7 @@ class Playlist extends React.Component {
     ];
 
     return (
-      <div>
+      <div style={styles.nav}>
         <NavBar />
         <div style={styles.container}>
           <div style={styles.playlistContainer}>
@@ -79,7 +79,11 @@ class Playlist extends React.Component {
 }
 
 const styles = {
+  nav: {
+    fontFamily: 'Arial, sans-serif',
+  },
   container: {
+    fontFamily: 'Arial, sans-serif',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

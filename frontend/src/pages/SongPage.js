@@ -111,6 +111,7 @@ const Song = () => {
 
 const styles = {
   container: {
+    fontFamily: 'Arial, sans-serif',
     display: 'flex',
     flexDirection: 'column',
     height: '100vh',

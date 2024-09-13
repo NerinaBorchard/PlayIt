@@ -74,6 +74,7 @@ import Song from './pages/SongPage';
 import Profile from './pages/ProfilePage';
 import PlaylistView from './pages/PlaylistView';
 import EditProfilePage from './pages/EditProfilePage';
+import FollowersFollowingPage from './pages/FollowersFollowingPage';
 
 class App extends Component {
   render() {
@@ -88,6 +89,7 @@ class App extends Component {
           <Route path="/songs" element={<Song />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/editProfile" element={<EditProfilePage />} />
+          <Route path="/followersFollowing" element={<FollowersFollowingPage />} />
           {/* <Route path="/playlistView/:id" element={<PlaylistView />} /> */}
 
           <Route path="/playlistView" element={<PlaylistView />} />
