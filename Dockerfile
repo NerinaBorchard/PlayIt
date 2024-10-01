@@ -1,85 +1,90 @@
-# # Stage 1: Build frontend
-# FROM node:16 AS build
 
-# # Set the working directory
+# # Step 1: Base stage for installing dependencies
+# FROM node:16 AS dependencies
+
+# # Set the working directory at the root
 # WORKDIR /app
 
-# # Install dependencies for both frontend and backend
+# # Copy the root package.json and package-lock.json to install dependencies
 # COPY package*.json ./
+
+# # Install all dependencies
 # RUN npm install --legacy-peer-deps
 
-# # Copy frontend source code
-# COPY frontend/ frontend/
-# # Build the frontend
-# RUN npm run build --prefix frontend
+# # Step 2: Build the frontend
+# FROM node:16 AS build-frontend
 
-# # Stage 2: Build backend
-# FROM node:16 AS backend
+# # Set the working directory for the frontend
+# WORKDIR /app/frontend
 
-# # Set the working directory
-# WORKDIR /app
+# # Copy all files from the app
+# COPY --from=dependencies /app/node_modules /app/node_modules
+# COPY frontend/ ./
 
-# # Copy backend source code and built frontend assets
-# COPY backend/ backend/
-# COPY --from=build /app/frontend/build /app/backend/public
+# # Build the frontend using webpack
+# RUN npm run build
 
-# # Build the backend (if needed)
-# RUN npm run build --prefix backend
+# # Step 3: Build the backend
+# FROM node:16 AS build-backend
 
-# # Stage 3: Final stage
+# # Set the working directory for the backend
+# WORKDIR /app/backend
+
+# # Copy all files from the app
+# COPY --from=dependencies /app/node_modules /app/node_modules
+# COPY backend/ ./
+
+# # Transpile the backend server with webpack and babel
+# RUN npm run build
+
+# # Step 4: Final stage for running the application
 # FROM node:16
 
-# # Set the working directory
+# # Set the working directory for the entire app
 # WORKDIR /app
 
-# # Copy the backend application from the backend stage
-# COPY --from=backend /app/backend /app/backend
+# # Copy the transpiled frontend and backend from the build stages
+# COPY --from=build-frontend /app/frontend/public ./frontend/public
+# COPY --from=build-backend /app/backend/dist ./backend/dist
 
-# # Expose the port the app runs on
+# # Copy the root package.json for production dependencies
+# COPY package*.json ./
+
+# # Install only production dependencies
+# RUN npm install --only=production --legacy-peer-deps
+
+# # Expose the port your backend server will run on (default 3000)
 # EXPOSE 3000
 
-# # Command to run the app
-# CMD ["node", "/app/backend/server.js"]
+# # Start the backend server
+# CMD ["npm", "start"]
 
 
 
 
+# Step 1: Base stage for installing dependencies
+FROM node:16 AS dependencies
 
+# Set the working directory at the root
+WORKDIR /app
 
-# Step 1: Base stage for building the frontend
-FROM node:16 AS build-frontend
+# Copy the root package.json and package-lock.json to install dependencies
+COPY package*.json ./
 
-# Set the working directory for the frontend
-WORKDIR /app/frontend
+# Install all dependencies
+RUN npm install --legacy-peer-deps
 
-# Copy the package.json and package-lock.json to install dependencies
-COPY frontend/package*.json ./
+# Step 2: Build the frontend and backend
+FROM node:16 AS build-app
 
-# Install frontend dependencies
-RUN npm install
+# Set the working directory at the root
+WORKDIR /app
 
-# Copy all frontend files
-COPY frontend/ .
+# Copy node_modules from the dependencies stage and the entire app
+COPY --from=dependencies /app/node_modules /app/node_modules
+COPY . .
 
-# Build the frontend using webpack
-RUN npm run build
-
-# Step 2: Base stage for building the backend
-FROM node:16 AS build-backend
-
-# Set the working directory for the backend
-WORKDIR /app/backend
-
-# Copy the package.json and package-lock.json for backend
-COPY backend/package*.json ./
-
-# Install backend dependencies
-RUN npm install
-
-# Copy all backend files
-COPY backend/ .
-
-# Transpile the backend server with webpack and babel
+# Build the app (frontend & backend)
 RUN npm run build
 
 # Step 3: Final stage for running the application
@@ -88,17 +93,14 @@ FROM node:16
 # Set the working directory for the entire app
 WORKDIR /app
 
-# Copy the transpiled frontend and backend from the build stages
-COPY --from=build-frontend /app/frontend/public ./frontend/public
-COPY --from=build-backend /app/backend/dist ./backend/dist
+# Copy the transpiled app from the build stage
+COPY --from=build-app /app /app
 
-# Copy the backend package.json and package-lock.json to install production dependencies
-COPY backend/package*.json ./backend/
-RUN cd backend && npm install --only=production
+# Install only production dependencies
+RUN npm install --only=production --legacy-peer-deps
 
 # Expose the port your backend server will run on (default 3000)
 EXPOSE 3000
 
 # Start the backend server
-CMD ["node", "backend/dist/server.js"]
-
+CMD ["npm", "start"]
