@@ -15,9 +15,38 @@ class SignInPage extends Component {
         this.setState({ redirectTo: '/signup' });
     }
 
-    handleSignIn = () => {
-        this.setState({ redirectTo: '/home' }); // Redirect to dashboard after signing in
-    }
+    // handleSignIn = () => {
+    //     this.setState({ redirectTo: '/home' }); // Redirect to dashboard after signing in
+    // }
+
+    handleSignIn = async () => {
+        const email = this.state.email; // You can set the email in state when the input changes
+        const password = this.state.password; // Similarly, set the password in state
+    
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+    
+            if (response.status === 200) {
+                const data = await response.json();
+                // Successful login, redirect to home/dashboard
+                console.log('Login successful:', data.user);
+                this.setState({ redirectTo: '/home' });
+            } else {
+                // Handle invalid login credentials
+                console.error('Invalid login credentials');
+                alert('Invalid email or password');
+            }
+        } catch (error) {
+            console.error('Error logging in:', error);
+        }
+    };
+    
 
     handleForgotPassword = () => {
         this.setState({ redirectTo: '/forgot-password' }); // Redirect to forgot password page
@@ -150,15 +179,29 @@ class SignInPage extends Component {
                         <div style={styles.formContainer}>
                             <label style={styles.label}>Email</label>
                             <div style={styles.inputContainer}>
-                                <input type="text" placeholder="Email" style={styles.input} />
+                                {/* <input type="text" placeholder="Email" style={styles.input} /> */}
+                                <input
+                                    type="text"
+                                    placeholder="Email"
+                                    style={styles.input}
+                                    value={this.state.email}
+                                    onChange={(e) => this.setState({ email: e.target.value })}
+                                />
                             </div>
                             
                             <label style={styles.label}>Password</label>
                             <div style={styles.inputContainer}>
+                                {/* <input
+                                    type={this.state.showPassword ? "text" : "password"}
+                                    placeholder="Password"
+                                    style={styles.input}
+                                /> */}
                                 <input
                                     type={this.state.showPassword ? "text" : "password"}
                                     placeholder="Password"
                                     style={styles.input}
+                                    value={this.state.password}
+                                    onChange={(e) => this.setState({ password: e.target.value })}
                                 />
                                 <div style={styles.eyeIcon} onClick={this.togglePasswordVisibility}>
                                     {this.state.showPassword ? <FaEyeSlash /> : <FaEye />}

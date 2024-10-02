@@ -1,11 +1,13 @@
 // import React, { Component } from 'react';
 // import { Navigate } from 'react-router-dom';
+// import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 // class SignUpPage extends Component {
 //     constructor(props) {
 //         super(props);
 //         this.state = {
 //             redirectTo: null,
+//             showPassword: false,
 //         };
 //     }
 
@@ -15,7 +17,13 @@
 
 //     handleSignUp = () => {
 //         // Handle Sign Up action
-//         this.setState({ redirectTo: '/dashboard' }); // Redirect to dashboard after signing up
+//         this.setState({ redirectTo: '/home' }); // Redirect to dashboard after signing up
+//     }
+
+//     togglePasswordVisibility = () => {
+//         this.setState((prevState) => ({
+//             showPassword: !prevState.showPassword,
+//         }));
 //     }
 
 //     render() {
@@ -26,53 +34,69 @@
 //         const styles = {
 //             container: {
 //                 display: 'flex',
+//                 height: '100vh',
+//             },
+//             left: {
+//                 flex: 1,
+//                 display: 'flex',
+//                 flexDirection: 'column',
 //                 justifyContent: 'center',
 //                 alignItems: 'center',
-//                 height: '100vh',
-//                 background: 'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 52%, rgba(223,8,8,1) 80%, rgba(218,83,20,1) 90%, rgba(255,175,0,1) 100%)',
+//                 padding: '20px',
+//                 textAlign: 'center', // Center-align the title and sign-up text
 //             },
-//             form: {
-//                 backgroundColor: 'white',
-//                 padding: '30px',
-//                 borderRadius: '10px',
-//                 boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-//                 width: '400px',
+//             logo: {
+//                 position: 'absolute',
+//                 top: '20px',
+//                 left: '20px',
+//                 width: '100px',
+//             },
+//             right: {
+//                 flex: 1,
+//             },
+//             image: {
+//                 width: '100%',
+//                 height: '100%',
+//                 objectFit: 'cover',
+//             },
+//             content: {
 //                 textAlign: 'center',
 //             },
 //             title: {
 //                 fontSize: '2rem',
-//                 marginBottom: '20px',
+//                 marginBottom: '10px',
 //             },
 //             subtitle: {
 //                 fontSize: '1rem',
 //                 marginBottom: '20px',
 //             },
-//             label: {
+//             formContainer: {
 //                 textAlign: 'left',
-//                 display: 'block',
-//                 fontWeight: 'bold',
+//                 width: '300px',
+//             },
+//             label: {
+//                 fontSize: '1rem',
 //                 marginBottom: '5px',
+//                 fontWeight: 'bold',
+//             },
+//             inputContainer: {
+//                 position: 'relative',
+//                 marginBottom: '15px',
 //             },
 //             input: {
 //                 width: '100%',
 //                 padding: '10px',
-//                 marginBottom: '20px',
 //                 fontSize: '1rem',
 //                 borderRadius: '5px',
 //                 border: '1px solid #ccc',
+//                 paddingRight: '40px',
 //             },
-//             checkboxContainer: {
-//                 display: 'flex',
-//                 justifyContent: 'space-between',
-//                 alignItems: 'center',
-//                 marginBottom: '20px',
-//             },
-//             checkboxLabel: {
-//                 display: 'flex',
-//                 alignItems: 'center',
-//             },
-//             checkbox: {
-//                 marginRight: '5px',
+//             eyeIcon: {
+//                 position: 'absolute',
+//                 top: '50%',
+//                 right: '-35px',
+//                 transform: 'translateY(-50%)',
+//                 cursor: 'pointer',
 //             },
 //             button: {
 //                 width: '100%',
@@ -81,38 +105,70 @@
 //                 border: 'none',
 //                 cursor: 'pointer',
 //                 borderRadius: '5px',
-//                 backgroundColor: '#000',
+//                 marginBottom: '15px',
+//                 background: 'linear-gradient(90deg, rgba(255,3,3,1) 0%, rgba(222,69,31,1) 35%, rgba(255,175,0,1) 100%)',
 //                 color: 'white',
-//                 marginBottom: '10px',
 //             },
-//             text: {
-//                 fontSize: '1rem',
-//                 marginTop: '10px',
+//             signInText: {
+//                 marginTop: '15px',
 //             },
 //         };
 
 //         return (
 //             <div style={styles.container}>
-//                 <div style={styles.form}>
-//                     <h1 style={styles.title}>Sign Up</h1>
-//                     <p style={styles.subtitle}>Create your account</p>
-//                     <label style={styles.label}>Email</label>
-//                     <input type="email" placeholder="Enter your email" style={styles.input} />
-//                     <label style={styles.label}>Password</label>
-//                     <input type="password" placeholder="Enter your password" style={styles.input} />
-//                     <div style={styles.checkboxContainer}>
-//                         <label style={styles.checkboxLabel}>
-//                             <input type="checkbox" style={styles.checkbox} />
-//                             Remember Me
-//                         </label>
-//                         <a href="#">Forgot Password?</a>
+//                 {/* Left half with form */}
+//                 <div style={styles.left}>
+//                     <img src="/assets/images/logo.png" alt="Logo" style={styles.logo} />
+//                     <div style={styles.content}>
+//                         <h1 style={styles.title}>NEW TO PLAYIT</h1>
+//                         <p style={styles.subtitle}>Enter your email and password to create your account</p>
+                        
+//                         <div style={styles.formContainer}>
+//                             <label style={styles.label}>Email</label>
+//                             <div style={styles.inputContainer}>
+//                                 <input type="text" placeholder="Email" style={styles.input} />
+//                             </div>
+                            
+//                             <label style={styles.label}>Password</label>
+//                             <div style={styles.inputContainer}>
+//                                 <input
+//                                     type={this.state.showPassword ? "text" : "password"}
+//                                     placeholder="Password"
+//                                     style={styles.input}
+//                                 />
+//                                 <div style={styles.eyeIcon} onClick={this.togglePasswordVisibility}>
+//                                     {this.state.showPassword ? <FaEyeSlash /> : <FaEye />}
+//                                 </div>
+//                             </div>
+//                             <label style={styles.label}>Confirm Password</label>
+//                             <div style={styles.inputContainer}>
+//                                 <input
+//                                     type={this.state.showPassword ? "text" : "password"}
+//                                     placeholder="Password"
+//                                     style={styles.input}
+//                                 />
+//                                 <div style={styles.eyeIcon} onClick={this.togglePasswordVisibility}>
+//                                     {this.state.showPassword ? <FaEyeSlash /> : <FaEye />}
+//                                 </div>
+//                             </div>
+//                         </div>
+
+//                         <button style={styles.button} onClick={this.handleSignUp}>
+//                             Sign Up
+//                         </button>
+//                         <p style={styles.signInText}>
+//                             Already have an account?<strong onClick={this.handleSignIn} style={{ cursor: 'pointer' }}>Sign In</strong>
+//                         </p>
 //                     </div>
-//                     <button style={styles.button} onClick={this.handleSignUp}>
-//                         Sign Up
-//                     </button>
-//                     <p style={styles.text}>
-//                         Already have an account? <strong onClick={this.handleSignIn} style={{cursor: 'pointer'}}>Sign In</strong>
-//                     </p>
+//                 </div>
+
+//                 {/* Right half with the image */}
+//                 <div style={styles.right}>
+//                     <img
+//                         src="/assets/images/Splash4.jpg"
+//                         alt="Sign In"
+//                         style={styles.image}
+//                     />
 //                 </div>
 //             </div>
 //         );
@@ -120,6 +176,8 @@
 // }
 
 // export default SignUpPage;
+
+
 
 import React, { Component } from 'react';
 import { Navigate } from 'react-router-dom';
@@ -131,6 +189,10 @@ class SignUpPage extends Component {
         this.state = {
             redirectTo: null,
             showPassword: false,
+            email: '',
+            password: '',
+            confirmPassword: '',
+            errorMessage: '',
         };
     }
 
@@ -138,15 +200,59 @@ class SignUpPage extends Component {
         this.setState({ redirectTo: '/signin' });
     }
 
-    handleSignUp = () => {
-        // Handle Sign Up action
-        this.setState({ redirectTo: '/home' }); // Redirect to dashboard after signing up
+    handleSignUp = async () => {
+        const { email, password, confirmPassword } = this.state;
+
+        // Basic validation
+        if (!email || !password || password !== confirmPassword) {
+            this.setState({ errorMessage: "Please fill all fields correctly." });
+            return;
+        }
+
+        const username = email.split('@')[0]; // Get username from email
+        const name = email.split('@')[0]; ;
+        const newUser = {
+            email,
+            password,
+            profile: {
+                username,
+                name,
+                picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+            },
+            playlists: [],
+            songs: [],
+        };
+
+        // Send user data to the server
+        try {
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newUser),
+            });
+
+            if (response.ok) {
+                // Successfully signed up
+                this.setState({ redirectTo: '/home' });
+            } else {
+                const errorData = await response.json();
+                this.setState({ errorMessage: errorData.message || "Signup failed." });
+            }
+        } catch (error) {
+            this.setState({ errorMessage: "An error occurred. Please try again." });
+        }
     }
 
     togglePasswordVisibility = () => {
         this.setState((prevState) => ({
             showPassword: !prevState.showPassword,
         }));
+    }
+
+    handleInputChange = (event) => {
+        this.setState({ [event.target.name]: event.target.value, errorMessage: '' });
     }
 
     render() {
@@ -166,7 +272,7 @@ class SignUpPage extends Component {
                 justifyContent: 'center',
                 alignItems: 'center',
                 padding: '20px',
-                textAlign: 'center', // Center-align the title and sign-up text
+                textAlign: 'center',
             },
             logo: {
                 position: 'absolute',
@@ -235,29 +341,44 @@ class SignUpPage extends Component {
             signInText: {
                 marginTop: '15px',
             },
+            errorMessage: {
+                color: 'red',
+                marginBottom: '15px',
+            },
         };
 
         return (
             <div style={styles.container}>
-                {/* Left half with form */}
                 <div style={styles.left}>
                     <img src="/assets/images/logo.png" alt="Logo" style={styles.logo} />
                     <div style={styles.content}>
                         <h1 style={styles.title}>NEW TO PLAYIT</h1>
                         <p style={styles.subtitle}>Enter your email and password to create your account</p>
                         
+                        {this.state.errorMessage && <p style={styles.errorMessage}>{this.state.errorMessage}</p>}
+                        
                         <div style={styles.formContainer}>
                             <label style={styles.label}>Email</label>
                             <div style={styles.inputContainer}>
-                                <input type="text" placeholder="Email" style={styles.input} />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email"
+                                    style={styles.input}
+                                    value={this.state.email}
+                                    onChange={this.handleInputChange}
+                                />
                             </div>
                             
                             <label style={styles.label}>Password</label>
                             <div style={styles.inputContainer}>
                                 <input
                                     type={this.state.showPassword ? "text" : "password"}
+                                    name="password"
                                     placeholder="Password"
                                     style={styles.input}
+                                    value={this.state.password}
+                                    onChange={this.handleInputChange}
                                 />
                                 <div style={styles.eyeIcon} onClick={this.togglePasswordVisibility}>
                                     {this.state.showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -267,8 +388,11 @@ class SignUpPage extends Component {
                             <div style={styles.inputContainer}>
                                 <input
                                     type={this.state.showPassword ? "text" : "password"}
-                                    placeholder="Password"
+                                    name="confirmPassword"
+                                    placeholder="Confirm Password"
                                     style={styles.input}
+                                    value={this.state.confirmPassword}
+                                    onChange={this.handleInputChange}
                                 />
                                 <div style={styles.eyeIcon} onClick={this.togglePasswordVisibility}>
                                     {this.state.showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -285,7 +409,6 @@ class SignUpPage extends Component {
                     </div>
                 </div>
 
-                {/* Right half with the image */}
                 <div style={styles.right}>
                     <img
                         src="/assets/images/Splash4.jpg"

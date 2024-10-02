@@ -1,8 +1,24 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-// import logoImage from '../../public/assets/images/clearLogo.png'; // Adjust the path as necessary
+import { Link, Navigate } from 'react-router-dom';
 
 class NavBar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      redirectTo: null,
+    };
+  }
+
+  // Handle user logout
+  handleLogout = () => {
+    // Perform any logout actions, e.g., clear session data, token
+    localStorage.removeItem('authToken'); // Example: remove auth token from local storage
+    console.log('User logged out');
+    
+    // Redirect to login page
+    this.setState({ redirectTo: '/' });
+  };
+
   render() {
     const styles = {
       navbar: {
@@ -11,7 +27,6 @@ class NavBar extends Component {
         alignItems: 'center',
         padding: '10px 20px',
         background: 'linear-gradient(90deg, rgba(255,3,3,1) 0%, rgba(222,69,31,1) 35%, rgba(255,175,0,1) 100%)',
-        // background: 'white',
         color: 'white',
       },
       logo: {
@@ -20,10 +35,6 @@ class NavBar extends Component {
         display: 'flex',
         alignItems: 'center',
         color: 'black',
-      },
-      logoImage: {
-        height: '40px', // Adjust height as necessary
-        marginRight: '10px',
       },
       navLinks: {
         listStyleType: 'none',
@@ -39,14 +50,18 @@ class NavBar extends Component {
         padding: '5px 10px',
         transition: 'background-color 0.3s',
         fontWeight: 'bold',
+        cursor: 'pointer',
       },
     };
+
+    if (this.state.redirectTo) {
+      return <Navigate to={this.state.redirectTo} />;
+    }
 
     return (
       <nav style={styles.navbar}>
         <div style={styles.logo}>
-          {/* <img src='/assets/images/clearLogo.png' alt="Logo" style={styles.logoImage} /> */}
-          {/* PlayIt */}
+          {/* PlayIt logo could go here */}
         </div>
         <ul style={styles.navLinks}>
           <li style={styles.navLinkItem}>
@@ -61,8 +76,11 @@ class NavBar extends Component {
           <li style={styles.navLinkItem}>
             <Link to="/profile" style={styles.navLink}>Profile</Link>
           </li>
+          {/* Change Sign Out to trigger handleLogout */}
           <li style={styles.navLinkItem}>
-            <Link to="/" style={styles.navLink}>Sign Out</Link>
+            <button onClick={this.handleLogout} style={{ ...styles.navLink, background: 'none', border: 'none' }}>
+              Sign Out
+            </button>
           </li>
         </ul>
       </nav>
