@@ -76,6 +76,7 @@ import PlaylistView from './pages/PlaylistView';
 import EditProfilePage from './pages/EditProfilePage';
 import FollowersFollowingPage from './pages/FollowersFollowingPage';
 import EditPlaylist from './pages/EditPlaylist';
+import Search from './pages/SearchPage';
 
 class App extends Component {
   render() {
@@ -92,6 +93,7 @@ class App extends Component {
           <Route path="/editProfile" element={<EditProfilePage />} />
           <Route path="/followersFollowing" element={<FollowersFollowingPage />} />
           <Route path="/editPlaylist" element={<EditPlaylist />} />
+          <Route path="/search" element={<Search />} />
           {/* <Route path="/playlistView/:id" element={<PlaylistView />} /> */}
 
           <Route path="/playlistView" element={<PlaylistView />} />

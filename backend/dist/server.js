@@ -69,6 +69,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 // const path = require('path');
 // const { MongoClient } = require('mongodb');
 // const bodyParser = require('body-parser');
+// const bcrypt = require('bcrypt');  // Import bcrypt
 
 // const app = express();
 // const url = "mongodb+srv://u21537144:vHpb6E2jMOq6iHH5@playit.xyo7t.mongodb.net/?retryWrites=true&w=majority&appName=playit";
@@ -90,23 +91,61 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 //         app.post('/api/login', async (req, res) => {
 //             const { email, password } = req.body;
 
-//             // Find the user with the provided email and password
-//             const user = await usersCollection.findOne({ email: email, password: password });
+//             // Find the user with the provided email
+//             const user = await usersCollection.findOne({ email: email });
 
 //             if (user) {
-//                 res.status(200).json({
-//                     message: "Login successful",
-//                     user: {
-//                         username: user.profile.username,
-//                         name: user.profile.name,
-//                         email: user.email,
-//                         playlists: user.playlists,
-//                         songs: user.songs,
-//                     }
-//                 });
+//                 // Compare provided password with hashed password
+//                 const isPasswordValid = await bcrypt.compare(password, user.password);
+//                 if (isPasswordValid) {
+//                     res.status(200).json({
+//                         message: "Login successful",
+//                         user: {
+//                             username: user.profile.username,
+//                             name: user.profile.name,
+//                             email: user.email,
+//                             playlists: user.playlists,
+//                             songs: user.songs,
+//                         }
+//                     });
+//                 } else {
+//                     res.status(401).json({ message: "Invalid email or password" });
+//                 }
 //             } else {
 //                 res.status(401).json({ message: "Invalid email or password" });
 //             }
+//         });
+
+//         // Sign Up API route
+//         app.post('/api/signup', async (req, res) => {
+//             const { email, password } = req.body;
+
+//             // Check if the user already exists
+//             const existingUser = await usersCollection.findOne({ email: email });
+//             if (existingUser) {
+//                 return res.status(409).json({ message: "User already exists" });
+//             }
+
+//             // Hash the password
+//             const hashedPassword = await bcrypt.hash(password, 10);
+
+//             // Create new user object
+//             const newUser = {
+//                 email: email,
+//                 password: hashedPassword,  // Save the hashed password
+//                 profile: {
+//                     username: email.split('@')[0],  // Use part before '@' as username
+//                     name: '',  // Optionally set this to an empty string or prompt for it
+//                     picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+//                 },
+//                 playlists: [],
+//                 songs: []
+//             };
+
+//             // Insert the new user into the database
+//             await usersCollection.insertOne(newUser);
+//             res.status(201).json({ message: "User created successfully" });
+
 //         });
 
 //     } catch (e) {
@@ -114,7 +153,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 //     } 
 // }
 
-// main().catch(console.error);
+// main().catch(console.error());
 
 // // Serve index.html for all other routes
 // app.get('*', (req, res) => {
@@ -126,162 +165,535 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 //     console.log("Listening on http://localhost:3001");
 // });
 
+// const express = require('express');
+// const mongoose = require('mongoose');
+// const cors = require('cors');
+
+// // Create the app
+// const app = express();
+// app.use(cors());
+// app.use(express.json());
+
+// // MongoDB connection string
+// const mongoURI = "mongodb+srv://u21537144:vHpb6E2jMOq6iHH5@playit.xyo7t.mongodb.net/playit?retryWrites=true&w=majority";
+
+// // Connect to MongoDB using Mongoose
+// mongoose.connect(mongoURI, {
+// //   useNewUrlParser: true,
+// //   useUnifiedTopology: true
+// })
+//   .then(() => console.log('Connected to MongoDB'))
+//   .catch(err => console.error('Failed to connect to MongoDB:', err));
+
+// // Define a Song schema and model
+// const songSchema = new mongoose.Schema({
+//   title: {
+//     type: String,
+//     required: true,
+//   },
+//   artist: {
+//     type: String,
+//     required: true,
+//   },
+//   link: {
+//     type: String,
+//     required: true,
+//   },
+//   dateAdded: {
+//     type: Date,
+//     default: Date.now, // Automatically sets to the current date
+//   },
+//   image: {
+//     type: String,
+//     required: true,
+//   },
+//   creator: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     required: true,
+//     ref: 'User', // Reference to the User model
+//   },
+// });
+
+// const Song = mongoose.model('Song', songSchema);
+
+// // API endpoint to fetch songs
+// app.get('/api/songs', async (req, res) => {
+//   try {
+//     const songs = await Song.find(); // Fetch all songs
+//     res.json(songs);
+//   } catch (err) {
+//     res.status(500).json({ error: 'Failed to fetch songs' });
+//   }
+// });
+
+// const playlistSchema = new mongoose.Schema({
+//     name: {
+//         type: String,
+//         required: true,
+//     },
+//     genre: {
+//         type: String,
+//         required: true,
+//     },
+//     description: {
+//         type: String,
+//         required: true,
+//     },
+//     coverImage: {
+//         type: String,
+//         required: true,
+//     },
+//     hashtags: [{
+//         type: String,
+//         required: false,
+//     }],
+//     creator: {
+//         type: mongoose.Schema.Types.ObjectId,
+//         required: true,
+//         ref: 'User', // Reference to the User model
+//     },
+//     songs: [{
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'Song', // Reference to the Song model
+//     }],
+//     comments: [{
+//         userId: {
+//             type: mongoose.Schema.Types.ObjectId,
+//             ref: 'User', // Reference to the User model for the commenter
+//         },
+//         text: {
+//             type: String,
+//             required: true,
+//         },
+//         date: {
+//             type: Date,
+//             default: Date.now,
+//         },
+//     }],
+//     dateCreated: {
+//         type: Date,
+//         default: Date.now,
+//     },
+// });
+
+// const PlaylistModel = mongoose.model('Playlist', playlistSchema);
+
+// // API endpoint to fetch songs
+// app.get('/api/playlists', async (req, res) => {
+//     try {
+//       const playlists = await PlaylistModel.find(); // Fetch all playlists
+//       res.json(playlists);
+//     } catch (err) {
+//       res.status(500).json({ error: 'Failed to fetch playlists' });
+//     }
+//   });
+
+//   const userSchema = new mongoose.Schema({
+//     email: {
+//         type: String,
+//         required: true,
+//         unique: true, // Ensure emails are unique
+//     },
+//     password: {
+//         type: String,
+//         required: true,
+//     },
+//     profile: {
+//         username: {
+//             type: String,
+//             required: true,
+//         },
+//         name: {
+//             type: String,
+//             required: true,
+//         },
+//         picture: {
+//             type: String,
+//             default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png', // Default profile picture
+//         },
+//     },
+//     playlists: [{
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'Playlist', // Reference to the Playlist model
+//     }],
+//     songs: [{
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'Song', // Reference to the Song model
+//     }],
+// });
+
+// // Create a User model
+// const UserModel = mongoose.model('User', userSchema);
+
+// // API endpoint to fetch users
+// app.get('/api/users', async (req, res) => {
+//     try {
+//       const users = await UserModel.find(); // Fetch all users
+//       res.json(users);
+//     } catch (err) {
+//       res.status(500).json({ error: 'Failed to fetch users' });
+//     }
+//   });
+
+// // Start the server
+// const PORT = process.env.PORT || 3001;
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
+
 var express = require('express');
 var path = require('path');
-var _require = require('mongodb'),
-  MongoClient = _require.MongoClient;
+var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt'); // Import bcrypt
+var cors = require('cors');
 
+// Initialize express
 var app = express();
-var url = "mongodb+srv://u21537144:vHpb6E2jMOq6iHH5@playit.xyo7t.mongodb.net/?retryWrites=true&w=majority&appName=playit";
-var client = new MongoClient(url);
-app.use(bodyParser.json()); // To parse JSON from request body
+app.use(cors());
+app.use(bodyParser.json()); // Parse JSON bodies
 app.use(express["static"](path.join(__dirname, '../../frontend/public')));
 
-// MongoDB connection
-function main() {
-  return _main.apply(this, arguments);
-}
-function _main() {
-  _main = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-    var db, usersCollection;
+// MongoDB connection string (for Mongoose)
+var mongoURI = "mongodb+srv://u21537144:vHpb6E2jMOq6iHH5@playit.xyo7t.mongodb.net/playit?retryWrites=true&w=majority";
+
+// Connect to MongoDB using Mongoose
+mongoose.connect(mongoURI, {
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true
+}).then(function () {
+  return console.log('Connected to MongoDB via Mongoose');
+})["catch"](function (err) {
+  return console.error('Failed to connect to MongoDB:', err);
+});
+
+// Define Mongoose schemas and models
+
+// Song Schema
+var songSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true
+  },
+  artist: {
+    type: String,
+    required: true
+  },
+  link: {
+    type: String,
+    required: true
+  },
+  dateAdded: {
+    type: Date,
+    "default": Date.now
+  },
+  image: {
+    type: String,
+    required: true
+  },
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
+});
+var Song = mongoose.model('Song', songSchema);
+
+// Playlist Schema
+var playlistSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  genre: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  coverImage: {
+    type: String,
+    required: true
+  },
+  hashtags: [{
+    type: String
+  }],
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  songs: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Song'
+  }],
+  comments: [{
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    text: {
+      type: String,
+      required: true
+    },
+    date: {
+      type: Date,
+      "default": Date.now
+    }
+  }],
+  dateCreated: {
+    type: Date,
+    "default": Date.now
+  }
+});
+var PlaylistModel = mongoose.model('Playlist', playlistSchema);
+
+// User Schema
+var userSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  profile: {
+    username: {
+      type: String,
+      required: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    picture: {
+      type: String,
+      "default": 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+    }
+  },
+  playlists: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Playlist'
+  }],
+  songs: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Song'
+  }]
+});
+var UserModel = mongoose.model('User', userSchema);
+
+// API Routes
+
+// Login route
+app.post('/api/login', /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
+    var _req$body, email, password, user;
+    return _regeneratorRuntime().wrap(function _callee$(_context) {
+      while (1) switch (_context.prev = _context.next) {
+        case 0:
+          _req$body = req.body, email = _req$body.email, password = _req$body.password;
+          _context.next = 3;
+          return UserModel.findOne({
+            email: email
+          });
+        case 3:
+          user = _context.sent;
+          _context.t0 = user;
+          if (!_context.t0) {
+            _context.next = 9;
+            break;
+          }
+          _context.next = 8;
+          return bcrypt.compare(password, user.password);
+        case 8:
+          _context.t0 = _context.sent;
+        case 9:
+          if (!_context.t0) {
+            _context.next = 13;
+            break;
+          }
+          res.status(200).json({
+            message: "Login successful",
+            user: {
+              username: user.profile.username,
+              name: user.profile.name,
+              email: user.email,
+              playlists: user.playlists,
+              songs: user.songs
+            }
+          });
+          _context.next = 14;
+          break;
+        case 13:
+          res.status(401).json({
+            message: "Invalid email or password"
+          });
+        case 14:
+        case "end":
+          return _context.stop();
+      }
+    }, _callee);
+  }));
+  return function (_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
+}());
+
+// Signup route
+app.post('/api/signup', /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
+    var _req$body2, email, password, existingUser, hashedPassword, newUser;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          _req$body2 = req.body, email = _req$body2.email, password = _req$body2.password;
+          _context2.next = 3;
+          return UserModel.findOne({
+            email: email
+          });
+        case 3:
+          existingUser = _context2.sent;
+          if (!existingUser) {
+            _context2.next = 6;
+            break;
+          }
+          return _context2.abrupt("return", res.status(409).json({
+            message: "User already exists"
+          }));
+        case 6:
+          _context2.next = 8;
+          return bcrypt.hash(password, 10);
+        case 8:
+          hashedPassword = _context2.sent;
+          newUser = new UserModel({
+            email: email,
+            password: hashedPassword,
+            profile: {
+              username: email.split('@')[0],
+              name: ''
+            },
+            playlists: [],
+            songs: []
+          });
+          _context2.next = 12;
+          return newUser.save();
+        case 12:
+          res.status(201).json({
+            message: "User created successfully"
+          });
+        case 13:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2);
+  }));
+  return function (_x3, _x4) {
+    return _ref2.apply(this, arguments);
+  };
+}());
+
+// Fetch songs route
+app.get('/api/songs', /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
+    var songs;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
           _context3.prev = 0;
           _context3.next = 3;
-          return client.connect();
+          return Song.find();
         case 3:
-          console.info("Connected to MongoDB");
-          db = client.db("playit");
-          usersCollection = db.collection("users"); // Login API route
-          app.post('/api/login', /*#__PURE__*/function () {
-            var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
-              var _req$body, email, password, user, isPasswordValid;
-              return _regeneratorRuntime().wrap(function _callee$(_context) {
-                while (1) switch (_context.prev = _context.next) {
-                  case 0:
-                    _req$body = req.body, email = _req$body.email, password = _req$body.password; // Find the user with the provided email
-                    _context.next = 3;
-                    return usersCollection.findOne({
-                      email: email
-                    });
-                  case 3:
-                    user = _context.sent;
-                    if (!user) {
-                      _context.next = 11;
-                      break;
-                    }
-                    _context.next = 7;
-                    return bcrypt.compare(password, user.password);
-                  case 7:
-                    isPasswordValid = _context.sent;
-                    if (isPasswordValid) {
-                      res.status(200).json({
-                        message: "Login successful",
-                        user: {
-                          username: user.profile.username,
-                          name: user.profile.name,
-                          email: user.email,
-                          playlists: user.playlists,
-                          songs: user.songs
-                        }
-                      });
-                    } else {
-                      res.status(401).json({
-                        message: "Invalid email or password"
-                      });
-                    }
-                    _context.next = 12;
-                    break;
-                  case 11:
-                    res.status(401).json({
-                      message: "Invalid email or password"
-                    });
-                  case 12:
-                  case "end":
-                    return _context.stop();
-                }
-              }, _callee);
-            }));
-            return function (_x, _x2) {
-              return _ref.apply(this, arguments);
-            };
-          }());
-
-          // Sign Up API route
-          app.post('/api/signup', /*#__PURE__*/function () {
-            var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-              var _req$body2, email, password, existingUser, hashedPassword, newUser;
-              return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-                while (1) switch (_context2.prev = _context2.next) {
-                  case 0:
-                    _req$body2 = req.body, email = _req$body2.email, password = _req$body2.password; // Check if the user already exists
-                    _context2.next = 3;
-                    return usersCollection.findOne({
-                      email: email
-                    });
-                  case 3:
-                    existingUser = _context2.sent;
-                    if (!existingUser) {
-                      _context2.next = 6;
-                      break;
-                    }
-                    return _context2.abrupt("return", res.status(409).json({
-                      message: "User already exists"
-                    }));
-                  case 6:
-                    _context2.next = 8;
-                    return bcrypt.hash(password, 10);
-                  case 8:
-                    hashedPassword = _context2.sent;
-                    // Create new user object
-                    newUser = {
-                      email: email,
-                      password: hashedPassword,
-                      // Save the hashed password
-                      profile: {
-                        username: email.split('@')[0],
-                        // Use part before '@' as username
-                        name: '',
-                        // Optionally set this to an empty string or prompt for it
-                        picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-                      },
-                      playlists: [],
-                      songs: []
-                    }; // Insert the new user into the database
-                    _context2.next = 12;
-                    return usersCollection.insertOne(newUser);
-                  case 12:
-                    res.status(201).json({
-                      message: "User created successfully"
-                    });
-                  case 13:
-                  case "end":
-                    return _context2.stop();
-                }
-              }, _callee2);
-            }));
-            return function (_x3, _x4) {
-              return _ref2.apply(this, arguments);
-            };
-          }());
-          _context3.next = 13;
+          songs = _context3.sent;
+          // Fetch all songs
+          res.json(songs);
+          _context3.next = 10;
           break;
-        case 10:
-          _context3.prev = 10;
+        case 7:
+          _context3.prev = 7;
           _context3.t0 = _context3["catch"](0);
-          console.error(_context3.t0);
-        case 13:
+          res.status(500).json({
+            error: 'Failed to fetch songs'
+          });
+        case 10:
         case "end":
           return _context3.stop();
       }
-    }, _callee3, null, [[0, 10]]);
+    }, _callee3, null, [[0, 7]]);
   }));
-  return _main.apply(this, arguments);
-}
-main()["catch"](console.error());
+  return function (_x5, _x6) {
+    return _ref3.apply(this, arguments);
+  };
+}());
+
+// Fetch playlists route
+app.get('/api/playlists', /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
+    var playlists;
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.prev = 0;
+          _context4.next = 3;
+          return PlaylistModel.find();
+        case 3:
+          playlists = _context4.sent;
+          // Fetch all playlists
+          res.json(playlists);
+          _context4.next = 10;
+          break;
+        case 7:
+          _context4.prev = 7;
+          _context4.t0 = _context4["catch"](0);
+          res.status(500).json({
+            error: 'Failed to fetch playlists'
+          });
+        case 10:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4, null, [[0, 7]]);
+  }));
+  return function (_x7, _x8) {
+    return _ref4.apply(this, arguments);
+  };
+}());
+
+// Fetch users route
+app.get('/api/users', /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
+    var users;
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.prev = 0;
+          _context5.next = 3;
+          return UserModel.find();
+        case 3:
+          users = _context5.sent;
+          // Fetch all users
+          res.json(users);
+          _context5.next = 10;
+          break;
+        case 7:
+          _context5.prev = 7;
+          _context5.t0 = _context5["catch"](0);
+          res.status(500).json({
+            error: 'Failed to fetch users'
+          });
+        case 10:
+        case "end":
+          return _context5.stop();
+      }
+    }, _callee5, null, [[0, 7]]);
+  }));
+  return function (_x9, _x10) {
+    return _ref5.apply(this, arguments);
+  };
+}());
 
 // Serve index.html for all other routes
 app.get('*', function (req, res) {
@@ -289,6 +701,7 @@ app.get('*', function (req, res) {
 });
 
 // Start the server
-app.listen(3001, function () {
-  console.log("Listening on http://localhost:3001");
+var PORT = process.env.PORT || 3001;
+app.listen(PORT, function () {
+  console.log("Server running on http://localhost:".concat(PORT));
 });

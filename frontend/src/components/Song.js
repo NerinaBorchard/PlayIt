@@ -40,6 +40,46 @@ const styles = {
   },
 };
 
+// class SongComponent extends Component {
+//   render() {
+//     const { name, artist, link, imageUrl } = this.props.song;
+//     const { style } = this.props;
+
+//     return (
+//       <a 
+//         href={link} 
+//         target="_blank" 
+//         rel="noopener noreferrer" 
+//         style={{ textDecoration: 'none' }}>
+//         <div 
+//           style={{ ...styles.card, ...style }}
+//           onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+//           onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
+
+//           {/* Song Cover Image */}
+//           <img 
+//             src={imageUrl} 
+//             alt={name} 
+//             style={styles.image} 
+//           />
+
+//           {/* Song Name */}
+//           <h3 style={styles.songTitle}>
+//             {name}
+//           </h3>
+
+//           {/* Song Artist */}
+//           <p style={styles.artistName}>
+//             {artist}
+//           </p>
+//         </div>
+//       </a>
+//     );
+//   }
+// }
+
+// export default SongComponent;
+
 class SongComponent extends Component {
   render() {
     const { name, artist, link, imageUrl } = this.props.song;
@@ -79,3 +119,4 @@ class SongComponent extends Component {
 }
 
 export default SongComponent;
+

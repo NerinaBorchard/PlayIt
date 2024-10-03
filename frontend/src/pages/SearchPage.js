@@ -138,9 +138,18 @@ class HomePage extends Component {
     return (
       <div style={styles.homePage}>
         <NavBar />
+        <div style={styles.searchBarContainer}>
+          <input
+            type="text"
+            placeholder="Search songs or playlists..."
+            value={searchQuery}
+            onChange={this.handleSearchChange}
+            style={styles.searchBar}
+          />
+        </div>
+
         {/* Songs Section */}
         <section style={styles.section}>
-          <h2 style={styles.sectionHeading}>New Songs</h2>
           <div style={styles.itemList}>
             {mockSongs.map(song => (
               <SongComponent key={song.id} song={song} style={styles.itemComponent} />
@@ -150,7 +159,6 @@ class HomePage extends Component {
 
         {/* Playlists Section */}
         <section style={styles.section}>
-          <h2 style={styles.sectionHeading}>New Playlists</h2>
           <div style={styles.itemList}>
             {mockPlaylists.map(playlist => (
               <PlaylistComponent key={playlist.id} playlist={playlist} style={styles.itemComponent} />
