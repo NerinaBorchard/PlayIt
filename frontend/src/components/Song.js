@@ -82,7 +82,7 @@ const styles = {
 
 class SongComponent extends Component {
   render() {
-    const { name, artist, link, imageUrl } = this.props.song;
+    const { title, artist, link, image } = this.props.song;
     const { style } = this.props;
 
     return (
@@ -98,14 +98,14 @@ class SongComponent extends Component {
 
           {/* Song Cover Image */}
           <img 
-            src={imageUrl} 
-            alt={name} 
+            src={image} 
+            alt={title} 
             style={styles.image} 
           />
 
           {/* Song Name */}
           <h3 style={styles.songTitle}>
-            {name}
+            {title}
           </h3>
 
           {/* Song Artist */}

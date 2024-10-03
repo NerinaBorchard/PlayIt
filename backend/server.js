@@ -498,15 +498,36 @@ app.get('/api/songs', async (req, res) => {
   }
 });
 
+// // Fetch playlists route
+// app.get('/api/playlists', async (req, res) => {
+//   try {
+//     const playlists = await PlaylistModel.find(); // Fetch all playlists
+//     res.json(playlists);
+//   } catch (err) {
+//     res.status(500).json({ error: 'Failed to fetch playlists' });
+//   }
+// });
+
 // Fetch playlists route
 app.get('/api/playlists', async (req, res) => {
-  try {
-    const playlists = await PlaylistModel.find(); // Fetch all playlists
-    res.json(playlists);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch playlists' });
-  }
-});
+    try {
+      let playlists = await PlaylistModel.find()
+        .populate('creator', 'profile.username') // Populate the 'creator' field with the user's 'username'
+        .populate('songs'); // Optionally populate songs as well
+  
+      // Modify playlists to replace the creator field with just the username
+      playlists = playlists.map(playlist => ({
+        ...playlist._doc, // Get the original playlist document
+        creator: playlist.creator.profile.username // Replace creator with the username
+      }));
+  
+      res.json(playlists);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to fetch playlists' });
+    }
+  });
+  
+  
 
 // Fetch users route
 app.get('/api/users', async (req, res) => {
