@@ -8,6 +8,8 @@ class SignInPage extends Component {
         this.state = {
             redirectTo: null,
             showPassword: false,
+            email: '',      // Initialize email state
+            password: '',   // Initialize password state
         };
     }
 
@@ -15,14 +17,14 @@ class SignInPage extends Component {
         this.setState({ redirectTo: '/signup' });
     }
 
-    // handleSignIn = () => {
-    //     this.setState({ redirectTo: '/home' }); // Redirect to dashboard after signing in
-    // }
-
     handleSignIn = async () => {
-        const email = this.state.email; // You can set the email in state when the input changes
-        const password = this.state.password; // Similarly, set the password in state
-    
+        const { email, password } = this.state;
+
+        if (!email || !password) {
+            alert('Please enter both email and password.');
+            return;
+        }
+
         try {
             const response = await fetch('/api/login', {
                 method: 'POST',
@@ -31,25 +33,27 @@ class SignInPage extends Component {
                 },
                 body: JSON.stringify({ email, password }),
             });
-    
+
             if (response.status === 200) {
                 const data = await response.json();
-                // Successful login, redirect to home/dashboard
                 console.log('Login successful:', data.user);
+
+                // Store the token in localStorage
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+
                 this.setState({ redirectTo: '/home' });
             } else {
-                // Handle invalid login credentials
-                console.error('Invalid login credentials');
                 alert('Invalid email or password');
             }
         } catch (error) {
             console.error('Error logging in:', error);
         }
     };
-    
 
     handleForgotPassword = () => {
-        this.setState({ redirectTo: '/forgot-password' }); // Redirect to forgot password page
+        this.setState({ redirectTo: '/forgot-password' });
     }
 
     togglePasswordVisibility = () => {
@@ -58,11 +62,14 @@ class SignInPage extends Component {
         }));
     }
 
+    
+
     render() {
         if (this.state.redirectTo) {
             return <Navigate to={this.state.redirectTo} />;
         }
 
+        
         const styles = {
             container: {
                 display: 'flex',
@@ -164,6 +171,7 @@ class SignInPage extends Component {
             },
             signupText: {
                 marginTop: '15px',
+          
             },
         };
 
@@ -175,11 +183,10 @@ class SignInPage extends Component {
                     <div style={styles.content}>
                         <h1 style={styles.title}>WELCOME BACK</h1>
                         <p style={styles.subtitle}>Enter your email and password to access your account.</p>
-                        
+
                         <div style={styles.formContainer}>
                             <label style={styles.label}>Email</label>
                             <div style={styles.inputContainer}>
-                                {/* <input type="text" placeholder="Email" style={styles.input} /> */}
                                 <input
                                     type="text"
                                     placeholder="Email"
@@ -191,11 +198,6 @@ class SignInPage extends Component {
                             
                             <label style={styles.label}>Password</label>
                             <div style={styles.inputContainer}>
-                                {/* <input
-                                    type={this.state.showPassword ? "text" : "password"}
-                                    placeholder="Password"
-                                    style={styles.input}
-                                /> */}
                                 <input
                                     type={this.state.showPassword ? "text" : "password"}
                                     placeholder="Password"

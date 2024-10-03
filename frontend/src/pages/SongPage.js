@@ -2,88 +2,56 @@ import React, { Component } from 'react';
 import NavBar from '../components/NavBar';
 import SongItem from '../components/SongItem';
 import AddSongForm from '../components/AddSongForm';
+import axios from 'axios';
 
 class Song extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mockSongs: [
-        {
-          id: 1,
-          title: 'Lagos Love Story',
-          artist: 'Ayra Starr',
-          link: 'https://open.spotify.com/album/placeholder1',
-          dateAdded: '2024-09-10',
-          image: 'https://media.pitchfork.com/photos/66561ba1b43d5e61153bccdf/1:1/w_320,c_limit/Ayra-Starr.jpg',
-        },
-        {
-          id: 2,
-          title: 'Away',
-          artist: 'Ayra Starr',
-          link: 'https://open.spotify.com/album/placeholder2',
-          dateAdded: '2024-09-09',
-          image: 'https://t2.genius.com/unsafe/832x0/https%3A%2F%2Fimages.genius.com%2Fd54810c6ddab54f229e85191c1fdae92.1000x1000x1.jpg',
-        },
-        {
-          id: 3,
-          title: 'Last Heartbreak Song',
-          artist: 'Ayra Starr',
-          link: 'https://open.spotify.com/album/placeholder3',
-          dateAdded: '2024-09-08',
-          image: 'https://media.pitchfork.com/photos/66561ba1b43d5e61153bccdf/1:1/w_320,c_limit/Ayra-Starr.jpg',
-        },
-        {
-          id: 4,
-          title: 'Espresso',
-          artist: 'Sabrina Carpenter',
-          link: 'https://open.spotify.com/album/placeholder3',
-          dateAdded: '2024-09-08',
-          image: 'https://t2.genius.com/unsafe/425x425/https%3A%2F%2Fimages.genius.com%2F8e8e92eda3d816065a4272a56b6f5ef6.1000x1000x1.png',
-        },
-        {
-          id: 5,
-          title: 'Taste',
-          artist: 'Sabrina Carpenter',
-          link: 'https://open.spotify.com/album/placeholder3',
-          dateAdded: '2024-09-08',
-          image: 'https://t2.genius.com/unsafe/425x425/https%3A%2F%2Fimages.genius.com%2F6ecbc2e64e62b35ee2fadf8532056f72.1000x1000x1.png',
-        },
-        {
-          id: 6,
-          title: 'Adore U',
-          artist: 'Khalid',
-          link: 'https://open.spotify.com/album/placeholder3',
-          dateAdded: '2024-09-08',
-          image: 'https://t2.genius.com/unsafe/832x0/https%3A%2F%2Fimages.genius.com%2Fe774a7e37cf159eae15804f03323f598.1000x1000x1.png',
-        },
-        {
-          id: 7,
-          title: 'Altitude',
-          artist: 'Khalid',
-          link: 'https://open.spotify.com/album/placeholder3',
-          dateAdded: '2024-09-08',
-          image: 'https://t2.genius.com/unsafe/832x0/https%3A%2F%2Fimages.genius.com%2Fe774a7e37cf159eae15804f03323f598.1000x1000x1.png',
-        },
-        {
-          id: 8,
-          title: 'Heatstroke',
-          artist: 'Khalid',
-          link: 'https://open.spotify.com/album/placeholder3',
-          dateAdded: '2024-09-08',
-          image: 'https://t2.genius.com/unsafe/832x0/https%3A%2F%2Fimages.genius.com%2Fe774a7e37cf159eae15804f03323f598.1000x1000x1.png',
-        },
-      ],
+      songs: [], // Songs from the database
     };
   }
 
-  handleDelete = (id) => {
-    this.setState((prevState) => ({
-      mockSongs: prevState.mockSongs.filter(song => song.id !== id),
-    }));
+  componentDidMount() {
+    this.fetchSongs();
+  }
+
+  fetchSongs = async () => {
+    try {
+      // Retrieve user data from local storage
+      const userData = JSON.parse(localStorage.getItem('user'));
+      const userSongIds = userData?.songs || [];
+
+      // Fetch songs from the database
+      const response = await axios.get('/api/songs');
+      const allSongs = response.data;
+
+      // Filter songs to only include the ones that belong to the user
+      const userSongs = allSongs.filter(song => userSongIds.includes(song._id));
+
+      // Update the state with the filtered songs
+      this.setState({ songs: userSongs });
+    } catch (error) {
+      console.error('Error fetching songs:', error);
+    }
+  };
+
+  handleDelete = async (id) => {
+    try {
+      // Delete song from the backend
+      await axios.delete(`/api/songs/${id}`);
+      
+      // Update state to remove the deleted song
+      this.setState((prevState) => ({
+        songs: prevState.songs.filter(song => song._id !== id),
+      }));
+    } catch (error) {
+      console.error('Error deleting song:', error);
+    }
   };
 
   render() {
-    const { mockSongs } = this.state;
+    const { songs } = this.state;
 
     return (
       <div style={styles.nav}>
@@ -93,11 +61,11 @@ class Song extends Component {
             <div style={styles.songListContainer}>
               <h1>My Songs</h1>
               <div style={styles.songList}>
-                {mockSongs.map(song => (
+                {songs.map(song => (
                   <SongItem
-                    key={song.id}
+                    key={song._id}
                     song={song}
-                    onDelete={() => this.handleDelete(song.id)}
+                    onDelete={() => this.handleDelete(song._id)}
                   />
                 ))}
               </div>
@@ -131,7 +99,7 @@ const styles = {
     padding: '20px',
   },
   songListContainer: {
-    flex: 0.65, 
+    flex: 0.65,
     marginRight: '20px',
     display: 'flex',
     flexDirection: 'column',
@@ -142,39 +110,14 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '10px',
-    maxHeight: 'calc(100vh - 150px)', // Leave space for NavBar and header
+    maxHeight: 'calc(100vh - 150px)',
   },
   formContainer: {
-    flex: 0.35, 
+    flex: 0.35,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     padding: '20px',
-  },
-  form: {
-    padding: '20px',
-    border: '1px solid #ccc',
-    borderRadius: '8px',
-    textAlign: 'center',
-    width: '100%',
-    backgroundColor: '#f9f9f9', 
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)', 
-  },
-  input: {
-    width: '90%',
-    padding: '10px',
-    marginBottom: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-  },
-  button: {
-    padding: '10px',
-    backgroundColor: '#007bff',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    width: '90%', 
   },
 };
 
