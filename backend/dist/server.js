@@ -438,6 +438,67 @@ app.get('/api/user/:userId', /*#__PURE__*/function () {
   };
 }());
 
+// Update user profile route
+app.put('/api/user/:userId', /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
+    var userId, _req$body3, username, name, email, picture, updatedUser;
+    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+      while (1) switch (_context7.prev = _context7.next) {
+        case 0:
+          userId = req.params.userId;
+          _req$body3 = req.body, username = _req$body3.username, name = _req$body3.name, email = _req$body3.email, picture = _req$body3.picture;
+          _context7.prev = 2;
+          _context7.next = 5;
+          return UserModel.findByIdAndUpdate(userId, {
+            profile: {
+              username: username,
+              name: name,
+              picture: picture
+            }
+          }, {
+            "new": true
+          } // Return the updated document
+          );
+        case 5:
+          updatedUser = _context7.sent;
+          if (updatedUser) {
+            _context7.next = 8;
+            break;
+          }
+          return _context7.abrupt("return", res.status(404).json({
+            message: 'User not found'
+          }));
+        case 8:
+          res.json({
+            message: 'User profile updated successfully',
+            user: {
+              id: updatedUser._id,
+              username: updatedUser.profile.username,
+              name: updatedUser.profile.name,
+              email: updatedUser.email,
+              picture: updatedUser.profile.picture
+            }
+          });
+          _context7.next = 15;
+          break;
+        case 11:
+          _context7.prev = 11;
+          _context7.t0 = _context7["catch"](2);
+          console.error('Error updating user:', _context7.t0);
+          res.status(500).json({
+            message: 'Failed to update user profile'
+          });
+        case 15:
+        case "end":
+          return _context7.stop();
+      }
+    }, _callee7, null, [[2, 11]]);
+  }));
+  return function (_x13, _x14) {
+    return _ref7.apply(this, arguments);
+  };
+}());
+
 // Serve index.html for all other routes
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '../../frontend/public', 'index.html'));

@@ -195,6 +195,47 @@ app.get('/api/user/:userId', async (req, res) => {
 });
 
 
+// Update user profile route
+app.put('/api/user/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { username, name, email, picture } = req.body;
+
+  try {
+    // Find the user and update their profile
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      { 
+        profile: { 
+          username, 
+          name, 
+          picture 
+        } 
+      },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      message: 'User profile updated successfully',
+      user: {
+        id: updatedUser._id,
+        username: updatedUser.profile.username,
+        name: updatedUser.profile.name,
+        email: updatedUser.email,
+        picture: updatedUser.profile.picture,
+      },
+    });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ message: 'Failed to update user profile' });
+  }
+});
+
+
+
 // Serve index.html for all other routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/public', 'index.html'));

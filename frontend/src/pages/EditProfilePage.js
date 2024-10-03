@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 
 class EditProfilePage extends Component {
   constructor(props) {
@@ -50,13 +51,40 @@ class EditProfilePage extends Component {
     }
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Profile updated successfully!');
-    // Here you can implement saving the profile data (e.g., sending it to the server)
+    const userData = JSON.parse(localStorage.getItem('user'));
+    const userId = userData?.id; // Assuming userData contains the user's ID
+
+    try {
+      // Send the updated user profile to the API
+      const response = await axios.put(`/api/user/${userId}`, {
+        username: this.state.user.username,
+        name: this.state.user.name,
+        email: this.state.user.email,
+        picture: this.state.profilePicture, // Send the new profile picture if changed
+      });
+
+      alert(response.data.message); // Show success message
+
+      // Update local storage with the new user data
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      // Redirect to the profile page if successful
+      this.setState({ redirectTo: '/profile' });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      alert('Failed to update profile');
+    }
   };
+  
 
   render() {
+
+    if (this.state.redirectTo) {
+      return <Navigate to={this.state.redirectTo} />;
+  }
+  
     return (
       <div style={styles.container}>
         <div style={styles.editContainer}>
