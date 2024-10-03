@@ -76,6 +76,9 @@ const UserModel = mongoose.model('User', userSchema);
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+// API Routes
+
+// Login route
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
   const user = await UserModel.findOne({ email });
@@ -88,6 +91,7 @@ app.post('/api/login', async (req, res) => {
       message: "Login successful",
       token, // Send the token to the client
       user: {
+        id: user._id,
         username: user.profile.username,
         name: user.profile.name,
         email: user.email,
@@ -99,20 +103,6 @@ app.post('/api/login', async (req, res) => {
     res.status(401).json({ message: "Invalid email or password" });
   }
 });
-
-const authenticateToken = (req, res, next) => {
-  const token = req.headers['authorization'];
-
-  if (!token) return res.status(401).json({ message: 'Access Denied' });
-
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: 'Invalid Token' });
-
-    req.user = user; // Attach the user to the request object
-    next(); // Move to the next middleware/route
-  });
-};
-
 
 // Signup route
 app.post('/api/signup', async (req, res) => {
@@ -139,7 +129,7 @@ app.post('/api/signup', async (req, res) => {
   res.status(201).json({ message: "User created successfully" });
 });
 
-// Fetch songs route
+// Fetch all songs route (no authentication)
 app.get('/api/songs', async (req, res) => {
   try {
     const songs = await Song.find(); // Fetch all songs
@@ -149,27 +139,27 @@ app.get('/api/songs', async (req, res) => {
   }
 });
 
+// Fetch all playlists route (no authentication)
 app.get('/api/playlists', async (req, res) => {
-    try {
-      let playlists = await PlaylistModel.find()
-        .populate('creator', 'profile.username') // Populate the 'creator' field with the user's 'username'
-        .populate('songs'); // Optionally populate songs as well
-  
-      // Modify playlists to replace the creator field with just the username
-      playlists = playlists.map(playlist => ({
-        ...playlist._doc, // Get the original playlist document
-        creator: playlist.creator.profile.username // Replace creator with the username
-      }));
-  
-      res.json(playlists);
-    } catch (err) {
-      res.status(500).json({ error: 'Failed to fetch playlists' });
-    }
-  });
-  
-  
+  try {
+    let playlists = await PlaylistModel.find()
+      .populate('creator', 'profile.username') // Populate the 'creator' field with the user's 'username'
+      .populate('songs'); // Optionally populate songs as well
 
-// Fetch users route
+    // Modify playlists to replace the creator field with just the username
+    playlists = playlists.map(playlist => ({
+      ...playlist._doc, // Get the original playlist document
+      creator: playlist.creator.profile.username // Replace creator with the username
+    }));
+
+    res.json(playlists);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch playlists' });
+  }
+});
+
+
+// Fetch all users route (no authentication)
 app.get('/api/users', async (req, res) => {
   try {
     const users = await UserModel.find(); // Fetch all users
@@ -178,6 +168,32 @@ app.get('/api/users', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch users' });
   }
 });
+
+// Fetch user profile by ID route
+app.get('/api/user/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId; // Get userId from request parameters
+    const user = await UserModel.findById(userId).populate('playlists').populate('songs'); // Fetch user by ID
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' }); // Handle case when user is not found
+    }
+
+    // Send back the user details (excluding password for security)
+    res.json({
+      id: user._id,
+      username: user.profile.username,
+      name: user.profile.name,
+      email: user.email,
+      playlists: user.playlists,
+      songs: user.songs,
+      picture: user.profile.picture
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch user profile' }); // Handle server errors
+  }
+});
+
 
 // Serve index.html for all other routes
 app.get('*', (req, res) => {
@@ -189,4 +205,5 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
 

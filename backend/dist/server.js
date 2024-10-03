@@ -159,6 +159,10 @@ var UserModel = mongoose.model('User', userSchema);
 // API Routes
 
 var JWT_SECRET = process.env.JWT_SECRET;
+
+// API Routes
+
+// Login route
 app.post('/api/login', /*#__PURE__*/function () {
   var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
     var _req$body, email, password, user, token;
@@ -198,6 +202,7 @@ app.post('/api/login', /*#__PURE__*/function () {
             token: token,
             // Send the token to the client
             user: {
+              id: user._id,
               username: user.profile.username,
               name: user.profile.name,
               email: user.email,
@@ -221,19 +226,6 @@ app.post('/api/login', /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
-var authenticateToken = function authenticateToken(req, res, next) {
-  var token = req.headers['authorization'];
-  if (!token) return res.status(401).json({
-    message: 'Access Denied'
-  });
-  jwt.verify(token, JWT_SECRET, function (err, user) {
-    if (err) return res.status(403).json({
-      message: 'Invalid Token'
-    });
-    req.user = user; // Attach the user to the request object
-    next(); // Move to the next middleware/route
-  });
-};
 
 // Signup route
 app.post('/api/signup', /*#__PURE__*/function () {
@@ -288,7 +280,7 @@ app.post('/api/signup', /*#__PURE__*/function () {
   };
 }());
 
-// Fetch songs route
+// Fetch all songs route (no authentication)
 app.get('/api/songs', /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
     var songs;
@@ -320,6 +312,8 @@ app.get('/api/songs', /*#__PURE__*/function () {
     return _ref3.apply(this, arguments);
   };
 }());
+
+// Fetch all playlists route (no authentication)
 app.get('/api/playlists', /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
     var playlists;
@@ -361,7 +355,7 @@ app.get('/api/playlists', /*#__PURE__*/function () {
   };
 }());
 
-// Fetch users route
+// Fetch all users route (no authentication)
 app.get('/api/users', /*#__PURE__*/function () {
   var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
     var users;
@@ -391,6 +385,56 @@ app.get('/api/users', /*#__PURE__*/function () {
   }));
   return function (_x9, _x10) {
     return _ref5.apply(this, arguments);
+  };
+}());
+
+// Fetch user profile by ID route
+app.get('/api/user/:userId', /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
+    var userId, user;
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.prev = 0;
+          userId = req.params.userId; // Get userId from request parameters
+          _context6.next = 4;
+          return UserModel.findById(userId).populate('playlists').populate('songs');
+        case 4:
+          user = _context6.sent;
+          if (user) {
+            _context6.next = 7;
+            break;
+          }
+          return _context6.abrupt("return", res.status(404).json({
+            message: 'User not found'
+          }));
+        case 7:
+          // Send back the user details (excluding password for security)
+          res.json({
+            id: user._id,
+            username: user.profile.username,
+            name: user.profile.name,
+            email: user.email,
+            playlists: user.playlists,
+            songs: user.songs,
+            picture: user.profile.picture
+          });
+          _context6.next = 13;
+          break;
+        case 10:
+          _context6.prev = 10;
+          _context6.t0 = _context6["catch"](0);
+          res.status(500).json({
+            error: 'Failed to fetch user profile'
+          }); // Handle server errors
+        case 13:
+        case "end":
+          return _context6.stop();
+      }
+    }, _callee6, null, [[0, 10]]);
+  }));
+  return function (_x11, _x12) {
+    return _ref6.apply(this, arguments);
   };
 }());
 

@@ -1,12 +1,43 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 class EditProfilePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profilePicture: 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/4935eafa-878e-43fd-a1dd-4234943bedec/dcr6m3m-73080ad4-bf39-405b-9697-2b812f5632a7.jpg/v1/fill/w_1024,h_768,q_75,strp/cool_nature_background_by_sugar__spice_dcr6m3m-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzY4IiwicGF0aCI6IlwvZlwvNDkzNWVhZmEtODc4ZS00M2ZkLWExZGQtNDIzNDk0M2JlZGVjXC9kY3I2bTNtLTczMDgwYWQ0LWJmMzktNDA1Yi05Njk3LTJiODEyZjU2MzJhNy5qcGciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.oOvZXX_5pUU6yENdBCN1VaRZvWq88R4fL41sdfrSRJw', // Default profile picture
+      profilePicture: 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/4935eafa-878e-43fd-a1dd-4234943bedec/dcr6m3m-73080ad4-bf39-405b-9697-2b812f5632a7.jpg/v1/fill/w_1024,h_768,q_75,strp/cool_nature_background_by_sugar__spice_dcr6m3m-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzY4IiwicGF0aCI6IlwvZlwvNDkzNWVhZmEtODc4ZS00M2ZkLWExZGQtNDIzNDk0M2JlZGVjXC9kY3I2bTNtLTczMDgwYWQ0LWJmMzktNDA1Yi05Njk3LTJiODEyZjU2MzJhNy5qcGciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.oOvZXX_5pUU6yENdBCN1VaRZvWq88R4fL41sdfrSRJw',
+      user: {
+        username: '',
+        name: '',
+        email: '',
+      },
     };
   }
+
+  componentDidMount() {
+    this.fetchUserDetails();
+  }
+
+  fetchUserDetails = async () => {
+    try {
+      // Retrieve user data from local storage
+      const userData = JSON.parse(localStorage.getItem('user'));
+      const userId = userData?.id; // Assuming userData contains the user's ID
+
+      // Fetch user details from the API
+      const response = await axios.get(`/api/user/${userId}`);
+      console.log('User details:', userId);
+      const userDetails = response.data;
+
+      // Update the state with user details
+      this.setState({ 
+        user: userDetails,
+        profilePicture: userDetails.profilePicture || this.state.profilePicture // Optional: Use the fetched profile picture if available
+      });
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+    }
+  };
 
   handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -53,15 +84,30 @@ class EditProfilePage extends Component {
           <form onSubmit={this.handleSubmit} style={styles.form}>
             <label style={styles.label}>
               Username:
-              <input type="text" defaultValue="yourusername" style={styles.input} />
+              <input
+                type="text"
+                value={this.state.user.username}
+                onChange={(e) => this.setState({ user: { ...this.state.user, username: e.target.value } })}
+                style={styles.input}
+              />
             </label>
             <label style={styles.label}>
               Name:
-              <input type="text" defaultValue="Your Name" style={styles.input} />
+              <input
+                type="text"
+                value={this.state.user.name}
+                onChange={(e) => this.setState({ user: { ...this.state.user, name: e.target.value } })}
+                style={styles.input}
+              />
             </label>
             <label style={styles.label}>
               Email:
-              <input type="email" defaultValue="your.email@example.com" style={styles.input} />
+              <input
+                type="email"
+                value={this.state.user.email}
+                onChange={(e) => this.setState({ user: { ...this.state.user, email: e.target.value } })}
+                style={styles.input}
+              />
             </label>
             <button type="submit" style={styles.saveButton}>Save Changes</button>
           </form>
@@ -109,14 +155,15 @@ const styles = {
     border: '2px solid #ddd',
   },
   changePicButton: {
-    padding: '10px 20px',
-    backgroundColor: '#ddd',
-    color: '#333',
+    padding: '12px 24px',
+    background: 'linear-gradient(90deg, rgba(255,3,3,1) 0%, rgba(222,69,31,1) 35%, rgba(255,175,0,1) 100%)',
+    color: '#fff',
     border: 'none',
     cursor: 'pointer',
     borderRadius: '5px',
-    fontSize: '14px',
-    marginBottom: '10px',
+    fontSize: '16px',
+    marginTop: '10px',
+    transition: 'background-color 0.3s ease',
   },
   changePicInput: {
     display: 'none',
