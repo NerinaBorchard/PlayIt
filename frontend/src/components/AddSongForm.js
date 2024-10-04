@@ -16,13 +16,91 @@ class SongForm extends Component {
     this.setState({ [name]: value });
   };
 
-  handleSubmit = (e) => {
+  // handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const { title, artist, coverUrl, songLink } = this.state;
+  //   // Handle form submission logic here
+  //   console.log({ title, artist, coverUrl, songLink });
+  // };
+
+  // handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const { title, artist, coverUrl, songLink } = this.state;
+  
+  //   // Assuming you have the user's ID stored in local storage or context
+  //   // const creatorId = localStorage.getItem('userId'); // Change this as necessary
+  //   const userData = JSON.parse(localStorage.getItem('user'));
+  //   const creatorId = userData?.id;
+  
+  //   try {
+  //     const response = await fetch('/api/songs', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ title, artist, songLink, coverUrl, creator: creatorId }),
+  //     });
+  
+  //     if (!response.ok) {
+  //       throw new Error('Failed to add song');
+  //     }
+  
+  //     const data = await response.json();
+  //     console.log('New song added:', data);
+  //     // Optionally reset the form or handle success state
+  //     this.setState({ title: '', artist: '', coverUrl: '', songLink: '' });
+  //   } catch (error) {
+  //     console.error('Error adding song:', error);
+  //     // Optionally display an error message to the user
+  //   }
+  // };
+
+  handleSubmit = async (e) => {
     e.preventDefault();
     const { title, artist, coverUrl, songLink } = this.state;
-    // Handle form submission logic here
-    console.log({ title, artist, coverUrl, songLink });
+    const userData = JSON.parse(localStorage.getItem('user'));
+    const creatorId = userData?.id;
+  
+    try {
+      // First API call to add the song
+      const response = await fetch('/api/songs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, artist, songLink, coverUrl, creator: creatorId }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to add song');
+      }
+  
+      const data = await response.json();
+      console.log('New song added:', data);
+  
+      // Second API call to update the creator's song list
+      // const updateResponse = await fetch(`/api/users/${creatorId}/songs`, {
+      //   method: 'PUT',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ songId: data._id }), // Pass the new song's ID
+      // });
+  
+      // if (!updateResponse.ok) {
+      //   throw new Error('Failed to update user\'s song list');
+      // }
+  
+      // console.log('User song list updated');
+      
+      // Optionally reset the form or handle success state
+      this.setState({ title: '', artist: '', coverUrl: '', songLink: '' });
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
-
+  
+  
   render() {
     const { title, artist, coverUrl, songLink } = this.state;
 

@@ -139,6 +139,85 @@ app.get('/api/songs', async (req, res) => {
   }
 });
 
+// Add new song route
+app.post('/api/songs', async (req, res) => {
+  const { title, artist, songLink, coverUrl, creator } = req.body;
+
+  try {
+    const newSong = new Song({
+      title,
+      artist,
+      link: songLink,
+      image: coverUrl,
+      creator, // Assuming you pass the creator's ID from the frontend
+    });
+
+    const savedSong = await newSong.save(); // Save the new song to the database
+    res.status(201).json(savedSong); // Return the saved song details
+  } catch (err) {
+    console.error('Error adding song:', err);
+    res.status(500).json({ message: 'Failed to add new song.' });
+  }
+});
+
+app.post('/api/songs', async (req, res) => {
+  const { title, artist, songLink, coverUrl, creator } = req.body;
+
+  try {
+    // Create and save the new song
+    const newSong = new Song({
+      title,
+      artist,
+      link: songLink,
+      image: coverUrl,
+      creator,
+    });
+
+    const savedSong = await newSong.save(); // Save the song to the database
+
+    // Find the user by the creator's ID and update their songs list
+    await UserModel.findByIdAndUpdate(
+      creator,
+      { $push: { songs: savedSong._id } }, // Add the song ID to the user's songs array
+      { new: true } // Return the updated document
+    );
+
+    res.status(201).json(savedSong); // Return the saved song details
+  } catch (err) {
+    console.error('Error adding song:', err);
+    res.status(500).json({ message: 'Failed to add new song.' });
+  }
+});
+
+
+
+// // Update user's song list API route
+// app.put('/api/users/:userId/songs', async (req, res) => {
+//   const { userId } = req.params;
+//   const { songId } = req.body; // Get the song ID from the request body
+
+//   try {
+//     // Find the user by ID and update their song list
+//     const updatedUser = await User.findByIdAndUpdate(
+//       userId,
+//       { $push: { songs: songId } }, // Push the new song ID into the user's songs array
+//       { new: true } // Return the updated user document
+//     );
+
+//     if (!updatedUser) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     res.status(200).json(updatedUser); // Return the updated user details
+//   } catch (err) {
+//     console.error('Error updating user song list:', err);
+//     res.status(500).json({ message: 'Failed to update user\'s song list' });
+//   }
+// });
+
+
+
+
 // Fetch all playlists route (no authentication)
 app.get('/api/playlists', async (req, res) => {
   try {
