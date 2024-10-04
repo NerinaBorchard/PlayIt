@@ -407,6 +407,57 @@ app.post('/api/songs', /*#__PURE__*/function () {
   };
 }());
 
+// Delete a song by ID
+app["delete"]('/api/songs/:id', /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
+    var songId, deletedSong;
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
+        case 0:
+          songId = req.params.id;
+          _context6.prev = 1;
+          _context6.next = 4;
+          return Song.findByIdAndDelete(songId);
+        case 4:
+          _context6.next = 6;
+          return Song.findByIdAndDelete(songId);
+        case 6:
+          deletedSong = _context6.sent;
+          if (deletedSong) {
+            _context6.next = 9;
+            break;
+          }
+          return _context6.abrupt("return", res.status(404).json({
+            message: 'Song not found'
+          }));
+        case 9:
+          // Optionally, you can also update the user's song list if needed.
+          // const userId = deletedSong.creator;
+          // await User.findByIdAndUpdate(userId, { $pull: { songs: songId } });
+
+          res.status(200).json({
+            message: 'Song deleted successfully'
+          });
+          _context6.next = 16;
+          break;
+        case 12:
+          _context6.prev = 12;
+          _context6.t0 = _context6["catch"](1);
+          console.error('Error deleting song:', _context6.t0);
+          res.status(500).json({
+            message: 'Failed to delete song'
+          });
+        case 16:
+        case "end":
+          return _context6.stop();
+      }
+    }, _callee6, null, [[1, 12]]);
+  }));
+  return function (_x11, _x12) {
+    return _ref6.apply(this, arguments);
+  };
+}());
+
 // // Update user's song list API route
 // app.put('/api/users/:userId/songs', async (req, res) => {
 //   const { userId } = req.params;
@@ -433,17 +484,17 @@ app.post('/api/songs', /*#__PURE__*/function () {
 
 // Fetch all playlists route (no authentication)
 app.get('/api/playlists', /*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
+  var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
     var playlists;
-    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-      while (1) switch (_context6.prev = _context6.next) {
+    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+      while (1) switch (_context7.prev = _context7.next) {
         case 0:
-          _context6.prev = 0;
-          _context6.next = 3;
+          _context7.prev = 0;
+          _context7.next = 3;
           return PlaylistModel.find().populate('creator', 'profile.username') // Populate the 'creator' field with the user's 'username'
           .populate('songs');
         case 3:
-          playlists = _context6.sent;
+          playlists = _context7.sent;
           // Optionally populate songs as well
 
           // Modify playlists to replace the creator field with just the username
@@ -454,76 +505,76 @@ app.get('/api/playlists', /*#__PURE__*/function () {
             });
           });
           res.json(playlists);
-          _context6.next = 11;
+          _context7.next = 11;
           break;
         case 8:
-          _context6.prev = 8;
-          _context6.t0 = _context6["catch"](0);
+          _context7.prev = 8;
+          _context7.t0 = _context7["catch"](0);
           res.status(500).json({
             error: 'Failed to fetch playlists'
           });
         case 11:
         case "end":
-          return _context6.stop();
-      }
-    }, _callee6, null, [[0, 8]]);
-  }));
-  return function (_x11, _x12) {
-    return _ref6.apply(this, arguments);
-  };
-}());
-
-// Fetch all users route (no authentication)
-app.get('/api/users', /*#__PURE__*/function () {
-  var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
-    var users;
-    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-      while (1) switch (_context7.prev = _context7.next) {
-        case 0:
-          _context7.prev = 0;
-          _context7.next = 3;
-          return UserModel.find();
-        case 3:
-          users = _context7.sent;
-          // Fetch all users
-          res.json(users);
-          _context7.next = 10;
-          break;
-        case 7:
-          _context7.prev = 7;
-          _context7.t0 = _context7["catch"](0);
-          res.status(500).json({
-            error: 'Failed to fetch users'
-          });
-        case 10:
-        case "end":
           return _context7.stop();
       }
-    }, _callee7, null, [[0, 7]]);
+    }, _callee7, null, [[0, 8]]);
   }));
   return function (_x13, _x14) {
     return _ref7.apply(this, arguments);
   };
 }());
 
-// Fetch user profile by ID route
-app.get('/api/user/:userId', /*#__PURE__*/function () {
+// Fetch all users route (no authentication)
+app.get('/api/users', /*#__PURE__*/function () {
   var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
-    var userId, user;
+    var users;
     return _regeneratorRuntime().wrap(function _callee8$(_context8) {
       while (1) switch (_context8.prev = _context8.next) {
         case 0:
           _context8.prev = 0;
+          _context8.next = 3;
+          return UserModel.find();
+        case 3:
+          users = _context8.sent;
+          // Fetch all users
+          res.json(users);
+          _context8.next = 10;
+          break;
+        case 7:
+          _context8.prev = 7;
+          _context8.t0 = _context8["catch"](0);
+          res.status(500).json({
+            error: 'Failed to fetch users'
+          });
+        case 10:
+        case "end":
+          return _context8.stop();
+      }
+    }, _callee8, null, [[0, 7]]);
+  }));
+  return function (_x15, _x16) {
+    return _ref8.apply(this, arguments);
+  };
+}());
+
+// Fetch user profile by ID route
+app.get('/api/user/:userId', /*#__PURE__*/function () {
+  var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
+    var userId, user;
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+      while (1) switch (_context9.prev = _context9.next) {
+        case 0:
+          _context9.prev = 0;
           userId = req.params.userId; // Get userId from request parameters
-          _context8.next = 4;
+          _context9.next = 4;
           return UserModel.findById(userId).populate('playlists').populate('songs');
         case 4:
-          user = _context8.sent;
+          user = _context9.sent;
           if (user) {
-            _context8.next = 7;
+            _context9.next = 7;
             break;
           }
-          return _context8.abrupt("return", res.status(404).json({
+          return _context9.abrupt("return", res.status(404).json({
             message: 'User not found'
           }));
         case 7:
@@ -537,36 +588,36 @@ app.get('/api/user/:userId', /*#__PURE__*/function () {
             songs: user.songs,
             picture: user.profile.picture
           });
-          _context8.next = 13;
+          _context9.next = 13;
           break;
         case 10:
-          _context8.prev = 10;
-          _context8.t0 = _context8["catch"](0);
+          _context9.prev = 10;
+          _context9.t0 = _context9["catch"](0);
           res.status(500).json({
             error: 'Failed to fetch user profile'
           }); // Handle server errors
         case 13:
         case "end":
-          return _context8.stop();
+          return _context9.stop();
       }
-    }, _callee8, null, [[0, 10]]);
+    }, _callee9, null, [[0, 10]]);
   }));
-  return function (_x15, _x16) {
-    return _ref8.apply(this, arguments);
+  return function (_x17, _x18) {
+    return _ref9.apply(this, arguments);
   };
 }());
 
 // Update user profile route
 app.put('/api/user/:userId', /*#__PURE__*/function () {
-  var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
+  var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
     var userId, _req$body5, username, name, email, picture, updatedUser;
-    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-      while (1) switch (_context9.prev = _context9.next) {
+    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+      while (1) switch (_context10.prev = _context10.next) {
         case 0:
           userId = req.params.userId;
           _req$body5 = req.body, username = _req$body5.username, name = _req$body5.name, email = _req$body5.email, picture = _req$body5.picture;
-          _context9.prev = 2;
-          _context9.next = 5;
+          _context10.prev = 2;
+          _context10.next = 5;
           return UserModel.findByIdAndUpdate(userId, {
             profile: {
               username: username,
@@ -578,12 +629,12 @@ app.put('/api/user/:userId', /*#__PURE__*/function () {
           } // Return the updated document
           );
         case 5:
-          updatedUser = _context9.sent;
+          updatedUser = _context10.sent;
           if (updatedUser) {
-            _context9.next = 8;
+            _context10.next = 8;
             break;
           }
-          return _context9.abrupt("return", res.status(404).json({
+          return _context10.abrupt("return", res.status(404).json({
             message: 'User not found'
           }));
         case 8:
@@ -597,44 +648,44 @@ app.put('/api/user/:userId', /*#__PURE__*/function () {
               picture: updatedUser.profile.picture
             }
           });
-          _context9.next = 15;
+          _context10.next = 15;
           break;
         case 11:
-          _context9.prev = 11;
-          _context9.t0 = _context9["catch"](2);
-          console.error('Error updating user:', _context9.t0);
+          _context10.prev = 11;
+          _context10.t0 = _context10["catch"](2);
+          console.error('Error updating user:', _context10.t0);
           res.status(500).json({
             message: 'Failed to update user profile'
           });
         case 15:
         case "end":
-          return _context9.stop();
+          return _context10.stop();
       }
-    }, _callee9, null, [[2, 11]]);
+    }, _callee10, null, [[2, 11]]);
   }));
-  return function (_x17, _x18) {
-    return _ref9.apply(this, arguments);
+  return function (_x19, _x20) {
+    return _ref10.apply(this, arguments);
   };
 }());
 
 // Delete user profile
 app["delete"]('/api/user/:id', /*#__PURE__*/function () {
-  var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
+  var _ref11 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(req, res) {
     var userId;
-    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
-      while (1) switch (_context10.prev = _context10.next) {
+    return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+      while (1) switch (_context11.prev = _context11.next) {
         case 0:
           userId = req.params.id;
-          _context10.prev = 1;
-          _context10.next = 4;
+          _context11.prev = 1;
+          _context11.next = 4;
           return UserModel.findByIdAndDelete(userId);
         case 4:
-          _context10.next = 6;
+          _context11.next = 6;
           return Song.deleteMany({
             creator: userId
           });
         case 6:
-          _context10.next = 8;
+          _context11.next = 8;
           return PlaylistModel.deleteMany({
             creator: userId
           });
@@ -642,23 +693,23 @@ app["delete"]('/api/user/:id', /*#__PURE__*/function () {
           res.status(200).json({
             message: "User profile deleted successfully."
           });
-          _context10.next = 15;
+          _context11.next = 15;
           break;
         case 11:
-          _context10.prev = 11;
-          _context10.t0 = _context10["catch"](1);
-          console.error('Error deleting user profile:', _context10.t0);
+          _context11.prev = 11;
+          _context11.t0 = _context11["catch"](1);
+          console.error('Error deleting user profile:', _context11.t0);
           res.status(500).json({
             message: "Failed to delete user profile."
           });
         case 15:
         case "end":
-          return _context10.stop();
+          return _context11.stop();
       }
-    }, _callee10, null, [[1, 11]]);
+    }, _callee11, null, [[1, 11]]);
   }));
-  return function (_x19, _x20) {
-    return _ref10.apply(this, arguments);
+  return function (_x21, _x22) {
+    return _ref11.apply(this, arguments);
   };
 }());
 

@@ -190,6 +190,33 @@ app.post('/api/songs', async (req, res) => {
 });
 
 
+// Delete a song by ID
+app.delete('/api/songs/:id', async (req, res) => {
+  const songId = req.params.id;
+
+  try {
+    // Find the song by ID and remove it
+    await Song.findByIdAndDelete(songId);
+    
+    const deletedSong = await Song.findByIdAndDelete(songId);
+
+    if (!deletedSong) {
+      return res.status(404).json({ message: 'Song not found' });
+    }
+
+    // Optionally, you can also update the user's song list if needed.
+    // const userId = deletedSong.creator;
+    // await User.findByIdAndUpdate(userId, { $pull: { songs: songId } });
+
+    res.status(200).json({ message: 'Song deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting song:', error);
+    res.status(500).json({ message: 'Failed to delete song' });
+  }
+});
+
+
+
 
 // // Update user's song list API route
 // app.put('/api/users/:userId/songs', async (req, res) => {
