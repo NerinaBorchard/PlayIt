@@ -499,6 +499,51 @@ app.put('/api/user/:userId', /*#__PURE__*/function () {
   };
 }());
 
+// Delete user profile
+app["delete"]('/api/user/:id', /*#__PURE__*/function () {
+  var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
+    var userId;
+    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+      while (1) switch (_context8.prev = _context8.next) {
+        case 0:
+          userId = req.params.id;
+          _context8.prev = 1;
+          _context8.next = 4;
+          return UserModel.findByIdAndDelete(userId);
+        case 4:
+          _context8.next = 6;
+          return Song.deleteMany({
+            creator: userId
+          });
+        case 6:
+          _context8.next = 8;
+          return PlaylistModel.deleteMany({
+            creator: userId
+          });
+        case 8:
+          res.status(200).json({
+            message: "User profile deleted successfully."
+          });
+          _context8.next = 15;
+          break;
+        case 11:
+          _context8.prev = 11;
+          _context8.t0 = _context8["catch"](1);
+          console.error('Error deleting user profile:', _context8.t0);
+          res.status(500).json({
+            message: "Failed to delete user profile."
+          });
+        case 15:
+        case "end":
+          return _context8.stop();
+      }
+    }, _callee8, null, [[1, 11]]);
+  }));
+  return function (_x15, _x16) {
+    return _ref8.apply(this, arguments);
+  };
+}());
+
 // Serve index.html for all other routes
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '../../frontend/public', 'index.html'));

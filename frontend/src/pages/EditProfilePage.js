@@ -12,6 +12,7 @@ class EditProfilePage extends Component {
         name: '',
         email: '',
       },
+      redirectTo: null, // Added to handle redirect after deletion
     };
   }
 
@@ -21,19 +22,15 @@ class EditProfilePage extends Component {
 
   fetchUserDetails = async () => {
     try {
-      // Retrieve user data from local storage
       const userData = JSON.parse(localStorage.getItem('user'));
-      const userId = userData?.id; // Assuming userData contains the user's ID
+      const userId = userData?.id;
 
-      // Fetch user details from the API
       const response = await axios.get(`/api/user/${userId}`);
-      console.log('User details:', userId);
       const userDetails = response.data;
 
-      // Update the state with user details
       this.setState({ 
         user: userDetails,
-        profilePicture: userDetails.profilePicture || this.state.profilePicture // Optional: Use the fetched profile picture if available
+        profilePicture: userDetails.profilePicture || this.state.profilePicture 
       });
     } catch (error) {
       console.error('Error fetching user details:', error);
@@ -54,43 +51,56 @@ class EditProfilePage extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const userData = JSON.parse(localStorage.getItem('user'));
-    const userId = userData?.id; // Assuming userData contains the user's ID
+    const userId = userData?.id;
 
     try {
-      // Send the updated user profile to the API
       const response = await axios.put(`/api/user/${userId}`, {
         username: this.state.user.username,
         name: this.state.user.name,
         email: this.state.user.email,
-        picture: this.state.profilePicture, // Send the new profile picture if changed
+        picture: this.state.profilePicture,
       });
 
-      alert(response.data.message); // Show success message
-
-      // Update local storage with the new user data
+      alert(response.data.message);
       localStorage.setItem('user', JSON.stringify(response.data.user));
-
-      // Redirect to the profile page if successful
       this.setState({ redirectTo: '/profile' });
     } catch (error) {
       console.error('Error updating profile:', error);
       alert('Failed to update profile');
     }
   };
-  
+
+  // New method to handle deleting the profile
+  handleDeleteProfile = async () => {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    const userId = userData?.id;
+    console.log('Deleting profile:', userId);
+
+    if (window.confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
+      try {
+        await axios.delete(`/api/user/${userId}`);
+        alert('Profile deleted successfully');
+        
+        // Clear user data from local storage and redirect
+        localStorage.removeItem('user');
+        this.setState({ redirectTo: '/' }); // Redirect to home or login page
+      } catch (error) {
+        console.error('Error deleting profile:', error);
+        alert('Failed to delete profile');
+      }
+    }
+  };
 
   render() {
-
     if (this.state.redirectTo) {
       return <Navigate to={this.state.redirectTo} />;
-  }
+    }
   
     return (
       <div style={styles.container}>
         <div style={styles.editContainer}>
           <h1 style={styles.title}>Edit Profile</h1>
 
-          {/* Change Profile Picture Section */}
           <div style={styles.profilePictureContainer}>
             <img
               src={this.state.profilePicture}
@@ -139,6 +149,11 @@ class EditProfilePage extends Component {
             </label>
             <button type="submit" style={styles.saveButton}>Save Changes</button>
           </form>
+
+          {/* Delete Profile Button */}
+          <button onClick={this.handleDeleteProfile} style={styles.deleteButton}>
+            Delete Profile
+          </button>
         </div>
       </div>
     );
@@ -224,6 +239,17 @@ const styles = {
     fontSize: '16px',
     width: '50%',
     alignSelf: 'center',
+  },
+  deleteButton: {
+    padding: '12px 24px',
+    background: 'linear-gradient(90deg, rgba(223,8,8,1) 0%, rgba(218,83,20,1) 100%)',
+    color: '#fff',
+    border: 'none',
+    cursor: 'pointer',
+    borderRadius: '5px',
+    fontSize: '16px',
+    marginTop: '20px',
+    transition: 'background-color 0.3s ease',
   },
 };
 

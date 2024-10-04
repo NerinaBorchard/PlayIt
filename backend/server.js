@@ -234,6 +234,24 @@ app.put('/api/user/:userId', async (req, res) => {
   }
 });
 
+// Delete user profile
+app.delete('/api/user/:id', async (req, res) => {
+  const userId = req.params.id;
+  
+  try {
+    // Remove the user from the database
+    await UserModel.findByIdAndDelete(userId);
+    
+    // Optionally, you could also delete related data like songs and playlists here
+    await Song.deleteMany({ creator: userId });
+    await PlaylistModel.deleteMany({ creator: userId });
+
+    res.status(200).json({ message: "User profile deleted successfully." });
+  } catch (error) {
+    console.error('Error deleting user profile:', error);
+    res.status(500).json({ message: "Failed to delete user profile." });
+  }
+});
 
 
 // Serve index.html for all other routes
