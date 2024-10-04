@@ -258,7 +258,7 @@ app.post('/api/signup', /*#__PURE__*/function () {
             password: hashedPassword,
             profile: {
               username: email.split('@')[0],
-              name: ''
+              name: email.split('@')[0]
             },
             playlists: [],
             songs: []

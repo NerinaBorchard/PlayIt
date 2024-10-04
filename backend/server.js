@@ -119,7 +119,7 @@ app.post('/api/signup', async (req, res) => {
     password: hashedPassword,
     profile: {
       username: email.split('@')[0],
-      name: '',
+      name: email.split('@')[0],
     },
     playlists: [],
     songs: []
