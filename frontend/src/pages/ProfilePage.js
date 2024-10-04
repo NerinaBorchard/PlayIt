@@ -62,15 +62,40 @@ class ProfilePage extends Component {
     }
   };
 
+  // fetchPlaylists = async () => {
+  //   try {
+  //     const userData = JSON.parse(localStorage.getItem('user'));
+  //     const userPlaylistIds = userData?.playlists || [];
+
+  //     const response = await axios.get('/api/playlists');
+  //     const allPlaylists = response.data;
+
+  //     const userPlaylists = allPlaylists.filter(playlist => userPlaylistIds.includes(playlist._id));
+  //     this.setState({ playlists: userPlaylists });
+  //   } catch (error) {
+  //     console.error('Error fetching playlists:', error);
+  //   }
+  // };
+
   fetchPlaylists = async () => {
     try {
+      // Retrieve user data from local storage
       const userData = JSON.parse(localStorage.getItem('user'));
-      const userPlaylistIds = userData?.playlists || [];
+      const userId = userData?.id; // Assuming the user ID is stored in 'id'
+      
+      if (!userId) {
+        console.error('User ID not found');
+        return;
+      }
 
-      const response = await axios.get('/api/playlists');
+      // Fetch playlists from the database
+      const response = await axios.get('/api/play');
       const allPlaylists = response.data;
-
-      const userPlaylists = allPlaylists.filter(playlist => userPlaylistIds.includes(playlist._id));
+  
+      // Filter playlists to only include the ones created by the user
+      const userPlaylists = allPlaylists.filter(playlist => playlist.creator === userId);
+  
+      // Update the state with the filtered playlists
       this.setState({ playlists: userPlaylists });
     } catch (error) {
       console.error('Error fetching playlists:', error);

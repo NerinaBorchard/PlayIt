@@ -265,6 +265,42 @@ app.get('/api/playlists', async (req, res) => {
 });
 
 
+// Fetch all playlists route (no authentication)
+app.get('/api/play', async (req, res) => {
+    try {
+      const playlists = await PlaylistModel.find(); // Fetch all songs
+      res.json(playlists);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to fetch songs' });
+    }
+});
+
+
+app.post('/api/playlists', async (req, res) => {
+  const { name, genre, description, hashtags, coverImage, creator } = req.body;
+
+  try {
+      // Create and save the new playlist
+      const newPlaylist = new PlaylistModel({
+          name,
+          genre,
+          description,
+          hashtags,
+          coverImage,
+          creator,
+      });
+
+      const savedPlaylist = await newPlaylist.save(); // Save the playlist to the database
+
+      res.status(201).json(savedPlaylist); // Return the saved playlist details
+  } catch (err) {
+      console.error('Error adding playlist:', err);
+      res.status(500).json({ message: 'Failed to add new playlist.' });
+  }
+});
+
+
+
 // Fetch all users route (no authentication)
 app.get('/api/users', async (req, res) => {
   try {
