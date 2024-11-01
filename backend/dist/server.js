@@ -207,7 +207,8 @@ app.post('/api/login', /*#__PURE__*/function () {
               name: user.profile.name,
               email: user.email,
               playlists: user.playlists,
-              songs: user.songs
+              songs: user.songs,
+              picture: user.profile.picture // Correct path to include picture in response
             }
           });
           _context.next = 15;
@@ -227,10 +228,35 @@ app.post('/api/login', /*#__PURE__*/function () {
   };
 }());
 
+// // Signup route
+// app.post('/api/signup', async (req, res) => {
+//   const { email, password } = req.body;
+//   const existingUser = await UserModel.findOne({ email });
+
+//   if (existingUser) {
+//     return res.status(409).json({ message: "User already exists" });
+//   }
+
+//   const hashedPassword = await bcrypt.hash(password, 10);
+//   const newUser = new UserModel({
+//     email,
+//     password: hashedPassword,
+//     profile: {
+//       username: email.split('@')[0],
+//       name: email.split('@')[0],
+//     },
+//     playlists: [],
+//     songs: []
+//   });
+
+//   await newUser.save();
+//   res.status(201).json({ message: "User created successfully" });
+// });
+
 // Signup route
 app.post('/api/signup', /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-    var _req$body2, email, password, existingUser, hashedPassword, newUser;
+    var _req$body2, email, password, existingUser, hashedPassword, profilePictures, randomProfilePicture, newUser;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
@@ -253,23 +279,27 @@ app.post('/api/signup', /*#__PURE__*/function () {
           return bcrypt.hash(password, 10);
         case 8:
           hashedPassword = _context2.sent;
+          // Array of profile picture file paths
+          profilePictures = ['assets/images/user.png', 'assets/images/user1.png', 'assets/images/user2.png']; // Select a random profile picture
+          randomProfilePicture = profilePictures[Math.floor(Math.random() * profilePictures.length)];
           newUser = new UserModel({
             email: email,
             password: hashedPassword,
             profile: {
               username: email.split('@')[0],
-              name: email.split('@')[0]
+              name: email.split('@')[0],
+              picture: randomProfilePicture // Set the random profile picture path
             },
             playlists: [],
             songs: []
           });
-          _context2.next = 12;
+          _context2.next = 14;
           return newUser.save();
-        case 12:
+        case 14:
           res.status(201).json({
             message: "User created successfully"
           });
-        case 13:
+        case 15:
         case "end":
           return _context2.stop();
       }

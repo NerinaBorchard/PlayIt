@@ -22,21 +22,6 @@ class ProfilePage extends Component {
     this.fetchUserDetails(); // Fetch user details
   }
 
-  // fetchSongs = async () => {
-  //   try {
-  //     const userData = JSON.parse(localStorage.getItem('user'));
-  //     const userSongIds = userData?.songs || [];
-
-  //     const response = await axios.get('/api/songs');
-  //     const allSongs = response.data;
-
-  //     const userSongs = allSongs.filter(song => userSongIds.includes(song._id));
-  //     this.setState({ songs: userSongs });
-  //   } catch (error) {
-  //     console.error('Error fetching songs:', error);
-  //   }
-  // };
-
   fetchSongs = async () => {
     try {
       // Retrieve user data from local storage
@@ -62,20 +47,6 @@ class ProfilePage extends Component {
     }
   };
 
-  // fetchPlaylists = async () => {
-  //   try {
-  //     const userData = JSON.parse(localStorage.getItem('user'));
-  //     const userPlaylistIds = userData?.playlists || [];
-
-  //     const response = await axios.get('/api/playlists');
-  //     const allPlaylists = response.data;
-
-  //     const userPlaylists = allPlaylists.filter(playlist => userPlaylistIds.includes(playlist._id));
-  //     this.setState({ playlists: userPlaylists });
-  //   } catch (error) {
-  //     console.error('Error fetching playlists:', error);
-  //   }
-  // };
 
   fetchPlaylists = async () => {
     try {
@@ -102,14 +73,25 @@ class ProfilePage extends Component {
     }
   };
 
+  // fetchUserDetails = () => {
+  //   // Retrieve user data from local storage
+  //   const userData = JSON.parse(localStorage.getItem('user'));
+  //   console.log("User Data:", userData); // 
+  //   // Update the state with user details
+  //   if (userData) {
+  //     this.setState({ user: userData });
+  //   }
+  // };
+
   fetchUserDetails = () => {
-    // Retrieve user data from local storage
-    const userData = JSON.parse(localStorage.getItem('user'));
-    // Update the state with user details
-    if (userData) {
-      this.setState({ user: userData });
-    }
-  };
+  // Retrieve user data from local storage
+  const userData = JSON.parse(localStorage.getItem('user'));
+  console.log("User Data:", userData); // Check if userData has `profile.picture`
+  if (userData) {
+    this.setState({ user: userData });
+  }
+};
+
 
   render() {
     const { songs, playlists, user } = this.state;
@@ -120,11 +102,13 @@ class ProfilePage extends Component {
 
         <div style={styles.profileContainer}>
           <div style={styles.profileHeader}>
-            <img
-              src={user.picture || "https://via.placeholder.com/150"} // Fallback to placeholder if no picture
-              alt="Profile Icon"
-              style={styles.profileIcon}
-            />
+          <img
+            src={user.picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+            alt="Profile Icon"
+            style={styles.profileIcon}
+          />
+
+
             <div style={styles.profileDetails}>
               <h1 style={styles.username}>@{user.username}</h1>
               <h2 style={styles.name}>{user.name}</h2>

@@ -97,12 +97,42 @@ app.post('/api/login', async (req, res) => {
         email: user.email,
         playlists: user.playlists,
         songs: user.songs,
+        picture: user.profile.picture // Correct path to include picture in response
       }
     });
+    
   } else {
     res.status(401).json({ message: "Invalid email or password" });
   }
 });
+
+
+// // Signup route
+// app.post('/api/signup', async (req, res) => {
+//   const { email, password } = req.body;
+//   const existingUser = await UserModel.findOne({ email });
+
+//   if (existingUser) {
+//     return res.status(409).json({ message: "User already exists" });
+//   }
+
+//   const hashedPassword = await bcrypt.hash(password, 10);
+//   const newUser = new UserModel({
+//     email,
+//     password: hashedPassword,
+//     profile: {
+//       username: email.split('@')[0],
+//       name: email.split('@')[0],
+//     },
+//     playlists: [],
+//     songs: []
+//   });
+
+//   await newUser.save();
+//   res.status(201).json({ message: "User created successfully" });
+// });
+
+
 
 // Signup route
 app.post('/api/signup', async (req, res) => {
@@ -114,12 +144,24 @@ app.post('/api/signup', async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Array of profile picture file paths
+  const profilePictures = [
+    'assets/images/user.png',
+    'assets/images/user1.png',
+    'assets/images/user2.png'
+  ];
+
+  // Select a random profile picture
+  const randomProfilePicture = profilePictures[Math.floor(Math.random() * profilePictures.length)];
+
   const newUser = new UserModel({
     email,
     password: hashedPassword,
     profile: {
       username: email.split('@')[0],
       name: email.split('@')[0],
+      picture: randomProfilePicture  // Set the random profile picture path
     },
     playlists: [],
     songs: []
@@ -128,6 +170,9 @@ app.post('/api/signup', async (req, res) => {
   await newUser.save();
   res.status(201).json({ message: "User created successfully" });
 });
+
+
+
 
 // Fetch all songs route (no authentication)
 app.get('/api/songs', async (req, res) => {
@@ -372,6 +417,7 @@ app.get('/api/user/:userId', async (req, res) => {
       songs: user.songs,
       picture: user.profile.picture
     });
+    
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch user profile' }); // Handle server errors
   }
