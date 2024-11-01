@@ -216,6 +216,19 @@ app.delete('/api/songs/:id', async (req, res) => {
 });
 
 
+// Backend route (e.g., Node.js/Express)
+app.get('/api/playlists/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const playlist = await PlaylistModel.findById(id);
+    if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
+    res.json(playlist);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching playlist', error });
+  }
+});
+
+
 
 
 // // Update user's song list API route
