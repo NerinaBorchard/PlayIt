@@ -24,11 +24,12 @@ const styles = {
 
 class ProfilePreviewComponent extends Component {
   render() {
-    const { profileImage, username, name } = this.props.user;
+    const { profile } = this.props.user;
+    const { username, name, picture } = profile;
 
     return (
       <div style={styles.container}>
-        <img src={profileImage} alt={username} style={styles.profileImage} />
+        <img src={picture} alt={username} style={styles.profileImage} />
         <div>
           <p style={styles.username}>{username}</p>
           <p style={styles.name}>{name}</p>

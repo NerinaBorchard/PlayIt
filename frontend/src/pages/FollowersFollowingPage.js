@@ -11,13 +11,25 @@ class FollowersFollowingPage extends Component {
 
   // Mock data
   mockFollowers = [
-    { id: 1, username: '@johnDoe', name: 'John Doe', profileImage: 'https://img.freepik.com/free-photo/cute-puppy-sitting-outdoors-looking-camera-playful-fluffy-generated-by-artificial-intelligence_25030-64542.jpg?t=st=1726187920~exp=1726191520~hmac=f215140db9fd86826713851bc39ec830e8d13ebf2d09efdbd12fb272701356eb&w=1060' },
-    { id: 2, username: '@janeSmith', name: 'Jane Smith', profileImage: 'https://img.freepik.com/free-photo/cute-puppy-sitting-outdoors-looking-camera-playful-fluffy-generated-by-artificial-intelligence_25030-64542.jpg?t=st=1726187920~exp=1726191520~hmac=f215140db9fd86826713851bc39ec830e8d13ebf2d09efdbd12fb272701356eb&w=1060' },
+    {
+      id: 1,
+      profile: { username: '@johnDoe', name: 'John Doe', picture: 'https://example.com/profile1.jpg' },
+    },
+    {
+      id: 2,
+      profile: { username: '@janeSmith', name: 'Jane Smith', picture: 'https://example.com/profile2.jpg' },
+    },
   ];
 
   mockFollowing = [
-    { id: 3, username: '@markTwain', name: 'Mark Twain', profileImage: 'https://img.freepik.com/free-photo/cute-puppy-sitting-outdoors-looking-camera-playful-fluffy-generated-by-artificial-intelligence_25030-64542.jpg?t=st=1726187920~exp=1726191520~hmac=f215140db9fd86826713851bc39ec830e8d13ebf2d09efdbd12fb272701356eb&w=1060' },
-    { id: 4, username: '@ericaJohnson', name: 'Erica Johnson', profileImage: 'https://img.freepik.com/free-photo/cute-puppy-sitting-outdoors-looking-camera-playful-fluffy-generated-by-artificial-intelligence_25030-64542.jpg?t=st=1726187920~exp=1726191520~hmac=f215140db9fd86826713851bc39ec830e8d13ebf2d09efdbd12fb272701356eb&w=1060' },
+    {
+      id: 3,
+      profile: { username: '@markTwain', name: 'Mark Twain', picture: 'https://example.com/profile3.jpg' },
+    },
+    {
+      id: 4,
+      profile: { username: '@ericaJohnson', name: 'Erica Johnson', picture: 'https://example.com/profile4.jpg' },
+    },
   ];
 
   setView = (view) => {
@@ -80,7 +92,7 @@ const styles = {
   },
   listContainer: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column', // Ensures vertical stacking
     gap: '10px',
   },
 };

@@ -28,9 +28,15 @@ class App extends Component {
           <Route path="/profile" element={<Profile />} />
           <Route path="/editProfile" element={<EditProfilePage />} />
           <Route path="/followersFollowing" element={<FollowersFollowingPage />} />
-          <Route path="/editPlaylist" element={<EditPlaylist />} />
+          {/* <Route path="/editPlaylist" element={<EditPlaylist />} /> */}
+          {/* <Route path="/editPlaylist/:playlistId" element={EditPlaylist} /> */}
+          {/* <Route path="/editPlaylist/:playlistId" component={EditPlaylist} /> */}
+          <Route path="/editPlaylist/:playlistId" element={<EditPlaylist />} />
+
+
           <Route path="/search" element={<Search />} />
           <Route path="/playlistView/:id" element={<PlaylistView />} />
+          {/* <Route path="/playlistView" element={<PlaylistView />} /> */}
         </Routes>
       </Router>
     );

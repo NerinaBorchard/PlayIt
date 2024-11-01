@@ -90,93 +90,87 @@
 
 // export default PlaylistView;
 
-import React, { Component } from 'react';
-import { withParams } from '../utils/withParams'; // Custom HOC for params
+
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom'; // Import useParams
+import NavBar from '../components/NavBar';
 import PlaylistDetails from '../components/PlaylistDetails';
 import PlaylistCover from '../components/PlaylistCover';
 import CommentSection from '../components/CommentSection';
 import TagBubble from '../components/TagBubble';
-import NavBar from '../components/NavBar';
 import axios from 'axios';
 
-class PlaylistView extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      playlist: null,
+const PlaylistView = () => {
+  const { id } = useParams(); // Get the playlist ID from URL
+  const [playlist, setPlaylist] = useState(null);
+
+  useEffect(() => {
+    const fetchPlaylist = async () => {
+      try {
+        const response = await axios.get(`/api/playlists/${id}`);
+        setPlaylist(response.data);
+      } catch (error) {
+        console.error('Error fetching playlist:', error);
+      }
     };
+
+    fetchPlaylist();
+  }, [id]);
+
+  if (!playlist) {
+    return <p>Loading...</p>;
   }
 
-  componentDidMount() {
-    const { id } = this.props.params; // Accessing the playlist id from params
-    axios
-      .get(`/api/playlists/${id}`)
-      .then((response) => {
-        this.setState({ playlist: response.data });
-      })
-      .catch((error) => {
-        console.error('Error fetching playlist', error);
-      });
-  }
-
-  render() {
-    const { playlist } = this.state;
-
-    if (!playlist) {
-      return <div>Loading...</div>;
-    }
-
-    return (
-      <div style={styles.nav}>
-        <NavBar />
-        <div style={styles.normal}>
-          <div style={styles.container}>
-            <PlaylistDetails playlist={playlist} />
-            <div style={styles.rightSection}>
-              <PlaylistCover coverImage={playlist.coverImage} />
-              <div style={styles.tagsContainer}>
-                <TagBubble text={playlist.genre} />
-                {playlist.hashtags.map((tag) => (
-                  <TagBubble key={tag} text={`#${tag}`} />
-                ))}
-              </div>
+  return (
+    <div style={styles.nav}>
+      <NavBar />
+      <div style={styles.normal}>
+        <div style={styles.container}>
+          <PlaylistDetails playlist={playlist} />
+          <div style={styles.rightSection}>
+            <PlaylistCover coverImage={playlist.coverImage} />
+            <div style={styles.tagsContainer}>
+              <TagBubble text={playlist.genre} />
+              {playlist.hashtags.map(tag => (
+                <TagBubble key={tag} text={`#${tag}`} />
+              ))}
             </div>
           </div>
-          <CommentSection comments={playlist.comments} />
         </div>
+        <CommentSection comments={playlist.comments} />
       </div>
-    );
-  }
-}
-
-const styles = {
-  nav: {
-    fontFamily: 'Arial, sans-serif',
-  },
-  normal: {
-    fontFamily: 'Arial, sans-serif',
-    backgroundColor: '#f4f4f4',
-    padding: '20px',
-  },
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '20px',
-  },
-  rightSection: {
-    width: '30%',
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  tagsContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginBottom: '20px',
-  },
+    </div>
+  );
 };
 
-export default withParams(PlaylistView);
+const styles = {
+    nav:  {
+      fontFamily: 'Arial, sans-serif',
+    },
+    normal: {
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: '#f4f4f4',
+      padding: '20px',
+    },
+    container: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '20px',
+    },
+    rightSection: {
+      width: '30%',
+      padding: '20px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    tagsContainer: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      marginBottom: '20px',
+    },
+  };
+  
 
+export default PlaylistView;

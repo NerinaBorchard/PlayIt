@@ -312,6 +312,34 @@ app.post('/api/playlists', async (req, res) => {
   }
 });
 
+// Update playlist route
+app.put('/api/playlists/:playlistId', async (req, res) => {
+  const { playlistId } = req.params;
+  const { name, genre, description, coverImage } = req.body;
+
+  try {
+    // Find the playlist and update its details
+    const updatedPlaylist = await PlaylistModel.findByIdAndUpdate(
+      playlistId,
+      { name, genre, description, coverImage },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedPlaylist) {
+      return res.status(404).json({ message: 'Playlist not found' });
+    }
+
+    res.json({
+      message: 'Playlist updated successfully',
+      playlist: updatedPlaylist,
+    });
+  } catch (error) {
+    console.error('Error updating playlist:', error);
+    res.status(500).json({ message: 'Failed to update playlist' });
+  }
+});
+
+
 
 
 // Fetch all users route (no authentication)
