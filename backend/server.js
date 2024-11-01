@@ -329,24 +329,49 @@ app.get('/api/playlists/:id', async (req, res) => {
 
 
 
-// Fetch all playlists route (no authentication)
-app.get('/api/playlists', async (req, res) => {
+// // Fetch all playlists route (no authentication)
+// app.get('/api/playlists', async (req, res) => {
+//   try {
+//     let playlists = await PlaylistModel.find()
+//       .populate('creator', 'profile.username') // Populate the 'creator' field with the user's 'username'
+//       .populate('songs'); // Optionally populate songs as well
+
+//     // Modify playlists to replace the creator field with just the username
+//     playlists = playlists.map(playlist => ({
+//       ...playlist._doc, // Get the original playlist document
+//       creator: playlist.creator.profile.username // Replace creator with the username
+//     }));
+
+//     res.json(playlists);
+//   } catch (err) {
+//     res.status(500).json({ error: 'Failed to fetch playlists' });
+//   }
+// });
+
+app.post('/api/playlists', async (req, res) => {
+  const { name, genre, description, hashtags, coverImage, creator } = req.body;
+
+  // Default image URL
+  const defaultImageUrl = 'https://img.freepik.com/free-photo/vivid-blurred-colorful-wallpaper-background_58702-4216.jpg?t=st=1730496577~exp=1730500177~hmac=96d88cbbdaa633fe2050cd4039fefbf75acd6dd72b6c08ed5258f14237c9353a&w=996';
+  
   try {
-    let playlists = await PlaylistModel.find()
-      .populate('creator', 'profile.username') // Populate the 'creator' field with the user's 'username'
-      .populate('songs'); // Optionally populate songs as well
+    const newPlaylist = new PlaylistModel({
+      name,
+      genre,
+      description,
+      hashtags,
+      coverImage: coverImage || defaultImageUrl, // Use default if coverImage is missing
+      creator,
+    });
 
-    // Modify playlists to replace the creator field with just the username
-    playlists = playlists.map(playlist => ({
-      ...playlist._doc, // Get the original playlist document
-      creator: playlist.creator.profile.username // Replace creator with the username
-    }));
-
-    res.json(playlists);
+    const savedPlaylist = await newPlaylist.save();
+    res.status(201).json(savedPlaylist);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch playlists' });
+    console.error('Error adding playlist:', err);
+    res.status(500).json({ message: 'Failed to add new playlist.' });
   }
 });
+
 
 
 // Fetch all playlists route (no authentication)
