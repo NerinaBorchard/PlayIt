@@ -194,45 +194,71 @@ app.post('/api/songs', async (req, res) => {
       artist,
       link: songLink,
       image: coverUrl,
-      creator, // Assuming you pass the creator's ID from the frontend
-    });
-
-    const savedSong = await newSong.save(); // Save the new song to the database
-    res.status(201).json(savedSong); // Return the saved song details
-  } catch (err) {
-    console.error('Error adding song:', err);
-    res.status(500).json({ message: 'Failed to add new song.' });
-  }
-});
-
-app.post('/api/songs', async (req, res) => {
-  const { title, artist, songLink, coverUrl, creator } = req.body;
-
-  try {
-    // Create and save the new song
-    const newSong = new Song({
-      title,
-      artist,
-      link: songLink,
-      image: coverUrl,
       creator,
     });
 
-    const savedSong = await newSong.save(); // Save the song to the database
-
-    // Find the user by the creator's ID and update their songs list
+    const savedSong = await newSong.save();
     await UserModel.findByIdAndUpdate(
       creator,
-      { $push: { songs: savedSong._id } }, // Add the song ID to the user's songs array
-      { new: true } // Return the updated document
+      { $push: { songs: savedSong._id } },
+      { new: true }
     );
 
-    res.status(201).json(savedSong); // Return the saved song details
+    res.status(201).json(savedSong);
   } catch (err) {
     console.error('Error adding song:', err);
     res.status(500).json({ message: 'Failed to add new song.' });
   }
 });
+
+// app.post('/api/songs', async (req, res) => {
+//   const { title, artist, songLink, coverUrl, creator } = req.body;
+
+//   try {
+//     const newSong = new Song({
+//       title,
+//       artist,
+//       link: songLink,
+//       image: coverUrl,
+//       creator, // Assuming you pass the creator's ID from the frontend
+//     });
+
+//     const savedSong = await newSong.save(); // Save the new song to the database
+//     res.status(201).json(savedSong); // Return the saved song details
+//   } catch (err) {
+//     console.error('Error adding song:', err);
+//     res.status(500).json({ message: 'Failed to add new song.' });
+//   }
+// });
+
+// app.post('/api/songs', async (req, res) => {
+//   const { title, artist, songLink, coverUrl, creator } = req.body;
+
+//   try {
+//     // Create and save the new song
+//     const newSong = new Song({
+//       title,
+//       artist,
+//       link: songLink,
+//       image: coverUrl,
+//       creator,
+//     });
+
+//     const savedSong = await newSong.save(); // Save the song to the database
+
+//     // Find the user by the creator's ID and update their songs list
+//     await UserModel.findByIdAndUpdate(
+//       creator,
+//       { $push: { songs: savedSong._id } }, // Add the song ID to the user's songs array
+//       { new: true } // Return the updated document
+//     );
+
+//     res.status(201).json(savedSong); // Return the saved song details
+//   } catch (err) {
+//     console.error('Error adding song:', err);
+//     res.status(500).json({ message: 'Failed to add new song.' });
+//   }
+// });
 
 
 // Delete a song by ID

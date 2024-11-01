@@ -16,26 +16,6 @@ class Song extends Component {
     this.fetchSongs();
   }
 
-  // fetchSongs = async () => {
-  //   try {
-  //     // Retrieve user data from local storage
-  //     const userData = JSON.parse(localStorage.getItem('user'));
-  //     const userSongIds = userData?.songs || [];
-
-  //     // Fetch songs from the database
-  //     const response = await axios.get('/api/songs');
-  //     const allSongs = response.data;
-
-  //     // Filter songs to only include the ones that belong to the user
-  //     const userSongs = allSongs.filter(song => userSongIds.includes(song._id));
-
-  //     // Update the state with the filtered songs
-  //     this.setState({ songs: userSongs });
-  //   } catch (error) {
-  //     console.error('Error fetching songs:', error);
-  //   }
-  // };
-
   fetchSongs = async () => {
     try {
       // Retrieve user data from local storage
