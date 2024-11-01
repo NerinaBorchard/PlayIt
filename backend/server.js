@@ -300,6 +300,23 @@ app.get('/api/playlists/:id', async (req, res) => {
 });
 
 
+// DELETE endpoint to remove a playlist by ID
+app.delete('/api/playlists/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedPlaylist = await PlaylistModel.findByIdAndDelete(id);
+    
+    if (!deletedPlaylist) {
+      return res.status(404).json({ message: 'Playlist not found' });
+    }
+    
+    res.status(200).json({ message: 'Playlist deleted successfully!' });
+  } catch (error) {
+    console.error('Error deleting playlist:', error);
+    res.status(500).json({ message: 'Error deleting playlist' });
+  }
+});
+
 
 
 // // Update user's song list API route
@@ -330,7 +347,7 @@ app.get('/api/playlists/:id', async (req, res) => {
 
 
 // // Fetch all playlists route (no authentication)
-// app.get('/api/playlists', async (req, res) => {
+// app.get('/api/homePlaylists', async (req, res) => {
 //   try {
 //     let playlists = await PlaylistModel.find()
 //       .populate('creator', 'profile.username') // Populate the 'creator' field with the user's 'username'
