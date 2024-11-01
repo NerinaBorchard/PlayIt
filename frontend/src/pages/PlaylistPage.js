@@ -36,6 +36,12 @@ class Playlist extends React.Component {
     }
   };
 
+  // Callback function to refresh songs
+  refreshPlaylists = () => {
+    this.fetchPlaylists();
+  };
+
+
   render() {
     const { playlists } = this.state;
 
@@ -62,7 +68,7 @@ class Playlist extends React.Component {
 
             </div>
             <div style={styles.playlistForm}>
-              <PlaylistForm />
+              <PlaylistForm  onPlaylistAdded={this.refreshPlaylists} />
             </div>
           </div>
         </div>

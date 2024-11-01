@@ -56,6 +56,12 @@ class Song extends Component {
     }
   };
 
+  // Callback function to refresh songs
+  refreshSongs = () => {
+    this.fetchSongs();
+  };
+
+
   render() {
     const { songs } = this.state;
 
@@ -77,7 +83,7 @@ class Song extends Component {
               </div>
             </div>
             <div style={styles.formContainer}>
-              <AddSongForm />
+              <AddSongForm  onSongAdded={this.refreshSongs} />
             </div>
           </div>
         </div>

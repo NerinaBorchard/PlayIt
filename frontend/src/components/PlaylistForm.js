@@ -140,6 +140,9 @@ class PlaylistForm extends Component {
         const data = await response.json();
         console.log('New playlist added:', data);
 
+        // Call the onPlaylistAdded prop to refresh the playlist list
+      this.props.onPlaylistAdded();
+
         this.setState({ name: '', genre: '', description: '', hashtags: '', image: '' });
       } catch (error) {
         console.error('Error:', error);

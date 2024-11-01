@@ -85,6 +85,9 @@ class SongForm extends Component {
   
       const data = await response.json();
       console.log('New song added:', data);
+
+      // Call the onSongAdded prop to refresh the song list
+      this.props.onSongAdded();
   
       this.setState({ title: '', artist: '', coverUrl: '', songLink: '' });
     } catch (error) {
