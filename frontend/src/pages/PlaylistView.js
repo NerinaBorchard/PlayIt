@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom'; // Import useParams
+import { useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import PlaylistDetails from '../components/PlaylistDetails';
 import PlaylistCover from '../components/PlaylistCover';
@@ -8,42 +8,59 @@ import TagBubble from '../components/TagBubble';
 import axios from 'axios';
 
 const PlaylistView = () => {
-  const { id } = useParams(); // Get the playlist ID from URL
+  const { id } = useParams();
   const [playlist, setPlaylist] = useState(null);
-  const [comments, setComments] = useState([]); // Separate state for comments
+  const [comments, setComments] = useState([]);
 
+  // Function to fetch the playlist details
+  const fetchPlaylist = async () => {
+    try {
+      const response = await axios.get(`/api/playlists/${id}`);
+      setPlaylist(response.data);
+    } catch (error) {
+      console.error('Error fetching playlist:', error);
+    }
+  };
+
+  // Function to fetch comments for the playlist
+  const fetchComments = async () => {
+    try {
+      const response = await axios.get(`/api/comments?playlistId=${id}`);
+      setComments(response.data);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
+
+  // useEffect to fetch playlist and comments on component mount
   useEffect(() => {
-    const fetchPlaylist = async () => {
-      try {
-        const response = await axios.get(`/api/playlists/${id}`);
-        setPlaylist(response.data); // Set the playlist
-      } catch (error) {
-        console.error('Error fetching playlist:', error);
-      }
-    };
-
-    // const fetchComments = async () => {
-    //   try {
-    //     const response = await axios.get(`/api/comments/${id}`);
-    //     setComments(response.data); // Set the comments
-    //   } catch (error) {
-    //     console.error('Error fetching comments:', error);
-    //   }
-    // };
-
-    const fetchComments = async () => {
-      try {
-        const response = await axios.get(`/api/comments?playlistId=${id}`);
-        setComments(response.data); // Set the comments specific to this playlist
-      } catch (error) {
-        console.error('Error fetching comments:', error);
-      }
-    };
-    
-
     fetchPlaylist();
     fetchComments();
   }, [id]);
+
+  const onAddComment = async (newCommentText) => {
+    try {
+      // Retrieve the user from local storage
+      const user = JSON.parse(localStorage.getItem('user'));
+      const userId = user?.id; // Retrieve the user ID
+
+      // Create the new comment object using the logged-in user's info
+      const newComment = {
+        user: userId, // Include the user ID here
+        text: newCommentText,
+        playlistId: id, // Include the playlist ID
+      };
+      console.log('New comment:', newComment);
+
+      // Send the new comment to the server
+      await axios.post('/api/comments', newComment);
+
+      // Refetch comments after adding a new comment
+      fetchComments();
+    } catch (error) {
+      console.error('Error saving comment:', error);
+    }
+  };
 
   if (!playlist) {
     return <p>Loading...</p>;
@@ -65,7 +82,7 @@ const PlaylistView = () => {
             </div>
           </div>
         </div>
-        <CommentSection comments={comments || []} /> {/* Pass comments to CommentSection */}
+        <CommentSection comments={comments} onAddComment={onAddComment} />
       </div>
     </div>
   );

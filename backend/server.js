@@ -493,38 +493,25 @@ app.put('/api/playlists/:playlistId', async (req, res) => {
 
 
 
-// Add a comment to a playlist
-app.post('/api/playlists/:playlistId/comments', async (req, res) => {
-  const { playlistId } = req.params;
-  const { userId, text } = req.body;
 
+// In your backend code
+app.post('/api/comments', async (req, res) => {
+  const { text, user, playlistId } = req.body;
+  
   try {
-    const newComment = new CommentModel({ playlistId, userId, text });
-    const savedComment = await newComment.save();
-    res.status(201).json(savedComment);
-  } catch (err) {
-    console.error('Error adding comment:', err);
-    res.status(500).json({ message: 'Failed to add comment' });
-  }
-});
-
-// Delete a comment by ID
-app.delete('/api/comments/:commentId', async (req, res) => {
-  const { commentId } = req.params;
-
-  try {
-    const deletedComment = await CommentModel.findByIdAndDelete(commentId);
-    if (!deletedComment) {
-      return res.status(404).json({ message: 'Comment not found' });
-    }
-    res.status(200).json({ message: 'Comment deleted successfully' });
+    const newComment = new Comment({
+      text,
+      user, // Assumes you're storing the user's ID
+      playlistId
+    });
+    
+    await newComment.save();
+    res.status(201).json(newComment); // Return the saved comment
   } catch (error) {
-    console.error('Error deleting comment:', error);
-    res.status(500).json({ message: 'Failed to delete comment' });
+    console.error('Error saving comment:', error);
+    res.status(500).json({ error: 'Failed to save comment' });
   }
 });
-
-
 
 
 

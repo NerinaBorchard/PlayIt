@@ -852,141 +852,127 @@ app.put('/api/playlists/:playlistId', /*#__PURE__*/function () {
   };
 }());
 
-// Add a comment to a playlist
-app.post('/api/playlists/:playlistId/comments', /*#__PURE__*/function () {
+// // Add a comment to a playlist
+// app.post('/api/playlists/:playlistId/comments', async (req, res) => {
+//   const { playlistId } = req.params;
+//   const { userId, text } = req.body;
+
+//   try {
+//     const newComment = new CommentModel({ playlistId, userId, text });
+//     const savedComment = await newComment.save();
+//     res.status(201).json(savedComment);
+//   } catch (err) {
+//     console.error('Error adding comment:', err);
+//     res.status(500).json({ message: 'Failed to add comment' });
+//   }
+// });
+
+// In your backend code
+app.post('/api/comments', /*#__PURE__*/function () {
   var _ref14 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14(req, res) {
-    var playlistId, _req$body7, userId, text, newComment, savedComment;
+    var _req$body7, text, user, playlistId, newComment;
     return _regeneratorRuntime().wrap(function _callee14$(_context14) {
       while (1) switch (_context14.prev = _context14.next) {
         case 0:
-          playlistId = req.params.playlistId;
-          _req$body7 = req.body, userId = _req$body7.userId, text = _req$body7.text;
-          _context14.prev = 2;
-          newComment = new CommentModel({
-            playlistId: playlistId,
-            userId: userId,
-            text: text
+          _req$body7 = req.body, text = _req$body7.text, user = _req$body7.user, playlistId = _req$body7.playlistId;
+          _context14.prev = 1;
+          newComment = new Comment({
+            text: text,
+            user: user,
+            // Assumes you're storing the user's ID
+            playlistId: playlistId
           });
-          _context14.next = 6;
+          _context14.next = 5;
           return newComment.save();
-        case 6:
-          savedComment = _context14.sent;
-          res.status(201).json(savedComment);
-          _context14.next = 14;
+        case 5:
+          res.status(201).json(newComment); // Return the saved comment
+          _context14.next = 12;
           break;
-        case 10:
-          _context14.prev = 10;
-          _context14.t0 = _context14["catch"](2);
-          console.error('Error adding comment:', _context14.t0);
+        case 8:
+          _context14.prev = 8;
+          _context14.t0 = _context14["catch"](1);
+          console.error('Error saving comment:', _context14.t0);
           res.status(500).json({
-            message: 'Failed to add comment'
+            error: 'Failed to save comment'
           });
-        case 14:
+        case 12:
         case "end":
           return _context14.stop();
       }
-    }, _callee14, null, [[2, 10]]);
+    }, _callee14, null, [[1, 8]]);
   }));
   return function (_x27, _x28) {
     return _ref14.apply(this, arguments);
   };
 }());
 
-// Delete a comment by ID
-app["delete"]('/api/comments/:commentId', /*#__PURE__*/function () {
+// // Delete a comment by ID
+// app.delete('/api/comments/:commentId', async (req, res) => {
+//   const { commentId } = req.params;
+
+//   try {
+//     const deletedComment = await CommentModel.findByIdAndDelete(commentId);
+//     if (!deletedComment) {
+//       return res.status(404).json({ message: 'Comment not found' });
+//     }
+//     res.status(200).json({ message: 'Comment deleted successfully' });
+//   } catch (error) {
+//     console.error('Error deleting comment:', error);
+//     res.status(500).json({ message: 'Failed to delete comment' });
+//   }
+// });
+
+// Fetch all users route (no authentication)
+app.get('/api/users', /*#__PURE__*/function () {
   var _ref15 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15(req, res) {
-    var commentId, deletedComment;
+    var users;
     return _regeneratorRuntime().wrap(function _callee15$(_context15) {
       while (1) switch (_context15.prev = _context15.next) {
         case 0:
-          commentId = req.params.commentId;
-          _context15.prev = 1;
-          _context15.next = 4;
-          return CommentModel.findByIdAndDelete(commentId);
-        case 4:
-          deletedComment = _context15.sent;
-          if (deletedComment) {
-            _context15.next = 7;
-            break;
-          }
-          return _context15.abrupt("return", res.status(404).json({
-            message: 'Comment not found'
-          }));
-        case 7:
-          res.status(200).json({
-            message: 'Comment deleted successfully'
-          });
-          _context15.next = 14;
+          _context15.prev = 0;
+          _context15.next = 3;
+          return UserModel.find();
+        case 3:
+          users = _context15.sent;
+          // Fetch all users
+          res.json(users);
+          _context15.next = 10;
           break;
-        case 10:
-          _context15.prev = 10;
-          _context15.t0 = _context15["catch"](1);
-          console.error('Error deleting comment:', _context15.t0);
+        case 7:
+          _context15.prev = 7;
+          _context15.t0 = _context15["catch"](0);
           res.status(500).json({
-            message: 'Failed to delete comment'
+            error: 'Failed to fetch users'
           });
-        case 14:
+        case 10:
         case "end":
           return _context15.stop();
       }
-    }, _callee15, null, [[1, 10]]);
+    }, _callee15, null, [[0, 7]]);
   }));
   return function (_x29, _x30) {
     return _ref15.apply(this, arguments);
   };
 }());
 
-// Fetch all users route (no authentication)
-app.get('/api/users', /*#__PURE__*/function () {
+// Fetch user profile by ID route
+app.get('/api/user/:userId', /*#__PURE__*/function () {
   var _ref16 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee16(req, res) {
-    var users;
+    var userId, user;
     return _regeneratorRuntime().wrap(function _callee16$(_context16) {
       while (1) switch (_context16.prev = _context16.next) {
         case 0:
           _context16.prev = 0;
-          _context16.next = 3;
-          return UserModel.find();
-        case 3:
-          users = _context16.sent;
-          // Fetch all users
-          res.json(users);
-          _context16.next = 10;
-          break;
-        case 7:
-          _context16.prev = 7;
-          _context16.t0 = _context16["catch"](0);
-          res.status(500).json({
-            error: 'Failed to fetch users'
-          });
-        case 10:
-        case "end":
-          return _context16.stop();
-      }
-    }, _callee16, null, [[0, 7]]);
-  }));
-  return function (_x31, _x32) {
-    return _ref16.apply(this, arguments);
-  };
-}());
-
-// Fetch user profile by ID route
-app.get('/api/user/:userId', /*#__PURE__*/function () {
-  var _ref17 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17(req, res) {
-    var userId, user;
-    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
-      while (1) switch (_context17.prev = _context17.next) {
-        case 0:
-          _context17.prev = 0;
           userId = req.params.userId; // Get userId from request parameters
-          _context17.next = 4;
+          _context16.next = 4;
           return UserModel.findById(userId).populate('playlists').populate('songs');
         case 4:
-          user = _context17.sent;
+          user = _context16.sent;
           if (user) {
-            _context17.next = 7;
+            _context16.next = 7;
             break;
           }
-          return _context17.abrupt("return", res.status(404).json({
+          return _context16.abrupt("return", res.status(404).json({
             message: 'User not found'
           }));
         case 7:
@@ -1000,36 +986,36 @@ app.get('/api/user/:userId', /*#__PURE__*/function () {
             songs: user.songs,
             picture: user.profile.picture
           });
-          _context17.next = 13;
+          _context16.next = 13;
           break;
         case 10:
-          _context17.prev = 10;
-          _context17.t0 = _context17["catch"](0);
+          _context16.prev = 10;
+          _context16.t0 = _context16["catch"](0);
           res.status(500).json({
             error: 'Failed to fetch user profile'
           }); // Handle server errors
         case 13:
         case "end":
-          return _context17.stop();
+          return _context16.stop();
       }
-    }, _callee17, null, [[0, 10]]);
+    }, _callee16, null, [[0, 10]]);
   }));
-  return function (_x33, _x34) {
-    return _ref17.apply(this, arguments);
+  return function (_x31, _x32) {
+    return _ref16.apply(this, arguments);
   };
 }());
 
 // Update user profile route
 app.put('/api/user/:userId', /*#__PURE__*/function () {
-  var _ref18 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18(req, res) {
+  var _ref17 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17(req, res) {
     var userId, _req$body8, username, name, email, picture, updatedUser;
-    return _regeneratorRuntime().wrap(function _callee18$(_context18) {
-      while (1) switch (_context18.prev = _context18.next) {
+    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+      while (1) switch (_context17.prev = _context17.next) {
         case 0:
           userId = req.params.userId;
           _req$body8 = req.body, username = _req$body8.username, name = _req$body8.name, email = _req$body8.email, picture = _req$body8.picture;
-          _context18.prev = 2;
-          _context18.next = 5;
+          _context17.prev = 2;
+          _context17.next = 5;
           return UserModel.findByIdAndUpdate(userId, {
             profile: {
               username: username,
@@ -1041,12 +1027,12 @@ app.put('/api/user/:userId', /*#__PURE__*/function () {
           } // Return the updated document
           );
         case 5:
-          updatedUser = _context18.sent;
+          updatedUser = _context17.sent;
           if (updatedUser) {
-            _context18.next = 8;
+            _context17.next = 8;
             break;
           }
-          return _context18.abrupt("return", res.status(404).json({
+          return _context17.abrupt("return", res.status(404).json({
             message: 'User not found'
           }));
         case 8:
@@ -1060,44 +1046,44 @@ app.put('/api/user/:userId', /*#__PURE__*/function () {
               picture: updatedUser.profile.picture
             }
           });
-          _context18.next = 15;
+          _context17.next = 15;
           break;
         case 11:
-          _context18.prev = 11;
-          _context18.t0 = _context18["catch"](2);
-          console.error('Error updating user:', _context18.t0);
+          _context17.prev = 11;
+          _context17.t0 = _context17["catch"](2);
+          console.error('Error updating user:', _context17.t0);
           res.status(500).json({
             message: 'Failed to update user profile'
           });
         case 15:
         case "end":
-          return _context18.stop();
+          return _context17.stop();
       }
-    }, _callee18, null, [[2, 11]]);
+    }, _callee17, null, [[2, 11]]);
   }));
-  return function (_x35, _x36) {
-    return _ref18.apply(this, arguments);
+  return function (_x33, _x34) {
+    return _ref17.apply(this, arguments);
   };
 }());
 
 // Delete user profile
 app["delete"]('/api/user/:id', /*#__PURE__*/function () {
-  var _ref19 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee19(req, res) {
+  var _ref18 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18(req, res) {
     var userId;
-    return _regeneratorRuntime().wrap(function _callee19$(_context19) {
-      while (1) switch (_context19.prev = _context19.next) {
+    return _regeneratorRuntime().wrap(function _callee18$(_context18) {
+      while (1) switch (_context18.prev = _context18.next) {
         case 0:
           userId = req.params.id;
-          _context19.prev = 1;
-          _context19.next = 4;
+          _context18.prev = 1;
+          _context18.next = 4;
           return UserModel.findByIdAndDelete(userId);
         case 4:
-          _context19.next = 6;
+          _context18.next = 6;
           return Song.deleteMany({
             creator: userId
           });
         case 6:
-          _context19.next = 8;
+          _context18.next = 8;
           return PlaylistModel.deleteMany({
             creator: userId
           });
@@ -1105,54 +1091,54 @@ app["delete"]('/api/user/:id', /*#__PURE__*/function () {
           res.status(200).json({
             message: "User profile deleted successfully."
           });
-          _context19.next = 15;
+          _context18.next = 15;
           break;
         case 11:
-          _context19.prev = 11;
-          _context19.t0 = _context19["catch"](1);
-          console.error('Error deleting user profile:', _context19.t0);
+          _context18.prev = 11;
+          _context18.t0 = _context18["catch"](1);
+          console.error('Error deleting user profile:', _context18.t0);
           res.status(500).json({
             message: "Failed to delete user profile."
           });
         case 15:
         case "end":
-          return _context19.stop();
+          return _context18.stop();
       }
-    }, _callee19, null, [[1, 11]]);
+    }, _callee18, null, [[1, 11]]);
   }));
-  return function (_x37, _x38) {
-    return _ref19.apply(this, arguments);
+  return function (_x35, _x36) {
+    return _ref18.apply(this, arguments);
   };
 }());
 app.get('/api/genres', /*#__PURE__*/function () {
-  var _ref20 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee20(req, res) {
+  var _ref19 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee19(req, res) {
     var genres;
-    return _regeneratorRuntime().wrap(function _callee20$(_context20) {
-      while (1) switch (_context20.prev = _context20.next) {
+    return _regeneratorRuntime().wrap(function _callee19$(_context19) {
+      while (1) switch (_context19.prev = _context19.next) {
         case 0:
-          _context20.prev = 0;
-          _context20.next = 3;
+          _context19.prev = 0;
+          _context19.next = 3;
           return GenreModel.find();
         case 3:
-          genres = _context20.sent;
+          genres = _context19.sent;
           // Assuming you have a Genre model
           res.json(genres);
-          _context20.next = 10;
+          _context19.next = 10;
           break;
         case 7:
-          _context20.prev = 7;
-          _context20.t0 = _context20["catch"](0);
+          _context19.prev = 7;
+          _context19.t0 = _context19["catch"](0);
           res.status(500).json({
             message: 'Error fetching genres'
           });
         case 10:
         case "end":
-          return _context20.stop();
+          return _context19.stop();
       }
-    }, _callee20, null, [[0, 7]]);
+    }, _callee19, null, [[0, 7]]);
   }));
-  return function (_x39, _x40) {
-    return _ref20.apply(this, arguments);
+  return function (_x37, _x38) {
+    return _ref19.apply(this, arguments);
   };
 }());
 
