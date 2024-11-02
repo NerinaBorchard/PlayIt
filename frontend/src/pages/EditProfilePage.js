@@ -6,13 +6,13 @@ class EditProfilePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profilePicture: 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/4935eafa-878e-43fd-a1dd-4234943bedec/dcr6m3m-73080ad4-bf39-405b-9697-2b812f5632a7.jpg/v1/fill/w_1024,h_768,q_75,strp/cool_nature_background_by_sugar__spice_dcr6m3m-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzY4IiwicGF0aCI6IlwvZlwvNDkzNWVhZmEtODc4ZS00M2ZkLWExZGQtNDIzNDk0M2JlZGVjXC9kY3I2bTNtLTczMDgwYWQ0LWJmMzktNDA1Yi05Njk3LTJiODEyZjU2MzJhNy5qcGciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.oOvZXX_5pUU6yENdBCN1VaRZvWq88R4fL41sdfrSRJw',
+      profilePicture: '', // Default to empty; this will be updated after fetching data
       user: {
         username: '',
         name: '',
         email: '',
       },
-      redirectTo: null, // Added to handle redirect after deletion
+      redirectTo: null, // For redirect after actions
     };
   }
 
@@ -24,17 +24,27 @@ class EditProfilePage extends Component {
     try {
       const userData = JSON.parse(localStorage.getItem('user'));
       const userId = userData?.id;
+      if (!userId) throw new Error("User ID not found");
 
       const response = await axios.get(`/api/user/${userId}`);
       const userDetails = response.data;
 
       this.setState({ 
-        user: userDetails,
-        profilePicture: userDetails.profilePicture || this.state.profilePicture 
+        user: {
+          username: userDetails.username,
+          name: userDetails.name,
+          email: userDetails.email,
+          picture: userDetails.picture,
+        },
+        // profilePicture: userDetails.profilePicture
       });
     } catch (error) {
       console.error('Error fetching user details:', error);
     }
+  };
+
+  getDefaultProfilePicture = () => {
+    return 'https://img.freepik.com/free-photo/abstract-smooth-orange-background-layout-designstudioroom-web-template-business-report-with-smooth-c_1258-54783.jpg';
   };
 
   handleImageChange = (e) => {
@@ -52,13 +62,17 @@ class EditProfilePage extends Component {
     e.preventDefault();
     const userData = JSON.parse(localStorage.getItem('user'));
     const userId = userData?.id;
+    if (!userId) {
+      alert('User ID not found');
+      return;
+    }
 
     try {
       const response = await axios.put(`/api/user/${userId}`, {
         username: this.state.user.username,
         name: this.state.user.name,
         email: this.state.user.email,
-        picture: this.state.profilePicture,
+        picture: this.state.picture,
       });
 
       alert(response.data.message);
@@ -70,20 +84,21 @@ class EditProfilePage extends Component {
     }
   };
 
-  // New method to handle deleting the profile
   handleDeleteProfile = async () => {
     const userData = JSON.parse(localStorage.getItem('user'));
     const userId = userData?.id;
-    console.log('Deleting profile:', userId);
+    if (!userId) {
+      alert('User ID not found');
+      return;
+    }
 
     if (window.confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
       try {
         await axios.delete(`/api/user/${userId}`);
         alert('Profile deleted successfully');
         
-        // Clear user data from local storage and redirect
         localStorage.removeItem('user');
-        this.setState({ redirectTo: '/' }); // Redirect to home or login page
+        this.setState({ redirectTo: '/' });
       } catch (error) {
         console.error('Error deleting profile:', error);
         alert('Failed to delete profile');
@@ -95,7 +110,7 @@ class EditProfilePage extends Component {
     if (this.state.redirectTo) {
       return <Navigate to={this.state.redirectTo} />;
     }
-  
+
     return (
       <div style={styles.container}>
         <div style={styles.editContainer}>
@@ -103,7 +118,7 @@ class EditProfilePage extends Component {
 
           <div style={styles.profilePictureContainer}>
             <img
-              src={this.state.profilePicture}
+              src={this.state.user.picture}
               alt="Profile"
               style={styles.profilePicture}
             />
@@ -150,7 +165,6 @@ class EditProfilePage extends Component {
             <button type="submit" style={styles.saveButton}>Save Changes</button>
           </form>
 
-          {/* Delete Profile Button */}
           <button onClick={this.handleDeleteProfile} style={styles.deleteButton}>
             Delete Profile
           </button>

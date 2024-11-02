@@ -99,26 +99,40 @@ var playlistSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Song'
   }],
-  comments: [{
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    text: {
-      type: String,
-      required: true
-    },
-    date: {
-      type: Date,
-      "default": Date.now
-    }
-  }],
   dateCreated: {
     type: Date,
     "default": Date.now
   }
 });
 var PlaylistModel = mongoose.model('Playlist', playlistSchema);
+
+// // Comment Schema
+// const CommentSchema = new mongoose.Schema({
+//   text: { type: String, required: true },
+//   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+//   playlistId: { type: mongoose.Schema.Types.ObjectId, ref: 'Playlist', required: true },
+// });
+
+// const CommentModel = mongoose.model('Comment', CommentSchema);
+// module.exports = CommentModel;
+
+// // Comment Schema
+// const commentSchema = new mongoose.Schema({
+//   text: String,
+//   user: String,
+//   playlistId: String, // Ensure this is a String
+// });
+// const Comment = mongoose.model('Comment', commentSchema);
+
+var commentSchema = new mongoose.Schema({
+  text: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  playlistId: String
+});
+var Comment = mongoose.model('Comment', commentSchema);
 
 // User Schema
 var userSchema = new mongoose.Schema({
@@ -235,31 +249,6 @@ app.post('/api/login', /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }());
-
-// // Signup route
-// app.post('/api/signup', async (req, res) => {
-//   const { email, password } = req.body;
-//   const existingUser = await UserModel.findOne({ email });
-
-//   if (existingUser) {
-//     return res.status(409).json({ message: "User already exists" });
-//   }
-
-//   const hashedPassword = await bcrypt.hash(password, 10);
-//   const newUser = new UserModel({
-//     email,
-//     password: hashedPassword,
-//     profile: {
-//       username: email.split('@')[0],
-//       name: email.split('@')[0],
-//     },
-//     playlists: [],
-//     songs: []
-//   });
-
-//   await newUser.save();
-//   res.status(201).json({ message: "User created successfully" });
-// });
 
 // Signup route
 app.post('/api/signup', /*#__PURE__*/function () {
@@ -401,55 +390,6 @@ app.post('/api/songs', /*#__PURE__*/function () {
   };
 }());
 
-// app.post('/api/songs', async (req, res) => {
-//   const { title, artist, songLink, coverUrl, creator } = req.body;
-
-//   try {
-//     const newSong = new Song({
-//       title,
-//       artist,
-//       link: songLink,
-//       image: coverUrl,
-//       creator, // Assuming you pass the creator's ID from the frontend
-//     });
-
-//     const savedSong = await newSong.save(); // Save the new song to the database
-//     res.status(201).json(savedSong); // Return the saved song details
-//   } catch (err) {
-//     console.error('Error adding song:', err);
-//     res.status(500).json({ message: 'Failed to add new song.' });
-//   }
-// });
-
-// app.post('/api/songs', async (req, res) => {
-//   const { title, artist, songLink, coverUrl, creator } = req.body;
-
-//   try {
-//     // Create and save the new song
-//     const newSong = new Song({
-//       title,
-//       artist,
-//       link: songLink,
-//       image: coverUrl,
-//       creator,
-//     });
-
-//     const savedSong = await newSong.save(); // Save the song to the database
-
-//     // Find the user by the creator's ID and update their songs list
-//     await UserModel.findByIdAndUpdate(
-//       creator,
-//       { $push: { songs: savedSong._id } }, // Add the song ID to the user's songs array
-//       { new: true } // Return the updated document
-//     );
-
-//     res.status(201).json(savedSong); // Return the saved song details
-//   } catch (err) {
-//     console.error('Error adding song:', err);
-//     res.status(500).json({ message: 'Failed to add new song.' });
-//   }
-// });
-
 // Delete a song by ID
 app["delete"]('/api/songs/:id', /*#__PURE__*/function () {
   var _ref5 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
@@ -501,62 +441,107 @@ app["delete"]('/api/songs/:id', /*#__PURE__*/function () {
   };
 }());
 
-// Backend route (e.g., Node.js/Express)
-app.get('/api/playlists/:id', /*#__PURE__*/function () {
+// // Backend route (Node.js/Express)
+// app.get('/api/playlists/:id', async (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     const playlist = await PlaylistModel.findById(id)
+//       .populate('creator', 'profile.username'); // Adjust the path to match your user schema
+
+//     if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
+
+//     res.json(playlist);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching playlist', error });
+//   }
+// });
+
+// app.get('/api/comments/:playlistId', async (req, res) => {
+//   const { playlistId } = req.params;
+//   try {
+//     const comments = await CommentModel.find({ playlistId: playlistId })
+//       .populate('user', 'profile.username'); // Populate user to get username
+//     res.json(comments); // Return only the comments
+//   } catch (error) {
+//     console.error('Error fetching comments:', error); // Log the error for debugging
+//     res.status(500).json({ message: 'Error fetching comments', error });
+//   }
+// });
+
+// app.get('/api/comments/:playlistId', async (req, res) => {
+//   const { playlistId } = req.params;
+//   try {
+//     const comments = await CommentModel.find({ playlistId: playlistId })
+//       .populate('user', 'profile.username'); // Populate user to get username
+//     res.json(comments);
+//   } catch (error) {
+//     console.error('Error fetching comments:', error);
+//     res.status(500).json({ message: 'Error fetching comments', error });
+//   }
+// });
+
+// app.get('/api/comments', async (req, res) => {
+//   const { playlistId } = req.query;
+//   console.log('Received playlistId:', playlistId); // Debugging line
+//   try {
+//     const comments = await Comment.find({ playlistId });
+//     console.log('Fetched comments:', comments); // Log fetched comments for verification
+//     res.json(comments);
+//   } catch (error) {
+//     console.error('Error fetching comments:', error);
+//     res.status(500).json({ error: 'Failed to fetch comments' });
+//   }
+// });
+
+app.get('/api/comments', /*#__PURE__*/function () {
   var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
-    var id, playlist;
+    var playlistId, comments;
     return _regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
-          id = req.params.id;
-          _context6.prev = 1;
-          _context6.next = 4;
-          return PlaylistModel.findById(id);
-        case 4:
-          playlist = _context6.sent;
-          if (playlist) {
-            _context6.next = 7;
-            break;
-          }
-          return _context6.abrupt("return", res.status(404).json({
-            message: 'Playlist not found'
-          }));
-        case 7:
-          res.json(playlist);
-          _context6.next = 13;
+          playlistId = req.query.playlistId;
+          console.log('Received playlistId:', playlistId); // Debugging line
+          _context6.prev = 2;
+          _context6.next = 5;
+          return Comment.find({
+            playlistId: playlistId
+          }).populate('user', 'profile.username');
+        case 5:
+          comments = _context6.sent;
+          console.log('Fetched comments:', comments); // Log fetched comments for verification
+          res.json(comments);
+          _context6.next = 14;
           break;
         case 10:
           _context6.prev = 10;
-          _context6.t0 = _context6["catch"](1);
+          _context6.t0 = _context6["catch"](2);
+          console.error('Error fetching comments:', _context6.t0);
           res.status(500).json({
-            message: 'Error fetching playlist',
-            error: _context6.t0
+            error: 'Failed to fetch comments'
           });
-        case 13:
+        case 14:
         case "end":
           return _context6.stop();
       }
-    }, _callee6, null, [[1, 10]]);
+    }, _callee6, null, [[2, 10]]);
   }));
   return function (_x11, _x12) {
     return _ref6.apply(this, arguments);
   };
 }());
-
-// DELETE endpoint to remove a playlist by ID
-app["delete"]('/api/playlists/:id', /*#__PURE__*/function () {
+app.get('/api/playlists/:id', /*#__PURE__*/function () {
   var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
-    var id, deletedPlaylist;
+    var id, playlist;
     return _regeneratorRuntime().wrap(function _callee7$(_context7) {
       while (1) switch (_context7.prev = _context7.next) {
         case 0:
-          _context7.prev = 0;
           id = req.params.id;
+          _context7.prev = 1;
           _context7.next = 4;
-          return PlaylistModel.findByIdAndDelete(id);
+          return PlaylistModel.findById(id).populate('creator', 'profile.username');
         case 4:
-          deletedPlaylist = _context7.sent;
-          if (deletedPlaylist) {
+          playlist = _context7.sent;
+          if (playlist) {
             _context7.next = 7;
             break;
           }
@@ -564,26 +549,68 @@ app["delete"]('/api/playlists/:id', /*#__PURE__*/function () {
             message: 'Playlist not found'
           }));
         case 7:
-          res.status(200).json({
-            message: 'Playlist deleted successfully!'
-          });
-          _context7.next = 14;
+          res.json(playlist); // Only return the playlist
+          _context7.next = 13;
           break;
         case 10:
           _context7.prev = 10;
-          _context7.t0 = _context7["catch"](0);
-          console.error('Error deleting playlist:', _context7.t0);
+          _context7.t0 = _context7["catch"](1);
+          res.status(500).json({
+            message: 'Error fetching playlist',
+            error: _context7.t0
+          });
+        case 13:
+        case "end":
+          return _context7.stop();
+      }
+    }, _callee7, null, [[1, 10]]);
+  }));
+  return function (_x13, _x14) {
+    return _ref7.apply(this, arguments);
+  };
+}());
+
+// DELETE endpoint to remove a playlist by ID
+app["delete"]('/api/playlists/:id', /*#__PURE__*/function () {
+  var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
+    var id, deletedPlaylist;
+    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+      while (1) switch (_context8.prev = _context8.next) {
+        case 0:
+          _context8.prev = 0;
+          id = req.params.id;
+          _context8.next = 4;
+          return PlaylistModel.findByIdAndDelete(id);
+        case 4:
+          deletedPlaylist = _context8.sent;
+          if (deletedPlaylist) {
+            _context8.next = 7;
+            break;
+          }
+          return _context8.abrupt("return", res.status(404).json({
+            message: 'Playlist not found'
+          }));
+        case 7:
+          res.status(200).json({
+            message: 'Playlist deleted successfully!'
+          });
+          _context8.next = 14;
+          break;
+        case 10:
+          _context8.prev = 10;
+          _context8.t0 = _context8["catch"](0);
+          console.error('Error deleting playlist:', _context8.t0);
           res.status(500).json({
             message: 'Error deleting playlist'
           });
         case 14:
         case "end":
-          return _context7.stop();
+          return _context8.stop();
       }
-    }, _callee7, null, [[0, 10]]);
+    }, _callee8, null, [[0, 10]]);
   }));
-  return function (_x13, _x14) {
-    return _ref7.apply(this, arguments);
+  return function (_x15, _x16) {
+    return _ref8.apply(this, arguments);
   };
 }());
 
@@ -613,17 +640,17 @@ app["delete"]('/api/playlists/:id', /*#__PURE__*/function () {
 
 // // Fetch all playlists route (no authentication)
 app.get('/api/homePlaylists', /*#__PURE__*/function () {
-  var _ref8 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
+  var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
     var playlists;
-    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-      while (1) switch (_context8.prev = _context8.next) {
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+      while (1) switch (_context9.prev = _context9.next) {
         case 0:
-          _context8.prev = 0;
-          _context8.next = 3;
+          _context9.prev = 0;
+          _context9.next = 3;
           return PlaylistModel.find().populate('creator', 'profile.username') // Populate the 'creator' field with the user's 'username'
           .populate('songs');
         case 3:
-          playlists = _context8.sent;
+          playlists = _context9.sent;
           // Optionally populate songs as well
 
           // Modify playlists to replace the creator field with just the username
@@ -634,33 +661,33 @@ app.get('/api/homePlaylists', /*#__PURE__*/function () {
             });
           });
           res.json(playlists);
-          _context8.next = 11;
+          _context9.next = 11;
           break;
         case 8:
-          _context8.prev = 8;
-          _context8.t0 = _context8["catch"](0);
+          _context9.prev = 8;
+          _context9.t0 = _context9["catch"](0);
           res.status(500).json({
             error: 'Failed to fetch playlists'
           });
         case 11:
         case "end":
-          return _context8.stop();
+          return _context9.stop();
       }
-    }, _callee8, null, [[0, 8]]);
+    }, _callee9, null, [[0, 8]]);
   }));
-  return function (_x15, _x16) {
-    return _ref8.apply(this, arguments);
+  return function (_x17, _x18) {
+    return _ref9.apply(this, arguments);
   };
 }());
 app.post('/api/playlists', /*#__PURE__*/function () {
-  var _ref9 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
+  var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
     var _req$body4, name, genre, description, hashtags, coverImage, creator, defaultImageUrl, newPlaylist, savedPlaylist;
-    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-      while (1) switch (_context9.prev = _context9.next) {
+    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+      while (1) switch (_context10.prev = _context10.next) {
         case 0:
           _req$body4 = req.body, name = _req$body4.name, genre = _req$body4.genre, description = _req$body4.description, hashtags = _req$body4.hashtags, coverImage = _req$body4.coverImage, creator = _req$body4.creator; // Default image URL
-          defaultImageUrl = 'https://img.freepik.com/free-photo/vivid-blurred-colorful-wallpaper-background_58702-4216.jpg?t=st=1730496577~exp=1730500177~hmac=96d88cbbdaa633fe2050cd4039fefbf75acd6dd72b6c08ed5258f14237c9353a&w=996';
-          _context9.prev = 2;
+          defaultImageUrl = 'https://img.freepik.com/free-photo/red-background-with-slight-shades_23-2147734193.jpg?t=st=1730496549~exp=1730500149~hmac=2f5ef3cdc14e6b5b5d430d8bf27485b8bfed1572bd4d7868add1f4433b6d533e&w=996';
+          _context10.prev = 2;
           newPlaylist = new PlaylistModel({
             name: name,
             genre: genre,
@@ -670,71 +697,71 @@ app.post('/api/playlists', /*#__PURE__*/function () {
             // Use default if coverImage is missing
             creator: creator
           });
-          _context9.next = 6;
+          _context10.next = 6;
           return newPlaylist.save();
         case 6:
-          savedPlaylist = _context9.sent;
+          savedPlaylist = _context10.sent;
           res.status(201).json(savedPlaylist);
-          _context9.next = 14;
+          _context10.next = 14;
           break;
         case 10:
-          _context9.prev = 10;
-          _context9.t0 = _context9["catch"](2);
-          console.error('Error adding playlist:', _context9.t0);
+          _context10.prev = 10;
+          _context10.t0 = _context10["catch"](2);
+          console.error('Error adding playlist:', _context10.t0);
           res.status(500).json({
             message: 'Failed to add new playlist.'
           });
         case 14:
         case "end":
-          return _context9.stop();
-      }
-    }, _callee9, null, [[2, 10]]);
-  }));
-  return function (_x17, _x18) {
-    return _ref9.apply(this, arguments);
-  };
-}());
-
-// Fetch all playlists route (no authentication)
-app.get('/api/play', /*#__PURE__*/function () {
-  var _ref10 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
-    var playlists;
-    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
-      while (1) switch (_context10.prev = _context10.next) {
-        case 0:
-          _context10.prev = 0;
-          _context10.next = 3;
-          return PlaylistModel.find();
-        case 3:
-          playlists = _context10.sent;
-          // Fetch all songs
-          res.json(playlists);
-          _context10.next = 10;
-          break;
-        case 7:
-          _context10.prev = 7;
-          _context10.t0 = _context10["catch"](0);
-          res.status(500).json({
-            error: 'Failed to fetch songs'
-          });
-        case 10:
-        case "end":
           return _context10.stop();
       }
-    }, _callee10, null, [[0, 7]]);
+    }, _callee10, null, [[2, 10]]);
   }));
   return function (_x19, _x20) {
     return _ref10.apply(this, arguments);
   };
 }());
-app.post('/api/playlists', /*#__PURE__*/function () {
+
+// Fetch all playlists route (no authentication)
+app.get('/api/play', /*#__PURE__*/function () {
   var _ref11 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(req, res) {
-    var _req$body5, name, genre, description, hashtags, coverImage, creator, newPlaylist, savedPlaylist;
+    var playlists;
     return _regeneratorRuntime().wrap(function _callee11$(_context11) {
       while (1) switch (_context11.prev = _context11.next) {
         case 0:
+          _context11.prev = 0;
+          _context11.next = 3;
+          return PlaylistModel.find();
+        case 3:
+          playlists = _context11.sent;
+          // Fetch all songs
+          res.json(playlists);
+          _context11.next = 10;
+          break;
+        case 7:
+          _context11.prev = 7;
+          _context11.t0 = _context11["catch"](0);
+          res.status(500).json({
+            error: 'Failed to fetch songs'
+          });
+        case 10:
+        case "end":
+          return _context11.stop();
+      }
+    }, _callee11, null, [[0, 7]]);
+  }));
+  return function (_x21, _x22) {
+    return _ref11.apply(this, arguments);
+  };
+}());
+app.post('/api/playlists', /*#__PURE__*/function () {
+  var _ref12 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12(req, res) {
+    var _req$body5, name, genre, description, hashtags, coverImage, creator, newPlaylist, savedPlaylist;
+    return _regeneratorRuntime().wrap(function _callee12$(_context12) {
+      while (1) switch (_context12.prev = _context12.next) {
+        case 0:
           _req$body5 = req.body, name = _req$body5.name, genre = _req$body5.genre, description = _req$body5.description, hashtags = _req$body5.hashtags, coverImage = _req$body5.coverImage, creator = _req$body5.creator;
-          _context11.prev = 1;
+          _context12.prev = 1;
           // Create and save the new playlist
           newPlaylist = new PlaylistModel({
             name: name,
@@ -744,44 +771,44 @@ app.post('/api/playlists', /*#__PURE__*/function () {
             coverImage: coverImage,
             creator: creator
           });
-          _context11.next = 5;
+          _context12.next = 5;
           return newPlaylist.save();
         case 5:
-          savedPlaylist = _context11.sent;
+          savedPlaylist = _context12.sent;
           // Save the playlist to the database
 
           res.status(201).json(savedPlaylist); // Return the saved playlist details
-          _context11.next = 13;
+          _context12.next = 13;
           break;
         case 9:
-          _context11.prev = 9;
-          _context11.t0 = _context11["catch"](1);
-          console.error('Error adding playlist:', _context11.t0);
+          _context12.prev = 9;
+          _context12.t0 = _context12["catch"](1);
+          console.error('Error adding playlist:', _context12.t0);
           res.status(500).json({
             message: 'Failed to add new playlist.'
           });
         case 13:
         case "end":
-          return _context11.stop();
+          return _context12.stop();
       }
-    }, _callee11, null, [[1, 9]]);
+    }, _callee12, null, [[1, 9]]);
   }));
-  return function (_x21, _x22) {
-    return _ref11.apply(this, arguments);
+  return function (_x23, _x24) {
+    return _ref12.apply(this, arguments);
   };
 }());
 
 // Update playlist route
 app.put('/api/playlists/:playlistId', /*#__PURE__*/function () {
-  var _ref12 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12(req, res) {
+  var _ref13 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee13(req, res) {
     var playlistId, _req$body6, name, genre, description, coverImage, updatedPlaylist;
-    return _regeneratorRuntime().wrap(function _callee12$(_context12) {
-      while (1) switch (_context12.prev = _context12.next) {
+    return _regeneratorRuntime().wrap(function _callee13$(_context13) {
+      while (1) switch (_context13.prev = _context13.next) {
         case 0:
           playlistId = req.params.playlistId;
           _req$body6 = req.body, name = _req$body6.name, genre = _req$body6.genre, description = _req$body6.description, coverImage = _req$body6.coverImage;
-          _context12.prev = 2;
-          _context12.next = 5;
+          _context13.prev = 2;
+          _context13.next = 5;
           return PlaylistModel.findByIdAndUpdate(playlistId, {
             name: name,
             genre: genre,
@@ -792,12 +819,12 @@ app.put('/api/playlists/:playlistId', /*#__PURE__*/function () {
           } // Return the updated document
           );
         case 5:
-          updatedPlaylist = _context12.sent;
+          updatedPlaylist = _context13.sent;
           if (updatedPlaylist) {
-            _context12.next = 8;
+            _context13.next = 8;
             break;
           }
-          return _context12.abrupt("return", res.status(404).json({
+          return _context13.abrupt("return", res.status(404).json({
             message: 'Playlist not found'
           }));
         case 8:
@@ -805,77 +832,161 @@ app.put('/api/playlists/:playlistId', /*#__PURE__*/function () {
             message: 'Playlist updated successfully',
             playlist: updatedPlaylist
           });
-          _context12.next = 15;
+          _context13.next = 15;
           break;
         case 11:
-          _context12.prev = 11;
-          _context12.t0 = _context12["catch"](2);
-          console.error('Error updating playlist:', _context12.t0);
+          _context13.prev = 11;
+          _context13.t0 = _context13["catch"](2);
+          console.error('Error updating playlist:', _context13.t0);
           res.status(500).json({
             message: 'Failed to update playlist'
           });
         case 15:
         case "end":
-          return _context12.stop();
-      }
-    }, _callee12, null, [[2, 11]]);
-  }));
-  return function (_x23, _x24) {
-    return _ref12.apply(this, arguments);
-  };
-}());
-
-// Fetch all users route (no authentication)
-app.get('/api/users', /*#__PURE__*/function () {
-  var _ref13 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee13(req, res) {
-    var users;
-    return _regeneratorRuntime().wrap(function _callee13$(_context13) {
-      while (1) switch (_context13.prev = _context13.next) {
-        case 0:
-          _context13.prev = 0;
-          _context13.next = 3;
-          return UserModel.find();
-        case 3:
-          users = _context13.sent;
-          // Fetch all users
-          res.json(users);
-          _context13.next = 10;
-          break;
-        case 7:
-          _context13.prev = 7;
-          _context13.t0 = _context13["catch"](0);
-          res.status(500).json({
-            error: 'Failed to fetch users'
-          });
-        case 10:
-        case "end":
           return _context13.stop();
       }
-    }, _callee13, null, [[0, 7]]);
+    }, _callee13, null, [[2, 11]]);
   }));
   return function (_x25, _x26) {
     return _ref13.apply(this, arguments);
   };
 }());
 
-// Fetch user profile by ID route
-app.get('/api/user/:userId', /*#__PURE__*/function () {
+// Add a comment to a playlist
+app.post('/api/playlists/:playlistId/comments', /*#__PURE__*/function () {
   var _ref14 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14(req, res) {
-    var userId, user;
+    var playlistId, _req$body7, userId, text, newComment, savedComment;
     return _regeneratorRuntime().wrap(function _callee14$(_context14) {
       while (1) switch (_context14.prev = _context14.next) {
         case 0:
-          _context14.prev = 0;
-          userId = req.params.userId; // Get userId from request parameters
-          _context14.next = 4;
-          return UserModel.findById(userId).populate('playlists').populate('songs');
+          playlistId = req.params.playlistId;
+          _req$body7 = req.body, userId = _req$body7.userId, text = _req$body7.text;
+          _context14.prev = 2;
+          newComment = new CommentModel({
+            playlistId: playlistId,
+            userId: userId,
+            text: text
+          });
+          _context14.next = 6;
+          return newComment.save();
+        case 6:
+          savedComment = _context14.sent;
+          res.status(201).json(savedComment);
+          _context14.next = 14;
+          break;
+        case 10:
+          _context14.prev = 10;
+          _context14.t0 = _context14["catch"](2);
+          console.error('Error adding comment:', _context14.t0);
+          res.status(500).json({
+            message: 'Failed to add comment'
+          });
+        case 14:
+        case "end":
+          return _context14.stop();
+      }
+    }, _callee14, null, [[2, 10]]);
+  }));
+  return function (_x27, _x28) {
+    return _ref14.apply(this, arguments);
+  };
+}());
+
+// Delete a comment by ID
+app["delete"]('/api/comments/:commentId', /*#__PURE__*/function () {
+  var _ref15 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15(req, res) {
+    var commentId, deletedComment;
+    return _regeneratorRuntime().wrap(function _callee15$(_context15) {
+      while (1) switch (_context15.prev = _context15.next) {
+        case 0:
+          commentId = req.params.commentId;
+          _context15.prev = 1;
+          _context15.next = 4;
+          return CommentModel.findByIdAndDelete(commentId);
         case 4:
-          user = _context14.sent;
-          if (user) {
-            _context14.next = 7;
+          deletedComment = _context15.sent;
+          if (deletedComment) {
+            _context15.next = 7;
             break;
           }
-          return _context14.abrupt("return", res.status(404).json({
+          return _context15.abrupt("return", res.status(404).json({
+            message: 'Comment not found'
+          }));
+        case 7:
+          res.status(200).json({
+            message: 'Comment deleted successfully'
+          });
+          _context15.next = 14;
+          break;
+        case 10:
+          _context15.prev = 10;
+          _context15.t0 = _context15["catch"](1);
+          console.error('Error deleting comment:', _context15.t0);
+          res.status(500).json({
+            message: 'Failed to delete comment'
+          });
+        case 14:
+        case "end":
+          return _context15.stop();
+      }
+    }, _callee15, null, [[1, 10]]);
+  }));
+  return function (_x29, _x30) {
+    return _ref15.apply(this, arguments);
+  };
+}());
+
+// Fetch all users route (no authentication)
+app.get('/api/users', /*#__PURE__*/function () {
+  var _ref16 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee16(req, res) {
+    var users;
+    return _regeneratorRuntime().wrap(function _callee16$(_context16) {
+      while (1) switch (_context16.prev = _context16.next) {
+        case 0:
+          _context16.prev = 0;
+          _context16.next = 3;
+          return UserModel.find();
+        case 3:
+          users = _context16.sent;
+          // Fetch all users
+          res.json(users);
+          _context16.next = 10;
+          break;
+        case 7:
+          _context16.prev = 7;
+          _context16.t0 = _context16["catch"](0);
+          res.status(500).json({
+            error: 'Failed to fetch users'
+          });
+        case 10:
+        case "end":
+          return _context16.stop();
+      }
+    }, _callee16, null, [[0, 7]]);
+  }));
+  return function (_x31, _x32) {
+    return _ref16.apply(this, arguments);
+  };
+}());
+
+// Fetch user profile by ID route
+app.get('/api/user/:userId', /*#__PURE__*/function () {
+  var _ref17 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17(req, res) {
+    var userId, user;
+    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+      while (1) switch (_context17.prev = _context17.next) {
+        case 0:
+          _context17.prev = 0;
+          userId = req.params.userId; // Get userId from request parameters
+          _context17.next = 4;
+          return UserModel.findById(userId).populate('playlists').populate('songs');
+        case 4:
+          user = _context17.sent;
+          if (user) {
+            _context17.next = 7;
+            break;
+          }
+          return _context17.abrupt("return", res.status(404).json({
             message: 'User not found'
           }));
         case 7:
@@ -889,36 +1000,36 @@ app.get('/api/user/:userId', /*#__PURE__*/function () {
             songs: user.songs,
             picture: user.profile.picture
           });
-          _context14.next = 13;
+          _context17.next = 13;
           break;
         case 10:
-          _context14.prev = 10;
-          _context14.t0 = _context14["catch"](0);
+          _context17.prev = 10;
+          _context17.t0 = _context17["catch"](0);
           res.status(500).json({
             error: 'Failed to fetch user profile'
           }); // Handle server errors
         case 13:
         case "end":
-          return _context14.stop();
+          return _context17.stop();
       }
-    }, _callee14, null, [[0, 10]]);
+    }, _callee17, null, [[0, 10]]);
   }));
-  return function (_x27, _x28) {
-    return _ref14.apply(this, arguments);
+  return function (_x33, _x34) {
+    return _ref17.apply(this, arguments);
   };
 }());
 
 // Update user profile route
 app.put('/api/user/:userId', /*#__PURE__*/function () {
-  var _ref15 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15(req, res) {
-    var userId, _req$body7, username, name, email, picture, updatedUser;
-    return _regeneratorRuntime().wrap(function _callee15$(_context15) {
-      while (1) switch (_context15.prev = _context15.next) {
+  var _ref18 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee18(req, res) {
+    var userId, _req$body8, username, name, email, picture, updatedUser;
+    return _regeneratorRuntime().wrap(function _callee18$(_context18) {
+      while (1) switch (_context18.prev = _context18.next) {
         case 0:
           userId = req.params.userId;
-          _req$body7 = req.body, username = _req$body7.username, name = _req$body7.name, email = _req$body7.email, picture = _req$body7.picture;
-          _context15.prev = 2;
-          _context15.next = 5;
+          _req$body8 = req.body, username = _req$body8.username, name = _req$body8.name, email = _req$body8.email, picture = _req$body8.picture;
+          _context18.prev = 2;
+          _context18.next = 5;
           return UserModel.findByIdAndUpdate(userId, {
             profile: {
               username: username,
@@ -930,12 +1041,12 @@ app.put('/api/user/:userId', /*#__PURE__*/function () {
           } // Return the updated document
           );
         case 5:
-          updatedUser = _context15.sent;
+          updatedUser = _context18.sent;
           if (updatedUser) {
-            _context15.next = 8;
+            _context18.next = 8;
             break;
           }
-          return _context15.abrupt("return", res.status(404).json({
+          return _context18.abrupt("return", res.status(404).json({
             message: 'User not found'
           }));
         case 8:
@@ -949,44 +1060,44 @@ app.put('/api/user/:userId', /*#__PURE__*/function () {
               picture: updatedUser.profile.picture
             }
           });
-          _context15.next = 15;
+          _context18.next = 15;
           break;
         case 11:
-          _context15.prev = 11;
-          _context15.t0 = _context15["catch"](2);
-          console.error('Error updating user:', _context15.t0);
+          _context18.prev = 11;
+          _context18.t0 = _context18["catch"](2);
+          console.error('Error updating user:', _context18.t0);
           res.status(500).json({
             message: 'Failed to update user profile'
           });
         case 15:
         case "end":
-          return _context15.stop();
+          return _context18.stop();
       }
-    }, _callee15, null, [[2, 11]]);
+    }, _callee18, null, [[2, 11]]);
   }));
-  return function (_x29, _x30) {
-    return _ref15.apply(this, arguments);
+  return function (_x35, _x36) {
+    return _ref18.apply(this, arguments);
   };
 }());
 
 // Delete user profile
 app["delete"]('/api/user/:id', /*#__PURE__*/function () {
-  var _ref16 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee16(req, res) {
+  var _ref19 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee19(req, res) {
     var userId;
-    return _regeneratorRuntime().wrap(function _callee16$(_context16) {
-      while (1) switch (_context16.prev = _context16.next) {
+    return _regeneratorRuntime().wrap(function _callee19$(_context19) {
+      while (1) switch (_context19.prev = _context19.next) {
         case 0:
           userId = req.params.id;
-          _context16.prev = 1;
-          _context16.next = 4;
+          _context19.prev = 1;
+          _context19.next = 4;
           return UserModel.findByIdAndDelete(userId);
         case 4:
-          _context16.next = 6;
+          _context19.next = 6;
           return Song.deleteMany({
             creator: userId
           });
         case 6:
-          _context16.next = 8;
+          _context19.next = 8;
           return PlaylistModel.deleteMany({
             creator: userId
           });
@@ -994,54 +1105,54 @@ app["delete"]('/api/user/:id', /*#__PURE__*/function () {
           res.status(200).json({
             message: "User profile deleted successfully."
           });
-          _context16.next = 15;
+          _context19.next = 15;
           break;
         case 11:
-          _context16.prev = 11;
-          _context16.t0 = _context16["catch"](1);
-          console.error('Error deleting user profile:', _context16.t0);
+          _context19.prev = 11;
+          _context19.t0 = _context19["catch"](1);
+          console.error('Error deleting user profile:', _context19.t0);
           res.status(500).json({
             message: "Failed to delete user profile."
           });
         case 15:
         case "end":
-          return _context16.stop();
+          return _context19.stop();
       }
-    }, _callee16, null, [[1, 11]]);
+    }, _callee19, null, [[1, 11]]);
   }));
-  return function (_x31, _x32) {
-    return _ref16.apply(this, arguments);
+  return function (_x37, _x38) {
+    return _ref19.apply(this, arguments);
   };
 }());
 app.get('/api/genres', /*#__PURE__*/function () {
-  var _ref17 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee17(req, res) {
+  var _ref20 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee20(req, res) {
     var genres;
-    return _regeneratorRuntime().wrap(function _callee17$(_context17) {
-      while (1) switch (_context17.prev = _context17.next) {
+    return _regeneratorRuntime().wrap(function _callee20$(_context20) {
+      while (1) switch (_context20.prev = _context20.next) {
         case 0:
-          _context17.prev = 0;
-          _context17.next = 3;
+          _context20.prev = 0;
+          _context20.next = 3;
           return GenreModel.find();
         case 3:
-          genres = _context17.sent;
+          genres = _context20.sent;
           // Assuming you have a Genre model
           res.json(genres);
-          _context17.next = 10;
+          _context20.next = 10;
           break;
         case 7:
-          _context17.prev = 7;
-          _context17.t0 = _context17["catch"](0);
+          _context20.prev = 7;
+          _context20.t0 = _context20["catch"](0);
           res.status(500).json({
             message: 'Error fetching genres'
           });
         case 10:
         case "end":
-          return _context17.stop();
+          return _context20.stop();
       }
-    }, _callee17, null, [[0, 7]]);
+    }, _callee20, null, [[0, 7]]);
   }));
-  return function (_x33, _x34) {
-    return _ref17.apply(this, arguments);
+  return function (_x39, _x40) {
+    return _ref20.apply(this, arguments);
   };
 }());
 

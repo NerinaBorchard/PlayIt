@@ -47,15 +47,38 @@ const playlistSchema = new mongoose.Schema({
   hashtags: [{ type: String }],
   creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   songs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song' }],
-  comments: [{
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    text: { type: String, required: true },
-    date: { type: Date, default: Date.now },
-  }],
   dateCreated: { type: Date, default: Date.now },
 });
 
 const PlaylistModel = mongoose.model('Playlist', playlistSchema);
+
+// // Comment Schema
+// const CommentSchema = new mongoose.Schema({
+//   text: { type: String, required: true },
+//   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+//   playlistId: { type: mongoose.Schema.Types.ObjectId, ref: 'Playlist', required: true },
+// });
+
+// const CommentModel = mongoose.model('Comment', CommentSchema);
+// module.exports = CommentModel;
+
+// // Comment Schema
+// const commentSchema = new mongoose.Schema({
+//   text: String,
+//   user: String,
+//   playlistId: String, // Ensure this is a String
+// });
+// const Comment = mongoose.model('Comment', commentSchema);
+
+const commentSchema = new mongoose.Schema({
+  text: String,
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  playlistId: String,
+});
+
+const Comment = mongoose.model('Comment', commentSchema);
+
+
 
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -115,33 +138,6 @@ app.post('/api/login', async (req, res) => {
     res.status(401).json({ message: "Invalid email or password" });
   }
 });
-
-
-// // Signup route
-// app.post('/api/signup', async (req, res) => {
-//   const { email, password } = req.body;
-//   const existingUser = await UserModel.findOne({ email });
-
-//   if (existingUser) {
-//     return res.status(409).json({ message: "User already exists" });
-//   }
-
-//   const hashedPassword = await bcrypt.hash(password, 10);
-//   const newUser = new UserModel({
-//     email,
-//     password: hashedPassword,
-//     profile: {
-//       username: email.split('@')[0],
-//       name: email.split('@')[0],
-//     },
-//     playlists: [],
-//     songs: []
-//   });
-
-//   await newUser.save();
-//   res.status(201).json({ message: "User created successfully" });
-// });
-
 
 
 // Signup route
@@ -221,55 +217,6 @@ app.post('/api/songs', async (req, res) => {
   }
 });
 
-// app.post('/api/songs', async (req, res) => {
-//   const { title, artist, songLink, coverUrl, creator } = req.body;
-
-//   try {
-//     const newSong = new Song({
-//       title,
-//       artist,
-//       link: songLink,
-//       image: coverUrl,
-//       creator, // Assuming you pass the creator's ID from the frontend
-//     });
-
-//     const savedSong = await newSong.save(); // Save the new song to the database
-//     res.status(201).json(savedSong); // Return the saved song details
-//   } catch (err) {
-//     console.error('Error adding song:', err);
-//     res.status(500).json({ message: 'Failed to add new song.' });
-//   }
-// });
-
-// app.post('/api/songs', async (req, res) => {
-//   const { title, artist, songLink, coverUrl, creator } = req.body;
-
-//   try {
-//     // Create and save the new song
-//     const newSong = new Song({
-//       title,
-//       artist,
-//       link: songLink,
-//       image: coverUrl,
-//       creator,
-//     });
-
-//     const savedSong = await newSong.save(); // Save the song to the database
-
-//     // Find the user by the creator's ID and update their songs list
-//     await UserModel.findByIdAndUpdate(
-//       creator,
-//       { $push: { songs: savedSong._id } }, // Add the song ID to the user's songs array
-//       { new: true } // Return the updated document
-//     );
-
-//     res.status(201).json(savedSong); // Return the saved song details
-//   } catch (err) {
-//     console.error('Error adding song:', err);
-//     res.status(500).json({ message: 'Failed to add new song.' });
-//   }
-// });
-
 
 // Delete a song by ID
 app.delete('/api/songs/:id', async (req, res) => {
@@ -297,17 +244,99 @@ app.delete('/api/songs/:id', async (req, res) => {
 });
 
 
-// Backend route (e.g., Node.js/Express)
+
+// // Backend route (Node.js/Express)
+// app.get('/api/playlists/:id', async (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     const playlist = await PlaylistModel.findById(id)
+//       .populate('creator', 'profile.username'); // Adjust the path to match your user schema
+
+//     if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
+    
+//     res.json(playlist);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching playlist', error });
+//   }
+// });
+
+
+
+// app.get('/api/comments/:playlistId', async (req, res) => {
+//   const { playlistId } = req.params;
+//   try {
+//     const comments = await CommentModel.find({ playlistId: playlistId })
+//       .populate('user', 'profile.username'); // Populate user to get username
+//     res.json(comments); // Return only the comments
+//   } catch (error) {
+//     console.error('Error fetching comments:', error); // Log the error for debugging
+//     res.status(500).json({ message: 'Error fetching comments', error });
+//   }
+// });
+
+// app.get('/api/comments/:playlistId', async (req, res) => {
+//   const { playlistId } = req.params;
+//   try {
+//     const comments = await CommentModel.find({ playlistId: playlistId })
+//       .populate('user', 'profile.username'); // Populate user to get username
+//     res.json(comments);
+//   } catch (error) {
+//     console.error('Error fetching comments:', error);
+//     res.status(500).json({ message: 'Error fetching comments', error });
+//   }
+// });
+
+// app.get('/api/comments', async (req, res) => {
+//   const { playlistId } = req.query;
+//   console.log('Received playlistId:', playlistId); // Debugging line
+//   try {
+//     const comments = await Comment.find({ playlistId });
+//     console.log('Fetched comments:', comments); // Log fetched comments for verification
+//     res.json(comments);
+//   } catch (error) {
+//     console.error('Error fetching comments:', error);
+//     res.status(500).json({ error: 'Failed to fetch comments' });
+//   }
+// });
+
+
+app.get('/api/comments', async (req, res) => {
+  const { playlistId } = req.query;
+  console.log('Received playlistId:', playlistId); // Debugging line
+  try {
+    // Populate the 'user' field with the 'profile' subfield of the User model
+    const comments = await Comment.find({ playlistId }).populate('user', 'profile.username');
+    console.log('Fetched comments:', comments); // Log fetched comments for verification
+    res.json(comments);
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    res.status(500).json({ error: 'Failed to fetch comments' });
+  }
+});
+
+
+
+
+
+
 app.get('/api/playlists/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const playlist = await PlaylistModel.findById(id);
+    const playlist = await PlaylistModel.findById(id)
+      .populate('creator', 'profile.username'); // Adjust the path to match your user schema
+
     if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
-    res.json(playlist);
+
+    res.json(playlist); // Only return the playlist
   } catch (error) {
     res.status(500).json({ message: 'Error fetching playlist', error });
   }
 });
+
+
+
+
+
 
 
 // DELETE endpoint to remove a playlist by ID
@@ -379,7 +408,7 @@ app.post('/api/playlists', async (req, res) => {
   const { name, genre, description, hashtags, coverImage, creator } = req.body;
 
   // Default image URL
-  const defaultImageUrl = 'https://img.freepik.com/free-photo/vivid-blurred-colorful-wallpaper-background_58702-4216.jpg?t=st=1730496577~exp=1730500177~hmac=96d88cbbdaa633fe2050cd4039fefbf75acd6dd72b6c08ed5258f14237c9353a&w=996';
+  const defaultImageUrl = 'https://img.freepik.com/free-photo/red-background-with-slight-shades_23-2147734193.jpg?t=st=1730496549~exp=1730500149~hmac=2f5ef3cdc14e6b5b5d430d8bf27485b8bfed1572bd4d7868add1f4433b6d533e&w=996';
   
   try {
     const newPlaylist = new PlaylistModel({
@@ -461,6 +490,40 @@ app.put('/api/playlists/:playlistId', async (req, res) => {
     res.status(500).json({ message: 'Failed to update playlist' });
   }
 });
+
+
+
+// Add a comment to a playlist
+app.post('/api/playlists/:playlistId/comments', async (req, res) => {
+  const { playlistId } = req.params;
+  const { userId, text } = req.body;
+
+  try {
+    const newComment = new CommentModel({ playlistId, userId, text });
+    const savedComment = await newComment.save();
+    res.status(201).json(savedComment);
+  } catch (err) {
+    console.error('Error adding comment:', err);
+    res.status(500).json({ message: 'Failed to add comment' });
+  }
+});
+
+// Delete a comment by ID
+app.delete('/api/comments/:commentId', async (req, res) => {
+  const { commentId } = req.params;
+
+  try {
+    const deletedComment = await CommentModel.findByIdAndDelete(commentId);
+    if (!deletedComment) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+    res.status(200).json({ message: 'Comment deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting comment:', error);
+    res.status(500).json({ message: 'Failed to delete comment' });
+  }
+});
+
 
 
 
