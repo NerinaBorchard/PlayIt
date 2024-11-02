@@ -72,6 +72,16 @@ const userSchema = new mongoose.Schema({
 
 const UserModel = mongoose.model('User', userSchema);
 
+const GenreSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+});
+
+const GenreModel = mongoose.model('Genre', GenreSchema);
+
 // API Routes
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -347,23 +357,23 @@ app.delete('/api/playlists/:id', async (req, res) => {
 
 
 // // Fetch all playlists route (no authentication)
-// app.get('/api/homePlaylists', async (req, res) => {
-//   try {
-//     let playlists = await PlaylistModel.find()
-//       .populate('creator', 'profile.username') // Populate the 'creator' field with the user's 'username'
-//       .populate('songs'); // Optionally populate songs as well
+app.get('/api/homePlaylists', async (req, res) => {
+  try {
+    let playlists = await PlaylistModel.find()
+      .populate('creator', 'profile.username') // Populate the 'creator' field with the user's 'username'
+      .populate('songs'); // Optionally populate songs as well
 
-//     // Modify playlists to replace the creator field with just the username
-//     playlists = playlists.map(playlist => ({
-//       ...playlist._doc, // Get the original playlist document
-//       creator: playlist.creator.profile.username // Replace creator with the username
-//     }));
+    // Modify playlists to replace the creator field with just the username
+    playlists = playlists.map(playlist => ({
+      ...playlist._doc, // Get the original playlist document
+      creator: playlist.creator.profile.username // Replace creator with the username
+    }));
 
-//     res.json(playlists);
-//   } catch (err) {
-//     res.status(500).json({ error: 'Failed to fetch playlists' });
-//   }
-// });
+    res.json(playlists);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch playlists' });
+  }
+});
 
 app.post('/api/playlists', async (req, res) => {
   const { name, genre, description, hashtags, coverImage, creator } = req.body;
@@ -549,6 +559,17 @@ app.delete('/api/user/:id', async (req, res) => {
     res.status(500).json({ message: "Failed to delete user profile." });
   }
 });
+
+
+app.get('/api/genres', async (req, res) => {
+  try {
+    const genres = await GenreModel.find(); // Assuming you have a Genre model
+    res.json(genres);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching genres' });
+  }
+});
+
 
 
 // Serve index.html for all other routes

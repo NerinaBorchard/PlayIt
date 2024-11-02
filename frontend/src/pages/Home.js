@@ -8,7 +8,6 @@ class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchQuery: '',
       songs: [],       // State to hold the fetched songs
       playlists: [],   // State to hold the fetched playlists
     };
@@ -24,22 +23,19 @@ class HomePage extends Component {
         console.error("There was an error fetching the songs!", error);
       });
 
-    // Fetch playlists from your MongoDB API
-    axios.get('/api/playlists')
-      .then(response => {
-        this.setState({ playlists: response.data });
-      })
-      .catch(error => {
-        console.error("There was an error fetching the playlists!", error);
-      });
+   // Fetch playlists from your MongoDB API
+    axios.get('/api/homePlaylists')
+    .then(response => {
+      console.log("Playlists fetched:", response.data); // Log playlists data
+      this.setState({ playlists: response.data });
+    })
+    .catch(error => {
+      console.error("There was an error fetching the playlists!", error);
+    });
   }
 
-  handleSearchChange = (event) => {
-    this.setState({ searchQuery: event.target.value });
-  };
-
   render() {
-    const { searchQuery, songs, playlists } = this.state;
+    const { songs, playlists } = this.state;
 
     const styles = {
       homePage: {

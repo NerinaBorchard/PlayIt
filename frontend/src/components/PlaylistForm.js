@@ -58,52 +58,9 @@ class PlaylistForm extends Component {
       image: '',
       message: '',
       error: false,
+      genres: [], // State to hold genres
     };
   }
-
-//   handleSubmit = async (e) => {
-//     e.preventDefault();
-//     const { name, genre, description, hashtags, image } = this.state; // Use 'image' here
-//     const userData = JSON.parse(localStorage.getItem('user'));
-//     const creatorId = userData?.id;
-
-//     try {
-//         // First API call to add the playlist
-//         const response = await fetch('/api/playlists', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({ 
-//                 name, 
-//                 genre, 
-//                 description, 
-//                 hashtags: hashtags.split(',').map(tag => tag.trim()), // Convert comma-separated hashtags to an array
-//                 coverImage: image, // Use 'image' instead of 'coverImage'
-//                 creator: creatorId 
-//             }),
-//         });
-
-//         if (!response.ok) {
-//             throw new Error('Failed to add playlist');
-//         }
-
-//         const data = await response.json();
-//         console.log('New playlist added:', data);
-
-//         // Reset the form fields
-//         this.setState({ 
-//             name: '', 
-//             genre: '', 
-//             description: '', 
-//             hashtags: '', // Reset to empty string for text input
-//             image: '' // Reset image as well
-//         });
-//     } catch (error) {
-//         console.error('Error:', error);
-//         this.setState({ message: error.message, error: true }); // Show error message to user
-//     }
-// };
 
     handleSubmit = async (e) => {
       e.preventDefault();
@@ -150,7 +107,16 @@ class PlaylistForm extends Component {
       }
     };
 
-
+    componentDidMount() {
+      // Fetch genres from the API
+      axios.get('/api/genres')
+        .then(response => {
+          this.setState({ genres: response.data });
+        })
+        .catch(error => {
+          console.error("Error fetching genres:", error);
+        });
+    }
 
   handleChange = (e) => {
     const { name, value } = e.target;
@@ -158,7 +124,7 @@ class PlaylistForm extends Component {
   };
 
   render() {
-    const { name, genre, description, hashtags, image, message, error } = this.state;
+    const { name, genre, description, hashtags, image, message, error, genres } = this.state;
 
     return (
       <div style={styles.formContainer}>
@@ -176,15 +142,19 @@ class PlaylistForm extends Component {
             />
           </div>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Genre</label>
-            <input 
-              type="text" 
-              name="genre"
-              value={genre} 
-              onChange={this.handleChange} 
-              style={styles.input} 
-              required
-            />
+          <label style={styles.label}>Genre</label>
+          <select 
+            name="genre"
+            value={genre}
+            onChange={this.handleChange}
+            style={styles.input}
+            required
+          >
+            <option value="">Select a Genre</option>
+            {genres.map((g) => (
+              <option key={g._id} value={g.name}>{g.name}</option>
+            ))}
+          </select>
           </div>
           <div style={styles.formGroup}>
             <label style={styles.label}>Description</label>

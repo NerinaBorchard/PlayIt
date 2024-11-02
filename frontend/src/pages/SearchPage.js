@@ -26,7 +26,7 @@ class SearchPage extends Component {
         console.error("There was an error fetching the songs!", error);
       });
 
-    axios.get('/api/playlists')
+    axios.get('/api/homePlaylists')
       .then(response => {
         this.setState({ playlists: response.data });
       })
