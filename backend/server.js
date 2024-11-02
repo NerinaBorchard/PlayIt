@@ -53,6 +53,7 @@ const playlistSchema = new mongoose.Schema({
 
 const PlaylistModel = mongoose.model('Playlist', playlistSchema);
 
+
 // // Comment Schema
 // const CommentSchema = new mongoose.Schema({
 //   text: { type: String, required: true },
@@ -190,6 +191,26 @@ app.get('/api/songs', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch songs' });
   }
 });
+
+
+app.patch('/api/playlists/:id/songs', async (req, res) => {
+  const { songIds } = req.body;
+  console.log("Received song IDs:", songIds); // Debugging line
+
+  try {
+    const updatedPlaylist = await PlaylistModel.findByIdAndUpdate(
+      req.params.id,
+      { $addToSet: { songs: { $each: songIds } } },
+      { new: true }
+    );
+    res.json(updatedPlaylist);
+  } catch (error) {
+    console.error('Error updating playlist with eish songs:', error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
 
 // Add new song route
 app.post('/api/songs', async (req, res) => {
