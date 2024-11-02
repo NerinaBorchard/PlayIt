@@ -10,91 +10,82 @@ class ProfilePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      songs: [], // Songs from the database
-      playlists: [], // Playlists from the database
-      user: {}, // Current user details
+      songs: [],
+      playlists: [],
+      user: {},
+      bookmarked: [],
     };
   }
 
   componentDidMount() {
     this.fetchSongs();
     this.fetchPlaylists();
-    this.fetchUserDetails(); // Fetch user details
+    this.fetchUserDetails();
+    this.fetchBookmarkedPlaylists();
   }
 
   fetchSongs = async () => {
     try {
-      // Retrieve user data from local storage
       const userData = JSON.parse(localStorage.getItem('user'));
-      const creatorId = userData?.id; // Get the creator ID from local storage
-  
+      const creatorId = userData?.id;
+
       if (!creatorId) {
         console.error('User ID not found');
         return;
       }
-  
-      // Fetch songs from the database
+
       const response = await axios.get('/api/songs');
       const allSongs = response.data;
-  
-      // Filter songs to only include the ones created by the current user
+
       const userSongs = allSongs.filter(song => song.creator === creatorId);
-  
-      // Update the state with the filtered songs
       this.setState({ songs: userSongs });
     } catch (error) {
       console.error('Error fetching songs:', error);
     }
   };
 
-
   fetchPlaylists = async () => {
     try {
-      // Retrieve user data from local storage
       const userData = JSON.parse(localStorage.getItem('user'));
-      const userId = userData?.id; // Assuming the user ID is stored in 'id'
-      
+      const userId = userData?.id;
+
       if (!userId) {
         console.error('User ID not found');
         return;
       }
 
-      // Fetch playlists from the database
       const response = await axios.get('/api/play');
       const allPlaylists = response.data;
-  
-      // Filter playlists to only include the ones created by the user
+
       const userPlaylists = allPlaylists.filter(playlist => playlist.creator === userId);
-  
-      // Update the state with the filtered playlists
       this.setState({ playlists: userPlaylists });
     } catch (error) {
       console.error('Error fetching playlists:', error);
     }
   };
 
-  // fetchUserDetails = () => {
-  //   // Retrieve user data from local storage
-  //   const userData = JSON.parse(localStorage.getItem('user'));
-  //   console.log("User Data:", userData); // 
-  //   // Update the state with user details
-  //   if (userData) {
-  //     this.setState({ user: userData });
-  //   }
-  // };
-
   fetchUserDetails = () => {
-  // Retrieve user data from local storage
-  const userData = JSON.parse(localStorage.getItem('user'));
-  console.log("User Data:", userData); // Check if userData has `profile.picture`
-  if (userData) {
-    this.setState({ user: userData });
-  }
-};
+    const userData = JSON.parse(localStorage.getItem('user'));
+    console.log("User Data:", userData);
+    if (userData) {
+      this.setState({ user: userData });
+    }
+  };
 
+  fetchBookmarkedPlaylists = async () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userId = user?.id;
+
+    try {
+      const response = await axios.get(`/api/bookPlaylists?userId=${userId}`);
+      this.setState({ bookmarked: response.data }); // Set the bookmarked playlists in state
+    } catch (error) {
+      console.error('Error fetching bookmarked playlists:', error);
+    }
+  };
 
   render() {
-    const { songs, playlists, user } = this.state;
+    const { songs, playlists, user, bookmarked } = this.state;
 
     return (
       <div style={styles.container}>
@@ -102,12 +93,11 @@ class ProfilePage extends Component {
 
         <div style={styles.profileContainer}>
           <div style={styles.profileHeader}>
-          <img
-            src={user.picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
-            alt="Profile Icon"
-            style={styles.profileIcon}
-          />
-
+            <img
+              src={user.picture || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+              alt="Profile Icon"
+              style={styles.profileIcon}
+            />
 
             <div style={styles.profileDetails}>
               <h1 style={styles.username}>@{user.username}</h1>
@@ -126,7 +116,7 @@ class ProfilePage extends Component {
               <h3 style={styles.sectionTitle}>Playlists I've Made</h3>
               <div style={styles.itemList}>
                 {playlists.map((playlist) => (
-                  <PlaylistComponent key={playlist.id} playlist={playlist} />
+                  <PlaylistComponent key={playlist._id} playlist={playlist} />
                 ))}
               </div>
             </div>
@@ -136,6 +126,15 @@ class ProfilePage extends Component {
               <div style={styles.itemList}>
                 {songs.map((song) => (
                   <SongComponent key={song._id} song={song} />
+                ))}
+              </div>
+            </div>
+            
+            <div style={styles.playlistsSection}>
+              <h3 style={styles.sectionTitle}>Saved Playlists</h3>
+              <div style={styles.itemList}>
+                {bookmarked.map((playlist) => (
+                  <PlaylistComponent key={playlist._id} playlist={playlist} />
                 ))}
               </div>
             </div>

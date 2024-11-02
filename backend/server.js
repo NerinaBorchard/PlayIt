@@ -48,6 +48,7 @@ const playlistSchema = new mongoose.Schema({
   creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   songs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song' }],
   dateCreated: { type: Date, default: Date.now },
+  bookmarkedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // To store user IDs of bookmarks
 });
 
 const PlaylistModel = mongoose.model('Playlist', playlistSchema);
@@ -349,8 +350,36 @@ app.get('/api/playlists/:id', async (req, res) => {
 });
 
 
+// Endpoint to update bookmark status
+app.patch('/api/playlists/:id/bookmark', async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+
+  try {
+    const playlist = await PlaylistModel.findByIdAndUpdate(id, updateData, { new: true });
+    if (!playlist) {
+      return res.status(404).json({ message: 'Playlist not found' });
+    }
+    res.json(playlist);
+  } catch (error) {
+    console.error('Error updating bookmark:', error);
+    res.status(500).json({ message: 'Error updating bookmark' });
+  }
+});
 
 
+app.get('/api/bookPlaylists', async (req, res) => {
+  const userId = req.query.userId;
+
+  try {
+    const playlists = await PlaylistModel.find({ bookmarkedBy: userId });
+    
+    res.json(playlists);
+  } catch (error) {
+    console.error('Error fetching book marked playlists:', error);
+    res.status(500).json({ message: 'Error fetching playlists' });
+  }
+});
 
 
 
