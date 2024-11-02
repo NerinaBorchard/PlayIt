@@ -499,36 +499,50 @@ app.get('/api/comments', /*#__PURE__*/function () {
     return _regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
-          playlistId = req.query.playlistId;
-          console.log('Received playlistId:', playlistId); // Debugging line
-          _context6.prev = 2;
-          _context6.next = 5;
+          playlistId = req.query.playlistId; // console.log('Received playlistId:', playlistId); // Debugging line
+          _context6.prev = 1;
+          _context6.next = 4;
           return Comment.find({
             playlistId: playlistId
           }).populate('user', 'profile.username');
-        case 5:
+        case 4:
           comments = _context6.sent;
-          console.log('Fetched comments:', comments); // Log fetched comments for verification
+          // console.log('Fetched comments:', comments); // Log fetched comments for verification
           res.json(comments);
-          _context6.next = 14;
+          _context6.next = 12;
           break;
-        case 10:
-          _context6.prev = 10;
-          _context6.t0 = _context6["catch"](2);
+        case 8:
+          _context6.prev = 8;
+          _context6.t0 = _context6["catch"](1);
           console.error('Error fetching comments:', _context6.t0);
           res.status(500).json({
             error: 'Failed to fetch comments'
           });
-        case 14:
+        case 12:
         case "end":
           return _context6.stop();
       }
-    }, _callee6, null, [[2, 10]]);
+    }, _callee6, null, [[1, 8]]);
   }));
   return function (_x11, _x12) {
     return _ref6.apply(this, arguments);
   };
 }());
+
+// app.get('/api/playlists/:id', async (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     const playlist = await PlaylistModel.findById(id)
+//       .populate('creator', 'profile.username'); // Adjust the path to match your user schema
+
+//     if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
+
+//     res.json(playlist); // Only return the playlist
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching playlist', error });
+//   }
+// });
+
 app.get('/api/playlists/:id', /*#__PURE__*/function () {
   var _ref7 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
     var id, playlist;
@@ -538,7 +552,8 @@ app.get('/api/playlists/:id', /*#__PURE__*/function () {
           id = req.params.id;
           _context7.prev = 1;
           _context7.next = 4;
-          return PlaylistModel.findById(id).populate('creator', 'profile.username');
+          return PlaylistModel.findById(id).populate('creator', 'profile.username') // Populate creator's username
+          .populate('songs');
         case 4:
           playlist = _context7.sent;
           if (playlist) {
@@ -549,7 +564,7 @@ app.get('/api/playlists/:id', /*#__PURE__*/function () {
             message: 'Playlist not found'
           }));
         case 7:
-          res.json(playlist); // Only return the playlist
+          res.json(playlist); // Return the playlist with populated songs
           _context7.next = 13;
           break;
         case 10:
@@ -852,21 +867,6 @@ app.put('/api/playlists/:playlistId', /*#__PURE__*/function () {
   };
 }());
 
-// // Add a comment to a playlist
-// app.post('/api/playlists/:playlistId/comments', async (req, res) => {
-//   const { playlistId } = req.params;
-//   const { userId, text } = req.body;
-
-//   try {
-//     const newComment = new CommentModel({ playlistId, userId, text });
-//     const savedComment = await newComment.save();
-//     res.status(201).json(savedComment);
-//   } catch (err) {
-//     console.error('Error adding comment:', err);
-//     res.status(500).json({ message: 'Failed to add comment' });
-//   }
-// });
-
 // In your backend code
 app.post('/api/comments', /*#__PURE__*/function () {
   var _ref14 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14(req, res) {
@@ -905,22 +905,6 @@ app.post('/api/comments', /*#__PURE__*/function () {
     return _ref14.apply(this, arguments);
   };
 }());
-
-// // Delete a comment by ID
-// app.delete('/api/comments/:commentId', async (req, res) => {
-//   const { commentId } = req.params;
-
-//   try {
-//     const deletedComment = await CommentModel.findByIdAndDelete(commentId);
-//     if (!deletedComment) {
-//       return res.status(404).json({ message: 'Comment not found' });
-//     }
-//     res.status(200).json({ message: 'Comment deleted successfully' });
-//   } catch (error) {
-//     console.error('Error deleting comment:', error);
-//     res.status(500).json({ message: 'Failed to delete comment' });
-//   }
-// });
 
 // Fetch all users route (no authentication)
 app.get('/api/users', /*#__PURE__*/function () {

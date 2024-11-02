@@ -302,11 +302,11 @@ app.delete('/api/songs/:id', async (req, res) => {
 
 app.get('/api/comments', async (req, res) => {
   const { playlistId } = req.query;
-  console.log('Received playlistId:', playlistId); // Debugging line
+  // console.log('Received playlistId:', playlistId); // Debugging line
   try {
     // Populate the 'user' field with the 'profile' subfield of the User model
     const comments = await Comment.find({ playlistId }).populate('user', 'profile.username');
-    console.log('Fetched comments:', comments); // Log fetched comments for verification
+    // console.log('Fetched comments:', comments); // Log fetched comments for verification
     res.json(comments);
   } catch (error) {
     console.error('Error fetching comments:', error);
@@ -319,19 +319,35 @@ app.get('/api/comments', async (req, res) => {
 
 
 
+// app.get('/api/playlists/:id', async (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     const playlist = await PlaylistModel.findById(id)
+//       .populate('creator', 'profile.username'); // Adjust the path to match your user schema
+
+//     if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
+
+//     res.json(playlist); // Only return the playlist
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching playlist', error });
+//   }
+// });
+
 app.get('/api/playlists/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const playlist = await PlaylistModel.findById(id)
-      .populate('creator', 'profile.username'); // Adjust the path to match your user schema
+      .populate('creator', 'profile.username') // Populate creator's username
+      .populate('songs'); // Populate the songs array with full song details
 
     if (!playlist) return res.status(404).json({ message: 'Playlist not found' });
 
-    res.json(playlist); // Only return the playlist
+    res.json(playlist); // Return the playlist with populated songs
   } catch (error) {
     res.status(500).json({ message: 'Error fetching playlist', error });
   }
 });
+
 
 
 

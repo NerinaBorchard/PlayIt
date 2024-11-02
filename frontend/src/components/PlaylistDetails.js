@@ -5,28 +5,23 @@ import { Link } from 'react-router-dom';
 
 class PlaylistDetails extends Component {
   handleAddSong = () => {
-    // Functionality to add a song
     alert('Add song functionality triggered!');
   };
 
   render() {
-    const { playlist } = this.props;
+    const { playlist, songs } = this.props; // Destructure songs here
 
     return (
       <div style={styles.leftSection}>
         <h1>{playlist.name}</h1>
         <p style={styles.creatorText}>
-          By {playlist.creator.profile.username} - {playlist.songs.length} songs
+          By {playlist.creator.profile.username} - {songs.length} songs {/* Use songs.length */}
         </p>
         <p style={styles.description}>{playlist.description}</p>
 
         <div style={styles.iconContainer}>
-          <FaPlusCircle 
-            style={styles.icon}
-            onClick={this.handleAddSong}  // Use `this.handleAddSong` here
-          />
-          
-          <Link to={`/editPlaylist/${playlist._id}`} >
+          <FaPlusCircle style={styles.icon} onClick={this.handleAddSong} />
+          <Link to={`/editPlaylist/${playlist._id}`}>
             <FaEdit style={styles.icon} />
           </Link>
         </div>
@@ -36,11 +31,12 @@ class PlaylistDetails extends Component {
           <p style={styles.title}>Title</p>
         </div>
 
-        <SongList songs={playlist.songs} />
+        <SongList songs={songs} /> {/* Pass songs to SongList */}
       </div>
     );
   }
 }
+
 
 const styles = {
     iconContainer: {
