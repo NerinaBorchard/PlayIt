@@ -66,10 +66,10 @@ class PlaylistComponent extends Component {
         >
           <img src={coverImage} alt={name} style={styles.image} />
           <h3 style={styles.name}>{name}</h3>
-          <p style={styles.creatorText}>
+          {/* <p style={styles.creatorText}>
             By &nbsp;
             <span style={styles.creatorName}>{creator}</span>
-          </p>
+          </p> */}
         </div>
       </Link>
     );

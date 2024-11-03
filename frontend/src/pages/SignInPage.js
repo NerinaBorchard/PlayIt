@@ -43,7 +43,7 @@ class SignInPage extends Component {
                 localStorage.setItem('user', JSON.stringify(data.user));
 
 
-                this.setState({ redirectTo: '/home' });
+                this.setState({ redirectTo: '/search' });
             } else {
                 alert('Invalid email or password');
             }

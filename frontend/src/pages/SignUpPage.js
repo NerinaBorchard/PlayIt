@@ -54,7 +54,7 @@ class SignUpPage extends Component {
 
             if (response.ok) {
                 // Successfully signed up
-                this.setState({ redirectTo: '/home' });
+                this.setState({ redirectTo: '/signin' });
             } else {
                 const errorData = await response.json();
                 this.setState({ errorMessage: errorData.message || "Signup failed." });

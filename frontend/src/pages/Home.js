@@ -95,8 +95,6 @@
 // }
 
 // export default HomePage;
-
-
 import React, { Component } from 'react';
 import NavBar from '../components/NavBar';
 import SongComponent from '../components/Song';  
@@ -157,7 +155,10 @@ class HomePage extends Component {
       itemList: {
         display: 'flex',
         gap: '15px',
-        flexWrap: 'wrap',
+        flexWrap: 'nowrap', // Prevent wrapping to maintain a single row
+        overflowX: 'auto', // Enable horizontal scrolling
+        maxWidth: '100%', // Adjust the maximum width as needed
+        padding: '10px 0', // Optional: add some padding
       },
       itemComponent: {
         border: '2px solid #0000', 

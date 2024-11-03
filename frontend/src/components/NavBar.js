@@ -64,11 +64,11 @@ class NavBar extends Component {
           {/* PlayIt logo could go here */}
         </div>
         <ul style={styles.navLinks}>
-          <li style={styles.navLinkItem}>
+          {/* <li style={styles.navLinkItem}>
             <Link to="/home" style={styles.navLink}>Home</Link>
-          </li>
+          </li> */}
           <li style={styles.navLinkItem}>
-            <Link to="/search" style={styles.navLink}>Search</Link>
+            <Link to="/search" style={styles.navLink}>Home</Link>
           </li>
           <li style={styles.navLinkItem}>
             <Link to="/playlists" style={styles.navLink}>Playlists</Link>
