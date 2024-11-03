@@ -1,0 +1,88 @@
+[{
+  "_id": {
+    "$oid": "67265d294247e75f0114f404"
+  },
+  "text": "Hope you enjoy the playlist :)",
+  "user": {
+    "$oid": "66fc8144a44aa305e0d1e65e"
+  },
+  "playlistId": "66fc7934a44aa305e0c7877d",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6726639928f15fdef76e2ef1"
+  },
+  "text": "Obessed with Khalid",
+  "user": {
+    "$oid": "66fc8144a44aa305e0d1e65e"
+  },
+  "playlistId": "66fc7934a44aa305e0c7877f",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "672667fe886edf0239cba581"
+  },
+  "text": "Sabrina Stan",
+  "user": {
+    "$oid": "66fc8144a44aa305e0d1e65e"
+  },
+  "playlistId": "66fc7934a44aa305e0c7877e",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727898bb4f6f85b82f85207"
+  },
+  "text": "so cool",
+  "user": {
+    "$oid": "67278925b4f6f85b82f851d1"
+  },
+  "playlistId": "672550034569418fe937f6b1",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727aaf948806a8aae607a5b"
+  },
+  "text": "Lets go!!!",
+  "user": {
+    "$oid": "66fc8144a44aa305e0d1e65d"
+  },
+  "playlistId": "66fc7934a44aa305e0c7877f",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727abc248806a8aae607a7e"
+  },
+  "text": "Wish moon and back wasnt removed",
+  "user": {
+    "$oid": "66fc8144a44aa305e0d1e65d"
+  },
+  "playlistId": "672550034569418fe937f6b1",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727ac31b652a681f98cb501"
+  },
+  "text": "same",
+  "user": {
+    "$oid": "66fc8144a44aa305e0d1e65e"
+  },
+  "playlistId": "672550034569418fe937f6b1",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727ac36b652a681f98cb505"
+  },
+  "text": "aiii",
+  "user": {
+    "$oid": "66fc8144a44aa305e0d1e65e"
+  },
+  "playlistId": "672550034569418fe937f6b1",
+  "__v": 0
+}]

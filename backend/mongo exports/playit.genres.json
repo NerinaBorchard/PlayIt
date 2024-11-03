@@ -1,0 +1,88 @@
+[{
+  "_id": "1",
+  "name": "Pop"
+},
+{
+  "_id": "2",
+  "name": "Rock"
+},
+{
+  "_id": "3",
+  "name": "Hip Hop"
+},
+{
+  "_id": "4",
+  "name": "Jazz"
+},
+{
+  "_id": "5",
+  "name": "Classical"
+},
+{
+  "_id": "6",
+  "name": "Electronic"
+},
+{
+  "_id": "7",
+  "name": "Country"
+},
+{
+  "_id": "8",
+  "name": "Reggae"
+},
+{
+  "_id": "9",
+  "name": "Blues"
+},
+{
+  "_id": "10",
+  "name": "R&B"
+},
+{
+  "_id": "11",
+  "name": "Soul"
+},
+{
+  "_id": "12",
+  "name": "Metal"
+},
+{
+  "_id": "13",
+  "name": "Funk"
+},
+{
+  "_id": "14",
+  "name": "Disco"
+},
+{
+  "_id": "15",
+  "name": "Latin"
+},
+{
+  "_id": "16",
+  "name": "Folk"
+},
+{
+  "_id": "17",
+  "name": "gospel/christian"
+},
+{
+  "_id": "18",
+  "name": "Punk"
+},
+{
+  "_id": "19",
+  "name": "Alternative"
+},
+{
+  "_id": "20",
+  "name": "Indie"
+},
+{
+  "_id": "21",
+  "name": "Afrobeats"
+},
+{
+  "_id": "22",
+  "name": "K-Pop"
+}]

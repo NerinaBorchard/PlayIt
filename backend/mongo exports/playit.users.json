@@ -1,0 +1,261 @@
+[{
+  "_id": {
+    "$oid": "66fc8144a44aa305e0d1e65d"
+  },
+  "email": "nerina@example.com",
+  "password": "$2b$10$.mIzvomorxImX92Uqvku4u1.1g/hPnMvAAJDuva7AgbsfEHX5o7pS",
+  "profile": {
+    "username": "Nerina",
+    "name": "Nerina Hearts",
+    "picture": "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/4935eafa-878e-43fd-a1dd-4234943bedec/dcr6m3m-73080ad4-bf39-405b-9697-2b812f5632a7.jpg/v1/fill/w_1024,h_768,q_75,strp/cool_nature_background_by_sugar__spice_dcr6m3m-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzY4IiwicGF0aCI6IlwvZlwvNDkzNWVhZmEtODc4ZS00M2ZkLWExZGQtNDIzNDk0M2JlZGVjXC9kY3I2bTNtLTczMDgwYWQ0LWJmMzktNDA1Yi05Njk3LTJiODEyZjU2MzJhNy5qcGciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.oOvZXX_5pUU6yENdBCN1VaRZvWq88R4fL41sdfrSRJw"
+  },
+  "playlists": [
+    "66fc7934a44aa305e0c7877f"
+  ],
+  "songs": [
+    "66fc7ee9a44aa305e0ced82e",
+    "66fc7ee9a44aa305e0ced82f",
+    "66fc7ee9a44aa305e0ced830",
+    {
+      "$oid": "67278bd506eae6de94654b7f"
+    },
+    {
+      "$oid": "67278beb06eae6de94654b83"
+    },
+    {
+      "$oid": "6727a442bd618192092b7b54"
+    },
+    {
+      "$oid": "6727a48ebe4a1b2278e71d06"
+    },
+    {
+      "$oid": "6727a4c7be4a1b2278e71d0b"
+    },
+    {
+      "$oid": "6727aa8248806a8aae607a45"
+    }
+  ],
+  "friends": [],
+  "friendRequests": [],
+  "role": "user"
+},
+{
+  "_id": {
+    "$oid": "66fc8144a44aa305e0d1e65e"
+  },
+  "email": "nin@example.com",
+  "password": "$2b$10$/0DQS6zUn5iap.thLAx7e.jKP6rEh06YLcstzTNA5n90R/UyyNdCS",
+  "profile": {
+    "username": "Nin",
+    "name": "Nin"
+  },
+  "playlists": [
+    "66fc7934a44aa305e0c7877d",
+    "66fc7934a44aa305e0c7877e"
+  ],
+  "songs": [
+    "66fc7ee9a44aa305e0ced829",
+    "66fc7ee9a44aa305e0ced82a",
+    "66fc7ee9a44aa305e0ced82b",
+    "66fc7ee9a44aa305e0ced82c",
+    "66fc7ee9a44aa305e0ced82d",
+    {
+      "$oid": "6727ca04db72512361fc593d"
+    },
+    {
+      "$oid": "6727ca5cdb72512361fc5941"
+    }
+  ],
+  "friends": [],
+  "friendRequests": [],
+  "role": "user"
+},
+{
+  "_id": {
+    "$oid": "66ff3469769cab276b63faf3"
+  },
+  "email": "ayra@example.com",
+  "password": "$2b$10$1rUnzoyY4CXrPL3YZ3eIlOv9sjbOL0G4TKD/6aI678pfveqneGx86",
+  "profile": {
+    "username": "ayra",
+    "name": "ayra",
+    "picture": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  "playlists": [],
+  "songs": [
+    {
+      "$oid": "66ff3cd105b7adca5ded40fc"
+    },
+    {
+      "$oid": "66ff3e470c544812aaf02c27"
+    },
+    {
+      "$oid": "66ff3f748274cca947cb00ac"
+    },
+    {
+      "$oid": "66ff3fbb8274cca947cb00ba"
+    }
+  ],
+  "__v": 0,
+  "friends": [],
+  "friendRequests": [],
+  "role": "user"
+},
+{
+  "_id": {
+    "$oid": "67252e5a23b3f67825453ec9"
+  },
+  "email": "girl@example.com",
+  "password": "$2b$10$YBTQAr0lWwbCyExnGaLItekCFVrtave7BVQdj/SbOTQOR1xT34iPu",
+  "profile": {
+    "username": "girl",
+    "name": "girl",
+    "picture": "/assets/images/user2.png"
+  },
+  "playlists": [],
+  "songs": [],
+  "__v": 0,
+  "friends": [],
+  "friendRequests": [],
+  "role": "user"
+},
+{
+  "_id": {
+    "$oid": "6725471c575473c30b1322d5"
+  },
+  "email": "boy@example.com",
+  "password": "$2b$10$g4AbvODblqxPqCWw8G6uTuqZ/a11NDD1ILHvwRtdwefq9g7Q7bBOG",
+  "profile": {
+    "username": "boy",
+    "name": "boy",
+    "picture": "assets/images/user.png"
+  },
+  "playlists": [],
+  "songs": [
+    {
+      "$oid": "67254ae27a3c55714c506fcf"
+    },
+    {
+      "$oid": "67254fe04569418fe937f6a6"
+    },
+    {
+      "$oid": "6727528a40d47677f4e94548"
+    }
+  ],
+  "__v": 0,
+  "friends": [],
+  "friendRequests": [],
+  "role": "user"
+},
+{
+  "_id": {
+    "$oid": "672785787d7ceed7befc0261"
+  },
+  "email": "khalid@example.com",
+  "password": "$2b$10$M2yQluiqdeMhmFcXMGuLoeumhbPZCUwqSpeBjAXvp60Yuf/BekWfe",
+  "profile": {
+    "username": "khalid",
+    "name": "khalid",
+    "picture": "assets/images/user2.png"
+  },
+  "playlists": [],
+  "songs": [],
+  "friends": [],
+  "friendRequests": [],
+  "__v": 0,
+  "role": "user"
+},
+{
+  "_id": {
+    "$oid": "672786107d7ceed7befc027a"
+  },
+  "email": "Tyla@example.com",
+  "password": "$2b$10$rYNkvJfKeo69hdZjEZ2XwOBP5vnvrUWohM3MnJsvbE/d5cf4XBNT.",
+  "profile": {
+    "username": "Tyla",
+    "name": "Tyla",
+    "picture": "assets/images/user.png"
+  },
+  "playlists": [],
+  "songs": [],
+  "friends": [],
+  "friendRequests": [],
+  "__v": 0,
+  "role": "user"
+},
+{
+  "_id": {
+    "$oid": "6727865f7d7ceed7befc0287"
+  },
+  "email": "Ben@example.com",
+  "password": "$2b$10$DTYhYDwBIqmMPlshkI80pOIHunu1d.2FhnoejU3yNmaFgGcmUV00y",
+  "profile": {
+    "username": "Ben",
+    "name": "Ben",
+    "picture": "assets/images/user1.png"
+  },
+  "playlists": [],
+  "songs": [],
+  "friends": [],
+  "friendRequests": [],
+  "__v": 0,
+  "role": "user"
+},
+{
+  "_id": {
+    "$oid": "672788542b3e990da9d5e377"
+  },
+  "email": "Kyla@example.com",
+  "password": "$2b$10$YAEpoX9aBUk4VIWjh.dvLeQHkZIzTRUhW6yy7eEYWTnuk6TmxkyFW",
+  "profile": {
+    "username": "Kyla",
+    "name": "Kyla",
+    "picture": "assets/images/user2.png"
+  },
+  "playlists": [],
+  "songs": [
+    {
+      "$oid": "6727e5818c90eacb1a6ae0bb"
+    }
+  ],
+  "friends": [],
+  "friendRequests": [],
+  "__v": 0,
+  "role": "admin"
+},
+{
+  "_id": {
+    "$oid": "672788702b3e990da9d5e37e"
+  },
+  "email": "John@example.com",
+  "password": "$2b$10$./N.nej4xXoFYfwtYOWnoenViN642Q4VkN4iVb6hVFa2KAp6me2Ci",
+  "profile": {
+    "username": "John",
+    "name": "John",
+    "picture": "assets/images/user.png"
+  },
+  "playlists": [],
+  "songs": [],
+  "friends": [],
+  "friendRequests": [],
+  "__v": 0,
+  "role": "user"
+},
+{
+  "_id": {
+    "$oid": "67278925b4f6f85b82f851d1"
+  },
+  "email": "Forest@example.com",
+  "password": "$2b$10$.mIzvomorxImX92Uqvku4u1.1g/hPnMvAAJDuva7AgbsfEHX5o7pS",
+  "profile": {
+    "username": "Forest",
+    "name": "Forest",
+    "picture": "assets/images/user.png"
+  },
+  "playlists": [],
+  "songs": [],
+  "friends": [],
+  "friendRequests": [],
+  "__v": 0,
+  "role": "user"
+}]

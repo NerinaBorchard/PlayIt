@@ -1,0 +1,219 @@
+[{
+  "_id": {
+    "$oid": "66fc7934a44aa305e0c7877e"
+  },
+  "name": "I Can't Relate to Desperation",
+  "genre": "Pop",
+  "description": "A playlist for the app.",
+  "coverImage": "https://i.pinimg.com/564x/6e/ea/1a/6eea1a8cbc8c0543bcf907c830ac56d4.jpg",
+  "hashtags": [
+    "Pop",
+    "Kiss",
+    "Sweet"
+  ],
+  "creator": "66fc8144a44aa305e0d1e65e",
+  "songs": [
+    "66fc7ee9a44aa305e0ced82c",
+    "66fc7ee9a44aa305e0ced82d",
+    {
+      "$oid": "6727a442bd618192092b7b54"
+    }
+  ],
+  "bookmarkedBy": [
+    {
+      "$oid": "66fc8144a44aa305e0d1e65e"
+    },
+    {
+      "$oid": "67278925b4f6f85b82f851d1"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "66fc7934a44aa305e0c7877d"
+  },
+  "name": "My Ayra Starr Collections",
+  "genre": "Afrobeats",
+  "description": "A collection of the best tracks by Ayra Starr.",
+  "coverImage": "https://t2.genius.com/unsafe/832x0/https%3A%2F%2Fimages.genius.com%2F4c509629284908c33fa2002eeea8e2e8.1000x1000x1.png",
+  "hashtags": [
+    "AyraStarr",
+    "Afrobeats",
+    "Collection"
+  ],
+  "creator": "66fc8144a44aa305e0d1e65e",
+  "songs": [
+    "66fc7ee9a44aa305e0ced829",
+    "66fc7ee9a44aa305e0ced82a",
+    "66fc7ee9a44aa305e0ced82b"
+  ],
+  "bookmarkedBy": [
+    {
+      "$oid": "66fc8144a44aa305e0d1e65e"
+    },
+    {
+      "$oid": "67278925b4f6f85b82f851d1"
+    },
+    {
+      "$oid": "672788542b3e990da9d5e377"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "66fc7934a44aa305e0c7877f"
+  },
+  "name": "Just Khalid",
+  "genre": "R&B",
+  "description": "A selection of Khalid’s most popular R&B tracks!",
+  "coverImage": "https://t2.genius.com/unsafe/832x0/https%3A%2F%2Fimages.genius.com%2F7bcf11bfc76756c6dc22eeff970cfd47.1000x1000x1.png",
+  "hashtags": [
+    "Khalid",
+    "RnB",
+    "Hits"
+  ],
+  "creator": "66fc8144a44aa305e0d1e65d",
+  "songs": [
+    "66fc7ee9a44aa305e0ced82e",
+    "66fc7ee9a44aa305e0ced82f",
+    "66fc7ee9a44aa305e0ced830",
+    {
+      "$oid": "6727aa8248806a8aae607a45"
+    }
+  ],
+  "bookmarkedBy": [
+    {
+      "$oid": "66fc8144a44aa305e0d1e65d"
+    },
+    {
+      "$oid": "67278925b4f6f85b82f851d1"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "672550034569418fe937f6b1"
+  },
+  "name": "My Frank!!!",
+  "genre": "Country",
+  "description": "The Ocean",
+  "coverImage": "https://img.freepik.com/free-photo/vivid-blurred-colorful-wallpaper-background_58702-4216.jpg?t=st=1730496577~exp=1730500177~hmac=96d88cbbdaa633fe2050cd4039fefbf75acd6dd72b6c08ed5258f14237c9353a&w=996",
+  "hashtags": [
+    "chill",
+    "cool"
+  ],
+  "creator": {
+    "$oid": "6725471c575473c30b1322d5"
+  },
+  "songs": [
+    {
+      "$oid": "67254fe04569418fe937f6a6"
+    },
+    {
+      "$oid": "67254ae27a3c55714c506fcf"
+    },
+    {
+      "$oid": "66fc7ee9a44aa305e0ced82b"
+    },
+    {
+      "$oid": "66fc7ee9a44aa305e0ced82f"
+    },
+    {
+      "$oid": "66fc7ee9a44aa305e0ced82c"
+    },
+    {
+      "$oid": "66fc7ee9a44aa305e0ced82d"
+    }
+  ],
+  "dateCreated": {
+    "$date": "2024-11-01T22:02:43.058Z"
+  },
+  "__v": 0,
+  "bookmarkedBy": [
+    {
+      "$oid": "6725471c575473c30b1322d5"
+    },
+    {
+      "$oid": "67278925b4f6f85b82f851d1"
+    },
+    {
+      "$oid": "66fc8144a44aa305e0d1e65d"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6727a6580e751934e8370f9b"
+  },
+  "name": "My Collections",
+  "genre": "Alternative",
+  "description": "For the vibes",
+  "coverImage": "https://www.industrialempathy.com/img/remote/ZiClJf-640w.avif",
+  "hashtags": [
+    "cool",
+    "chill",
+    "vibes"
+  ],
+  "creator": {
+    "$oid": "66fc8144a44aa305e0d1e65d"
+  },
+  "songs": [
+    {
+      "$oid": "66fc7ee9a44aa305e0ced82c"
+    },
+    {
+      "$oid": "66fc7ee9a44aa305e0ced82d"
+    },
+    {
+      "$oid": "66fc7ee9a44aa305e0ced82a"
+    },
+    {
+      "$oid": "67254fe04569418fe937f6a6"
+    }
+  ],
+  "bookmarkedBy": [
+    {
+      "$oid": "672788542b3e990da9d5e377"
+    }
+  ],
+  "dateCreated": {
+    "$date": "2024-11-03T16:35:36.852Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727c8879077ddcbad390f61"
+  },
+  "name": "My Christian Playlist",
+  "genre": "gospel/christian",
+  "description": "Chilled",
+  "coverImage": "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/4935eafa-878e-43fd-a1dd-4234943bedec/dcr6m3m-73080ad4-bf39-405b-9697-2b812f5632a7.jpg/v1/fill/w_1024,h_768,q_75,strp/cool_nature_background_by_sugar__spice_dcr6m3m-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NzY4IiwicGF0aCI6IlwvZlwvNDkzNWVhZmEtODc4ZS00M2ZkLWExZGQtNDIzNDk0M2JlZGVjXC9kY3I2bTNtLTczMDgwYWQ0LWJmMzktNDA1Yi05Njk3LTJiODEyZjU2MzJhNy5qcGciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.oOvZXX_5pUU6yENdBCN1VaRZvWq88R4fL41sdfrSRJw",
+  "hashtags": [
+    "sondae",
+    "forestfrank"
+  ],
+  "creator": {
+    "$oid": "66fc8144a44aa305e0d1e65e"
+  },
+  "songs": [
+    {
+      "$oid": "67278bd506eae6de94654b7f"
+    },
+    {
+      "$oid": "6727ca5cdb72512361fc5941"
+    },
+    {
+      "$oid": "6727ca04db72512361fc593d"
+    }
+  ],
+  "bookmarkedBy": [
+    {
+      "$oid": "66fc8144a44aa305e0d1e65e"
+    }
+  ],
+  "dateCreated": {
+    "$date": "2024-11-03T19:01:27.373Z"
+  },
+  "__v": 0
+}]

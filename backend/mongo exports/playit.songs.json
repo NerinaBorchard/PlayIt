@@ -1,0 +1,283 @@
+[{
+  "_id": {
+    "$oid": "66fc7ee9a44aa305e0ced82b"
+  },
+  "title": "Last Heartbreak Song",
+  "artist": "Ayra Starr",
+  "link": "https://open.spotify.com/track/1A1ifX8sWzelNpkL5PxcHT?si=d4d8568f623a4a1e",
+  "dateAdded": "2024-09-08",
+  "image": "https://media.pitchfork.com/photos/66561ba1b43d5e61153bccdf/1:1/w_320,c_limit/Ayra-Starr.jpg",
+  "creator": "66fc8144a44aa305e0d1e65e",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "66fc7ee9a44aa305e0ced82f"
+  },
+  "title": "Altitude",
+  "artist": "Khalid",
+  "link": "https://open.spotify.com/track/0EkcOLpnfMMBvq95tgr5gJ?si=e9fea9e230e44756",
+  "dateAdded": "2024-09-08",
+  "image": "https://t2.genius.com/unsafe/832x0/https%3A%2F%2Fimages.genius.com%2Fe774a7e37cf159eae15804f03323f598.1000x1000x1.png",
+  "creator": "66fc8144a44aa305e0d1e65d",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "66fc7ee9a44aa305e0ced82c"
+  },
+  "title": "Espresso",
+  "artist": "Sabrina Carpenter",
+  "link": "https://open.spotify.com/track/2qSkIjg1o9h3YT9RAgYN75?si=08d5423bcf8746b8",
+  "dateAdded": "2024-09-08",
+  "image": "https://t2.genius.com/unsafe/425x425/https%3A%2F%2Fimages.genius.com%2F8e8e92eda3d816065a4272a56b6f5ef6.1000x1000x1.png",
+  "creator": "66fc8144a44aa305e0d1e65e",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "66fc7ee9a44aa305e0ced82d"
+  },
+  "title": "Taste",
+  "artist": "Sabrina Carpenter",
+  "link": "https://open.spotify.com/track/5G2f63n7IPVPPjfNIGih7Q?si=0f510d75f60a4d83",
+  "dateAdded": "2024-09-08",
+  "image": "https://t2.genius.com/unsafe/425x425/https%3A%2F%2Fimages.genius.com%2F6ecbc2e64e62b35ee2fadf8532056f72.1000x1000x1.png",
+  "creator": "66fc8144a44aa305e0d1e65e",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "66fc7ee9a44aa305e0ced829"
+  },
+  "title": "Lagos Love Story",
+  "artist": "Ayra Starr",
+  "link": "https://open.spotify.com/track/2Q2QZJlhGcGPV1XAdvcqob?si=7eeec098df404a89",
+  "dateAdded": "2024-09-08",
+  "image": "https://media.pitchfork.com/photos/66561ba1b43d5e61153bccdf/1:1/w_320,c_limit/Ayra-Starr.jpg",
+  "creator": "66fc8144a44aa305e0d1e65e",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "66fc7ee9a44aa305e0ced82a"
+  },
+  "title": "Away",
+  "artist": "Ayra Starr",
+  "link": "https://open.spotify.com/track/47eAURQmsBK5e5cliaObFm?si=de859edeb9434843",
+  "dateAdded": "2024-09-08",
+  "image": "https://t2.genius.com/unsafe/832x0/https%3A%2F%2Fimages.genius.com%2Fd54810c6ddab54f229e85191c1fdae92.1000x1000x1.jpg",
+  "creator": "66fc8144a44aa305e0d1e65e",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "66fc7ee9a44aa305e0ced82e"
+  },
+  "title": "Adore U",
+  "artist": "Khalid",
+  "link": "https://open.spotify.com/track/1WVYtRDj1phw8W8YClYglD?si=b212a52d87eb490f",
+  "dateAdded": "2024-09-08",
+  "image": "https://t2.genius.com/unsafe/832x0/https%3A%2F%2Fimages.genius.com%2Fe774a7e37cf159eae15804f03323f598.1000x1000x1.png",
+  "creator": "66fc8144a44aa305e0d1e65d",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "66fc7ee9a44aa305e0ced830"
+  },
+  "title": "Heatstroke",
+  "artist": "Khalid",
+  "link": "https://open.spotify.com/track/1Bs8WpjQ8s2QE9jgh27fUB?si=eb23e28a5784421c",
+  "dateAdded": "2024-09-08",
+  "image": "https://t2.genius.com/unsafe/832x0/https%3A%2F%2Fimages.genius.com%2Fe774a7e37cf159eae15804f03323f598.1000x1000x1.png",
+  "creator": "66fc8144a44aa305e0d1e65d",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "6724e3daac6de249dfbf8c5b"
+  },
+  "title": "hey",
+  "artist": "there",
+  "link": "https://open.spotify.com/track/5Q4JduIFVtirezPnU9RggG?si=3ef2400ac895446b",
+  "image": "https://img.freepik.com/free-photo/colorful-abstract-textured-background-design_53876-108265.jpg?t=st=1730470859~exp=1730474459~hmac=7adacdfbaea925b45cacde971d722b6444072c604013694e07900f2739af9c6f&w=996",
+  "creator": {
+    "$oid": "66ff3469769cab276b63faf3"
+  },
+  "dateAdded": {
+    "$date": "2024-11-01T14:21:14.622Z"
+  },
+  "__v": 0,
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "6724e415ac6de249dfbf8c5e"
+  },
+  "title": "Be home",
+  "artist": "Sondae",
+  "link": "https://open.spotify.com/track/5Q4JduIFVtirezPnU9RggG?si=3ef2400ac895446b",
+  "image": "https://img.freepik.com/free-photo/colorful-abstract-textured-background-design_53876-108265.jpg?t=st=1730470859~exp=1730474459~hmac=7adacdfbaea925b45cacde971d722b6444072c604013694e07900f2739af9c6f&w=996",
+  "creator": {
+    "$oid": "66ff3469769cab276b63faf3"
+  },
+  "dateAdded": {
+    "$date": "2024-11-01T14:22:13.517Z"
+  },
+  "__v": 0,
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "67254ae27a3c55714c506fcf"
+  },
+  "title": "moon and back",
+  "artist": "JVKE",
+  "link": "https://open.spotify.com/track/5Q4JduIFVtirezPnU9RggG?si=e143ddddbdaf466e",
+  "image": "https://img.freepik.com/free-photo/abstract-smooth-orange-background-layout-designstudioroom-web-template-business-report-with-smooth-c_1258-54783.jpg",
+  "creator": {
+    "$oid": "6725471c575473c30b1322d5"
+  },
+  "dateAdded": {
+    "$date": "2024-11-01T21:40:50.149Z"
+  },
+  "__v": 0,
+  "deleted": true
+},
+{
+  "_id": {
+    "$oid": "67254fe04569418fe937f6a6"
+  },
+  "title": "Lost",
+  "artist": "Frank Ocean",
+  "link": "https://open.spotify.com/track/1bjhYUwKUHEg5fHknxFObO?si=95789f24bc5448b7",
+  "image": "https://img.freepik.com/free-photo/abstract-smooth-orange-background-layout-designstudioroom-web-template-business-report-with-smooth-c_1258-54783.jpg",
+  "creator": {
+    "$oid": "6725471c575473c30b1322d5"
+  },
+  "dateAdded": {
+    "$date": "2024-11-01T22:02:08.176Z"
+  },
+  "__v": 0,
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "67278bd506eae6de94654b7f"
+  },
+  "title": "LIFE IS GOOD",
+  "artist": "Forest Frank",
+  "link": "https://open.spotify.com/track/3TQk8yZld28u3CvGiT8gHq?si=f59ceb3296894755",
+  "image": "https://t2.genius.com/unsafe/425x425/https%3A%2F%2Fimages.genius.com%2Fd0864e57dce0fd872a8bf7df1067b4cc.1000x1000x1.png",
+  "creator": {
+    "$oid": "66fc8144a44aa305e0d1e65d"
+  },
+  "deleted": false,
+  "dateAdded": {
+    "$date": "2024-11-03T14:42:29.764Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67278beb06eae6de94654b83"
+  },
+  "title": "hey ",
+  "artist": "Sondae",
+  "link": "https://open.spotify.com/track/5Q4JduIFVtirezPnU9RggG?si=e143ddddbdaf466e",
+  "image": "https://img.freepik.com/free-photo/abstract-smooth-orange-background-layout-designstudioroom-web-template-business-report-with-smooth-c_1258-54783.jpg",
+  "creator": {
+    "$oid": "66fc8144a44aa305e0d1e65d"
+  },
+  "deleted": true,
+  "dateAdded": {
+    "$date": "2024-11-03T14:42:51.071Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727a442bd618192092b7b54"
+  },
+  "title": "Sharpest Tool",
+  "artist": "Sabrina Carpenter",
+  "link": "https://open.spotify.com/track/3iPIDAFybaoyqX7hvAfWkl?si=b633528d8faf4779",
+  "image": "https://t2.genius.com/unsafe/425x425/https%3A%2F%2Fimages.genius.com%2F6ecbc2e64e62b35ee2fadf8532056f72.1000x1000x1.png",
+  "creator": {
+    "$oid": "66fc8144a44aa305e0d1e65d"
+  },
+  "deleted": false,
+  "dateAdded": {
+    "$date": "2024-11-03T16:26:42.078Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727aa8248806a8aae607a45"
+  },
+  "title": "Winter",
+  "artist": "Khalid",
+  "link": "https://open.spotify.com/track/4V3VshJLUTCIWa77YiAkvM?si=7726d9a1903e465a",
+  "image": "https://t2.genius.com/unsafe/425x425/https%3A%2F%2Fimages.genius.com%2Fb72ffa400a4c1fe6ce65cae15548217f.1000x1000x1.png",
+  "creator": {
+    "$oid": "66fc8144a44aa305e0d1e65d"
+  },
+  "deleted": false,
+  "dateAdded": {
+    "$date": "2024-11-03T16:53:22.987Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727ca04db72512361fc593d"
+  },
+  "title": "Jesus, sometimes i..",
+  "artist": "Sondae",
+  "link": "https://open.spotify.com/track/43X1GcJBJ9dPPzk7OeFZh0?si=de2be79e70354042",
+  "image": "https://t2.genius.com/unsafe/425x425/https%3A%2F%2Fimages.genius.com%2F43a95e2a975185dfb0cd5f113d8a4a7a.1000x1000x1.jpg",
+  "creator": {
+    "$oid": "66fc8144a44aa305e0d1e65e"
+  },
+  "deleted": false,
+  "dateAdded": {
+    "$date": "2024-11-03T19:07:48.186Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727ca5cdb72512361fc5941"
+  },
+  "title": "Elohim",
+  "artist": "Sondae",
+  "link": "https://open.spotify.com/track/5Q4JduIFVtirezPnU9RggG?si=d004cf5cb01b4117",
+  "image": "https://t2.genius.com/unsafe/425x425/https%3A%2F%2Fimages.genius.com%2F5532631b2398e817551c38af38cf69e2.1000x1000x1.jpg",
+  "creator": {
+    "$oid": "66fc8144a44aa305e0d1e65e"
+  },
+  "deleted": false,
+  "dateAdded": {
+    "$date": "2024-11-03T19:09:16.262Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6727e5818c90eacb1a6ae0bb"
+  },
+  "title": "Promises",
+  "artist": "Maverick City Music",
+  "link": "https://open.spotify.com/track/5suRrn5N4HNeRXOpBTdmZt?si=d038528347204469",
+  "image": "https://t2.genius.com/unsafe/425x425/https%3A%2F%2Fimages.genius.com%2Fbfa1503368f8f4d99dd0601f54924f34.1000x1000x1.jpg",
+  "creator": {
+    "$oid": "672788542b3e990da9d5e377"
+  },
+  "deleted": false,
+  "dateAdded": {
+    "$date": "2024-11-03T21:05:05.704Z"
+  },
+  "__v": 0
+}]
