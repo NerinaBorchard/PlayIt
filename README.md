@@ -7,6 +7,10 @@ A web application that allows users to share and discover playlists. Built with 
 
 ![alt text](frontend/public/assets/images/image.png)
 
+# what u need in your env
+MONGO_URI which links to your database
+JWT_SECRET
+
 
 
 # Build the Docker image

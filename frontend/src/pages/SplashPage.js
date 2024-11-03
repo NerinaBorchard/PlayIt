@@ -96,7 +96,7 @@ class SplashPage extends Component {
 
                 {/* Right half with logo, title, subtitle, and buttons */}
                 <div style={styles.right}>
-                    <img src="/assets/images/logo.png" alt="Logo" style={styles.logo} />
+                    <img src="/assets/images/clearLogo.png" alt="Logo" style={styles.logo} />
 
                     <div style={styles.content}>
                         <h1 style={styles.title}>WELCOME TO PLAYIT</h1>

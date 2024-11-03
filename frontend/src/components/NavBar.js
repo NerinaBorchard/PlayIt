@@ -11,17 +11,9 @@ class NavBar extends Component {
 
   // Handle user logout
   handleLogout = () => {
-    // Perform any logout actions, e.g., clear session data, token
-    localStorage.removeItem('authToken'); // Example: remove auth token from local storage
+    localStorage.removeItem('authToken'); // Remove auth token from local storage
     console.log('User logged out');
-    
-    // Redirect to login page
-    this.setState({ redirectTo: '/' });
-  };
-
-  // Navigate to the search page
-  handleLogoClick = () => {
-    this.setState({ redirectTo: '/search' });
+    this.setState({ redirectTo: '/' }); // Redirect to login page
   };
 
   render() {
@@ -35,11 +27,9 @@ class NavBar extends Component {
         color: 'white',
       },
       logo: {
-        fontSize: '24px',
-        fontWeight: 'bold',
         display: 'flex',
         alignItems: 'center',
-        cursor: 'pointer', // Add cursor pointer to indicate it's clickable
+        cursor: 'pointer',
       },
       logoImage: {
         width: '100px', // Adjust size as needed
@@ -70,17 +60,12 @@ class NavBar extends Component {
 
     return (
       <nav style={styles.navbar}>
-        {/* Logo on the left */}
-        <div style={styles.logo} onClick={this.handleLogoClick}>
-          <Link to="/search" style={{ display: 'flex', alignItems: 'center' }}>
-            <img src="/assets/images/homeLogo.png" alt="Logo" style={styles.logoImage} />
-          </Link>
-        </div>
-
-        {/* Navigation links on the right */}
+        <Link to="/search" style={styles.logo}>
+          <img src="/assets/images/homeLogo.png" alt="Logo" style={styles.logoImage} />
+        </Link>
         <ul style={styles.navLinks}>
-          <li style={styles.navLinkItem}>
-            <Link to="/search" style={styles.navLink}>Home</Link>
+        <li style={styles.navLinkItem}>
+            <Link to="/Search" style={styles.navLink}>Home</Link>
           </li>
           <li style={styles.navLinkItem}>
             <Link to="/playlists" style={styles.navLink}>Playlists</Link>
@@ -103,16 +88,3 @@ class NavBar extends Component {
 }
 
 export default NavBar;
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -169,7 +169,7 @@ class SignUpPage extends Component {
         return (
             <div style={styles.container}>
                 <div style={styles.left}>
-                    <img src="/assets/images/logo.png" alt="Logo" style={styles.logo} />
+                    <img src="/assets/images/clearLogo.png" alt="Logo" style={styles.logo} />
                     <div style={styles.content}>
                         <h1 style={styles.title}>NEW TO PLAYIT</h1>
                         <p style={styles.subtitle}>Enter your email and password to create your account</p>

@@ -179,7 +179,7 @@ class SignInPage extends Component {
             <div style={styles.container}>
                 {/* Left half with form */}
                 <div style={styles.left}>
-                    <img src="/assets/images/logo.png" alt="Logo" style={styles.logo} />
+                    <img src="/assets/images/clearLogo.png" alt="Logo" style={styles.logo} />
                     <div style={styles.content}>
                         <h1 style={styles.title}>WELCOME BACK</h1>
                         <p style={styles.subtitle}>Enter your email and password to access your account.</p>
