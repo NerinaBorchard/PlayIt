@@ -42,6 +42,7 @@ const SongSearchModal = ({ isOpen, onClose, onSongSelect }) => {
     isOpen && (
       <div style={modalStyles.overlay}>
         <div style={modalStyles.container}>
+          <button onClick={onClose} style={styles.closeButton}>×</button>
           <h2>Select a Song</h2>
           <input
             type="text"
@@ -56,16 +57,19 @@ const SongSearchModal = ({ isOpen, onClose, onSongSelect }) => {
                 key={song._id}
                 onClick={() => toggleSongSelection(song)}
                 style={{
-                  cursor: 'pointer',
+                  ...modalStyles.songItem,
                   fontWeight: selectedSongs.some(selected => selected._id === song._id) ? 'bold' : 'normal',
                 }}
               >
-                {song.title} by {song.artist}
+                <img src={song.image} alt={song.title} style={modalStyles.songImage} />
+                <div style={modalStyles.songInfo}>
+                  <span>{song.title}</span>
+                  <small style={{ marginTop: '2px', color: 'gray' }}>{song.artist}</small>
+                </div>
               </li>
             ))}
           </ul>
-          <button onClick={handleAddSongs} style={modalStyles.addButton}>Add Selected Songs</button>
-          <button onClick={onClose} style={modalStyles.closeButton}>Close</button>
+          <button onClick={handleAddSongs} style={styles.saveButton}>Add Selected Songs</button>
         </div>
       </div>
     )
@@ -85,6 +89,7 @@ const modalStyles = {
     alignItems: 'center',
   },
   container: {
+    position: 'relative',
     background: 'white',
     padding: '20px',
     borderRadius: '8px',
@@ -92,7 +97,7 @@ const modalStyles = {
     boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
   },
   searchInput: {
-    width: '100%',
+    width: '90%',
     padding: '8px',
     marginBottom: '10px',
   },
@@ -103,14 +108,45 @@ const modalStyles = {
     maxHeight: '200px',
     overflowY: 'auto',
   },
-  addButton: {
-    marginTop: '10px',
-    padding: '5px 10px',
+  songItem: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '10px',
+    cursor: 'pointer',
+    borderBottom: '1px solid #ddd',
+  },
+  songImage: {
+    width: '50px',
+    height: '50px',
+    borderRadius: '5px',
     marginRight: '10px',
   },
-  closeButton: {
+  songInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+};
+
+const styles = {
+  saveButton: {
+    padding: '12px 20px',
+    background: 'linear-gradient(90deg, rgba(255,3,3,1) 0%, rgba(222,69,31,1) 35%, rgba(255,175,0,1) 100%)',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '16px',
+    width: '100%',
     marginTop: '10px',
-    padding: '5px 10px',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    background: 'transparent',
+    border: 'none',
+    fontSize: '20px',
+    cursor: 'pointer',
   },
 };
 

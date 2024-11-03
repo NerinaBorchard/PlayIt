@@ -19,6 +19,11 @@ class NavBar extends Component {
     this.setState({ redirectTo: '/' });
   };
 
+  // Navigate to the search page
+  handleLogoClick = () => {
+    this.setState({ redirectTo: '/search' });
+  };
+
   render() {
     const styles = {
       navbar: {
@@ -34,7 +39,12 @@ class NavBar extends Component {
         fontWeight: 'bold',
         display: 'flex',
         alignItems: 'center',
-        color: 'black',
+        cursor: 'pointer', // Add cursor pointer to indicate it's clickable
+      },
+      logoImage: {
+        width: '100px', // Adjust size as needed
+        height: 'auto',
+        marginRight: '10px', // Space between logo image and text
       },
       navLinks: {
         listStyleType: 'none',
@@ -60,13 +70,15 @@ class NavBar extends Component {
 
     return (
       <nav style={styles.navbar}>
-        <div style={styles.logo}>
-          {/* PlayIt logo could go here */}
+        {/* Logo on the left */}
+        <div style={styles.logo} onClick={this.handleLogoClick}>
+          <Link to="/search" style={{ display: 'flex', alignItems: 'center' }}>
+            <img src="/assets/images/homeLogo.png" alt="Logo" style={styles.logoImage} />
+          </Link>
         </div>
+
+        {/* Navigation links on the right */}
         <ul style={styles.navLinks}>
-          {/* <li style={styles.navLinkItem}>
-            <Link to="/home" style={styles.navLink}>Home</Link>
-          </li> */}
           <li style={styles.navLinkItem}>
             <Link to="/search" style={styles.navLink}>Home</Link>
           </li>
@@ -79,7 +91,6 @@ class NavBar extends Component {
           <li style={styles.navLinkItem}>
             <Link to="/profile" style={styles.navLink}>Profile</Link>
           </li>
-          {/* Change Sign Out to trigger handleLogout */}
           <li style={styles.navLinkItem}>
             <button onClick={this.handleLogout} style={{ ...styles.navLink, background: 'none', border: 'none' }}>
               Sign Out
@@ -92,6 +103,8 @@ class NavBar extends Component {
 }
 
 export default NavBar;
+
+
 
 
 

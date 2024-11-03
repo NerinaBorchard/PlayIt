@@ -174,6 +174,7 @@ class SearchPage extends Component {
         gap: '15px',
         flexWrap: 'wrap',
         flexDirection: view === 'users' ? 'column' : 'row',
+        justifyContent: 'center',
       },
     };
 
