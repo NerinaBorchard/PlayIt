@@ -8,68 +8,34 @@ class SongForm extends Component {
       artist: '',
       coverUrl: '',
       songLink: '',
+      errorMessage: '', // Added state for error message
     };
   }
 
   handleChange = (e) => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    this.setState({ [name]: value, errorMessage: '' }); // Reset error message on change
   };
 
-  // handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const { title, artist, coverUrl, songLink } = this.state;
-  //   const userData = JSON.parse(localStorage.getItem('user'));
-  //   const creatorId = userData?.id;
-  
-  //   try {
-  //     // First API call to add the song
-  //     const response = await fetch('/api/songs', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ title, artist, songLink, coverUrl, creator: creatorId }),
-  //     });
-  
-  //     if (!response.ok) {
-  //       throw new Error('Failed to add song');
-  //     }
-  
-  //     const data = await response.json();
-  //     console.log('New song added:', data);
-  
-  //     // Second API call to update the creator's song list
-  //     // const updateResponse = await fetch(`/api/users/${creatorId}/songs`, {
-  //     //   method: 'PUT',
-  //     //   headers: {
-  //     //     'Content-Type': 'application/json',
-  //     //   },
-  //     //   body: JSON.stringify({ songId: data._id }), // Pass the new song's ID
-  //     // });
-  
-  //     // if (!updateResponse.ok) {
-  //     //   throw new Error('Failed to update user\'s song list');
-  //     // }
-  
-  //     // console.log('User song list updated');
-      
-  //     // Optionally reset the form or handle success state
-  //     this.setState({ title: '', artist: '', coverUrl: '', songLink: '' });
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   }
-  // };
-
+  validateSpotifyLink = (link) => {
+    const spotifyUrlPattern = /^(https?:\/\/(open\.)?spotify\.com\/(track|album|artist)\/[a-zA-Z0-9]{22})$/;
+    return spotifyUrlPattern.test(link);
+  };
 
   handleSubmit = async (e) => {
     e.preventDefault();
     const { title, artist, coverUrl, songLink } = this.state;
     const userData = JSON.parse(localStorage.getItem('user'));
     const creatorId = userData?.id;
-    
+
     const finalCoverUrl = coverUrl || 'https://img.freepik.com/free-photo/abstract-smooth-orange-background-layout-designstudioroom-web-template-business-report-with-smooth-c_1258-54783.jpg';
-  
+
+    // Validate Spotify URL
+    if (!this.validateSpotifyLink(songLink)) {
+      this.setState({ errorMessage: 'Please enter a valid Spotify song URL.' });
+      return;
+    }
+
     try {
       const response = await fetch('/api/songs', {
         method: 'POST',
@@ -78,27 +44,25 @@ class SongForm extends Component {
         },
         body: JSON.stringify({ title, artist, songLink, coverUrl: finalCoverUrl, creator: creatorId }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to add song');
       }
-  
+
       const data = await response.json();
       console.log('New song added:', data);
 
       // Call the onSongAdded prop to refresh the song list
       this.props.onSongAdded();
-  
-      this.setState({ title: '', artist: '', coverUrl: '', songLink: '' });
+
+      this.setState({ title: '', artist: '', coverUrl: '', songLink: '', errorMessage: '' }); // Reset fields and error message
     } catch (error) {
       console.error('Error:', error);
     }
   };
-  
-  
-  
+
   render() {
-    const { title, artist, coverUrl, songLink } = this.state;
+    const { title, artist, coverUrl, songLink, errorMessage } = this.state;
 
     return (
       <div style={styles.formContainer}>
@@ -138,7 +102,7 @@ class SongForm extends Component {
             />
           </div>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Cover Image URL</label>
+            <label style={styles.label}>Cover Image URL (Optional)</label>
             <input 
               type="url" 
               name="coverUrl" 
@@ -147,6 +111,7 @@ class SongForm extends Component {
               style={styles.input} 
             />
           </div>
+          {errorMessage && <p style={styles.errorMessage}>{errorMessage}</p>} {/* Display error message */}
           <button type="submit" style={styles.submitButton}>Add Song</button>
         </form>
       </div>
@@ -185,6 +150,11 @@ const styles = {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
+  },
+  errorMessage: {
+    color: 'red',
+    fontSize: '12px',
+    marginTop: '10px',
   },
 };
 
