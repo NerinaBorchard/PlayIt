@@ -940,19 +940,20 @@ app.post('/api/playlists', /*#__PURE__*/function () {
 // Update playlist route
 app.put('/api/playlists/:playlistId', /*#__PURE__*/function () {
   var _ref16 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee16(req, res) {
-    var playlistId, _req$body6, name, genre, description, coverImage, updatedPlaylist;
+    var playlistId, _req$body6, name, genre, description, coverImage, hashtags, updatedPlaylist;
     return _regeneratorRuntime().wrap(function _callee16$(_context16) {
       while (1) switch (_context16.prev = _context16.next) {
         case 0:
           playlistId = req.params.playlistId;
-          _req$body6 = req.body, name = _req$body6.name, genre = _req$body6.genre, description = _req$body6.description, coverImage = _req$body6.coverImage;
+          _req$body6 = req.body, name = _req$body6.name, genre = _req$body6.genre, description = _req$body6.description, coverImage = _req$body6.coverImage, hashtags = _req$body6.hashtags;
           _context16.prev = 2;
           _context16.next = 5;
           return PlaylistModel.findByIdAndUpdate(playlistId, {
             name: name,
             genre: genre,
             description: description,
-            coverImage: coverImage
+            coverImage: coverImage,
+            hashtags: hashtags
           }, {
             "new": true
           } // Return the updated document

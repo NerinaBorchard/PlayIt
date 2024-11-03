@@ -533,13 +533,13 @@ app.post('/api/playlists', async (req, res) => {
 // Update playlist route
 app.put('/api/playlists/:playlistId', async (req, res) => {
   const { playlistId } = req.params;
-  const { name, genre, description, coverImage } = req.body;
+  const { name, genre, description, coverImage, hashtags } = req.body;
 
   try {
     // Find the playlist and update its details
     const updatedPlaylist = await PlaylistModel.findByIdAndUpdate(
       playlistId,
-      { name, genre, description, coverImage },
+      { name, genre, description, coverImage, hashtags },
       { new: true } // Return the updated document
     );
 
