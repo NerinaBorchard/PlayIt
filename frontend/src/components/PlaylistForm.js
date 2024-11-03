@@ -151,9 +151,11 @@ class PlaylistForm extends Component {
             required
           >
             <option value="">Select a Genre</option>
-            {genres.map((g) => (
-              <option key={g._id} value={g.name}>{g.name}</option>
-            ))}
+            {genres.map((g) => {
+              // console.log("Genre:", g._id, g.name);
+              return <option key={g._id || g.name} value={g.name}>{g.name}</option>;
+            })}
+
           </select>
           </div>
           <div style={styles.formGroup}>

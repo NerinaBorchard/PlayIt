@@ -41,6 +41,25 @@ const styles = {
   creatorName: {
     color: '#df0808',
     fontWeight: 'bold',
+    marginTop: '50px',
+    marginBottom: '-100px',
+  },
+  genreBubble: {
+    display: 'inline-block',
+    padding: '5px 10px',
+    background: 'linear-gradient(90deg, rgba(255,3,3,1) 0%, rgba(222,69,31,1) 35%, rgba(255,175,0,1) 100%)',
+    borderRadius: '50px',
+    color: '#fff',
+    fontSize: '12px',
+    margin: '0 auto 15px', // Centers horizontally and adds bottom margin
+    textAlign: 'center',
+    width: 'fit-content',
+  },  
+  hashtags: {
+    fontSize: '14px',
+    background: 'linear-gradient(90deg, rgba(255,3,3,1) 0%, rgba(222,69,31,1) 35%, rgba(255,175,0,1) 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
   },
 };
 
@@ -54,7 +73,7 @@ class PlaylistComponent extends Component {
   };
 
   render() {
-    const { _id, name, coverImage, creator } = this.props.playlist;
+    const { _id, name, coverImage, creator, genre, hashtags  } = this.props.playlist;
     const { style } = this.props;
 
     return (
@@ -66,6 +85,12 @@ class PlaylistComponent extends Component {
         >
           <img src={coverImage} alt={name} style={styles.image} />
           <h3 style={styles.name}>{name}</h3>
+          <p style={styles.hashtags}>
+            {hashtags.map((tag, index) => (
+              <span key={index} style={styles.tag}>#{tag} </span>
+            ))}
+          </p>
+          <div style={styles.genreBubble}>{genre}</div>
           <p style={styles.creatorText}>
             By &nbsp;
             <span style={styles.creatorName}>{creator}</span>

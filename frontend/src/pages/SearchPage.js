@@ -4,6 +4,7 @@ import SongComponent from '../components/Song';
 import PlaylistComponent from '../components/Playlist';
 import ProfilePreviewComponent from '../components/ProfilePreviewComponent';
 import axios from 'axios';
+import Fuse from 'fuse.js'; // Import Fuse.js
 
 class SearchPage extends Component {
   constructor(props) {
@@ -14,10 +15,17 @@ class SearchPage extends Component {
       playlists: [],
       users: [],
       view: 'songs',
+      suggestions: [], // State for autocomplete suggestions
+      showSuggestions: false, // New state to control the visibility of the suggestion box
     };
+    this.suggestionBoxRef = React.createRef(); // Create a ref for the suggestion box
   }
 
   componentDidMount() {
+    // Set up event listener for clicks outside of the suggestion box
+    document.addEventListener('mousedown', this.handleClickOutside);
+    
+    // Fetch data
     axios.get('/api/songs')
       .then(response => {
         this.setState({ songs: response.data });
@@ -43,8 +51,59 @@ class SearchPage extends Component {
       });
   }
 
+  componentWillUnmount() {
+    // Clean up event listener
+    document.removeEventListener('mousedown', this.handleClickOutside);
+  }
+
+  handleClickOutside = (event) => {
+    // Check if the click is outside the suggestion box
+    if (this.suggestionBoxRef.current && !this.suggestionBoxRef.current.contains(event.target)) {
+      this.setState({ showSuggestions: false }); // Hide suggestions if clicked outside
+    }
+  };
+
   handleSearchChange = (event) => {
-    this.setState({ searchQuery: event.target.value });
+    const query = event.target.value;
+    this.setState({ searchQuery: query, showSuggestions: true }, this.updateSuggestions);
+  };
+
+  // Update suggestions based on search query
+  updateSuggestions = () => {
+    const { searchQuery, songs, playlists, users } = this.state;
+
+    const fuseOptions = {
+      threshold: 0.3, // Adjust based on how fuzzy you want the search
+    };
+
+    // Search songs
+    const songFuse = new Fuse(songs, { ...fuseOptions, keys: ['title', 'artist'] });
+    const filteredSongs = songFuse.search(searchQuery).map(result => result.item);
+
+    // Search playlists
+    const playlistFuse = new Fuse(playlists, { ...fuseOptions, keys: ['name', 'creator'] });
+    const filteredPlaylists = playlistFuse.search(searchQuery).map(result => result.item);
+
+    // Search users
+    const userFuse = new Fuse(users, { ...fuseOptions, keys: ['profile.username', 'profile.name'] });
+    const filteredUsers = userFuse.search(searchQuery).map(result => result.item);
+
+    // Combine suggestions
+    this.setState({
+      suggestions: [
+        ...filteredSongs,
+        ...filteredPlaylists,
+        ...filteredUsers
+      ],
+    });
+  };
+
+  handleSuggestionClick = (item) => {
+    // Update search query and hide suggestions
+    this.setState({
+      searchQuery: item.title || item.name || item.profile.username,
+      showSuggestions: false, // Hide suggestions after selection
+    });
   };
 
   setView = (view) => {
@@ -52,7 +111,7 @@ class SearchPage extends Component {
   };
 
   render() {
-    const { searchQuery, songs, playlists, users, view } = this.state;
+    const { searchQuery, songs, playlists, users, view, suggestions, showSuggestions } = this.state;
 
     const styles = {
       SearchPage: {
@@ -64,6 +123,7 @@ class SearchPage extends Component {
         display: 'flex',
         justifyContent: 'center',
         margin: '40px 0',
+        position: 'relative',
       },
       searchBar: {
         padding: '10px',
@@ -72,7 +132,23 @@ class SearchPage extends Component {
         border: '2px solid #ccc',
         fontSize: '16px',
       },
+      suggestionBox: {
+        border: '1px solid #ccc',
+        backgroundColor: '#fff',
+        position: 'absolute',
+        zIndex: 10,
+        width: '50%',
+        marginTop: '50px',
+        maxHeight: '200px',
+        overflowY: 'auto',
+        borderRadius: '5px',
+      },
+      suggestionItem: {
+        padding: '10px',
+        cursor: 'pointer',
+      },
       tabContainer: {
+        marginTop: '50px',
         display: 'flex',
         justifyContent: 'center',
         marginBottom: '20px',
@@ -101,30 +177,30 @@ class SearchPage extends Component {
       },
     };
 
-    // Enhanced filtering logic based on `view`, `searchQuery`, and `deleted` status
     const filteredItems = (() => {
       const lowerCaseQuery = searchQuery.toLowerCase();
-
+    
+      const filterAndReverse = (items, filterFn) => 
+        items.filter(filterFn).reverse();
+    
       if (view === 'songs') {
-        return songs.filter(song => 
-          !song.deleted && (
-            song.title.toLowerCase().includes(lowerCaseQuery) ||
-            song.artist.toLowerCase().includes(lowerCaseQuery)
-          )
+        return filterAndReverse(songs, song => 
+          song.title.toLowerCase().includes(lowerCaseQuery) ||
+          song.artist.toLowerCase().includes(lowerCaseQuery) || // Filter by artist name
+          (song.genre && song.genre.toLowerCase().includes(lowerCaseQuery)) || // Filter by genre
+          (song.hashtags && song.hashtags.some(tag => tag.toLowerCase().includes(lowerCaseQuery))) // Filter by hashtags
         );
       } else if (view === 'playlists') {
-        return playlists.filter(playlist => 
-          !playlist.deleted && (
-            playlist.name.toLowerCase().includes(lowerCaseQuery) ||
-            playlist.creator.toLowerCase().includes(lowerCaseQuery)
-          )
+        return filterAndReverse(playlists, playlist => 
+          playlist.name.toLowerCase().includes(lowerCaseQuery) ||
+          playlist.creator.toLowerCase().includes(lowerCaseQuery) || // Filter by playlist creator
+          (playlist.genre && playlist.genre.toLowerCase().includes(lowerCaseQuery)) || // Filter by genre
+          (playlist.hashtags && playlist.hashtags.some(tag => tag.toLowerCase().includes(lowerCaseQuery))) // Filter by hashtags
         );
       } else if (view === 'users') {
         return users.filter(user => 
-          !user.deleted && (
-            user.profile.username.toLowerCase().includes(lowerCaseQuery) || 
-            user.profile.name.toLowerCase().includes(lowerCaseQuery)
-          )
+          user.profile.username.toLowerCase().includes(lowerCaseQuery) || 
+          user.profile.name.toLowerCase().includes(lowerCaseQuery)
         );
       }
       return [];
@@ -133,16 +209,6 @@ class SearchPage extends Component {
     return (
       <div style={styles.SearchPage}>
         <NavBar />
-        <div style={styles.searchBarContainer}>
-          <input
-            type="text"
-            placeholder="Search songs, playlists, or users..."
-            value={searchQuery}
-            onChange={this.handleSearchChange}
-            style={styles.searchBar}
-          />
-        </div>
-
         {/* Tab Selection */}
         <div style={styles.tabContainer}>
           <button
@@ -164,6 +230,28 @@ class SearchPage extends Component {
             Users
           </button>
         </div>
+        <div style={styles.searchBarContainer}>
+          <input
+            type="text"
+            placeholder="Search songs, playlists, or users..."
+            value={searchQuery}
+            onChange={this.handleSearchChange}
+            style={styles.searchBar}
+          />
+          {showSuggestions && suggestions.length > 0 && (
+            <div ref={this.suggestionBoxRef} style={styles.suggestionBox}>
+              {suggestions.map((item, index) => (
+                <div
+                  key={index}
+                  style={styles.suggestionItem}
+                  onClick={() => this.handleSuggestionClick(item)}
+                >
+                  {item.title || item.name || item.profile.username}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Render Items Based on Selected View and Search Query */}
         <section style={styles.section}>
@@ -175,7 +263,7 @@ class SearchPage extends Component {
               <PlaylistComponent key={playlist._id} playlist={playlist} />
             ))}
             {view === 'users' && filteredItems.map(user => (
-              <ProfilePreviewComponent key={user.id} user={user} />
+              <ProfilePreviewComponent key={user._id} user={user} />
             ))}
           </div>
         </section>
