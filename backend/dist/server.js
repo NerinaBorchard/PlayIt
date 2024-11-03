@@ -153,6 +153,11 @@ var userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  role: {
+    type: String,
+    "enum": ['user', 'admin'],
+    "default": 'user'
+  },
   profile: {
     username: {
       type: String,
@@ -246,7 +251,9 @@ app.post('/api/login', /*#__PURE__*/function () {
               email: user.email,
               playlists: user.playlists,
               songs: user.songs,
-              picture: user.profile.picture // Correct path to include picture in response
+              picture: user.profile.picture,
+              // Correct path to include picture in response
+              role: user.role
             }
           });
           _context.next = 15;
@@ -1046,7 +1053,8 @@ app.get('/api/user/:userId', /*#__PURE__*/function () {
             email: user.email,
             playlists: user.playlists,
             songs: user.songs,
-            picture: user.profile.picture
+            picture: user.profile.picture,
+            role: user.role
           });
           _context19.next = 13;
           break;

@@ -21,6 +21,7 @@ class Playlist extends React.Component {
     try {
       const userData = JSON.parse(localStorage.getItem('user'));
       const userId = userData?.id;
+      const role = userData?.role; // Get the role from user data
   
       if (!userId) {
         console.error('User ID not found');
@@ -29,14 +30,17 @@ class Playlist extends React.Component {
   
       const response = await axios.get('/api/play');
       const allPlaylists = response.data;
-      const userPlaylists = allPlaylists.filter(playlist => playlist.creator === userId);
-      
-      // Store the number of user playlists
+  
+      // Filter playlists based on the user's role
+      const userPlaylists = role === 'admin' ? allPlaylists : allPlaylists.filter(playlist => playlist.creator === userId);
+  
+      // Update the state with the filtered playlists
       this.setState({ playlists: userPlaylists, userPlaylistCount: userPlaylists.length });
     } catch (error) {
       console.error('Error fetching playlists:', error);
     }
   };
+  
   
 
   // Callback function to refresh songs

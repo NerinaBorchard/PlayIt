@@ -29,7 +29,7 @@ class ProfilePreviewComponent extends Component {
     const { username, name, picture, id } = profile; // Ensure 'id' is included in the profile
 
     return (
-      <Link to={`/profile/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}> {/* Use Link for navigation */}
+      // <Link to={`/profile/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}> {/* Use Link for navigation */}
         <div style={styles.container}>
           <img src={picture} alt={username} style={styles.profileImage} />
           <div>
@@ -37,7 +37,7 @@ class ProfilePreviewComponent extends Component {
             <p style={styles.name}>{name}</p>
           </div>
         </div>
-      </Link>
+      // </Link>
     );
   }
 }

@@ -20,7 +20,8 @@ class Song extends Component {
     try {
       // Retrieve user data from local storage
       const userData = JSON.parse(localStorage.getItem('user'));
-      const creatorId = userData?.id; // Get the creator ID from local storage
+      const creatorId = userData?.id;
+      const role = userData?.role; // Get the role from user data
   
       if (!creatorId) {
         console.error('User ID not found');
@@ -31,8 +32,8 @@ class Song extends Component {
       const response = await axios.get('/api/songs');
       const allSongs = response.data;
   
-      // Filter songs to only include the ones created by the current user
-      const userSongs = allSongs.filter(song => song.creator === creatorId);
+      // Filter songs based on the user's role
+      const userSongs = role === 'admin' ? allSongs : allSongs.filter(song => song.creator === creatorId);
   
       // Update the state with the filtered songs
       this.setState({ songs: userSongs });
@@ -65,37 +66,37 @@ class Song extends Component {
   };
 
 
-render() {
-  const { songs } = this.state;
+  render() {
+    const { songs } = this.state;
 
-  // Filter out deleted songs
-  const activeSongs = songs.filter(song => !song.deleted);
+    // Filter out deleted songs
+    const activeSongs = songs.filter(song => !song.deleted);
 
-  return (
-    <div style={styles.nav}>
-      <NavBar />
-      <div style={styles.container}>
-        <div style={styles.content}>
-          <div style={styles.songListContainer}>
-            <h1>My Songs</h1>
-            <div style={styles.songList}>
-              {activeSongs.map(song => (
-                <SongItem
-                  key={song._id}
-                  song={song}
-                  onDelete={() => this.handleDelete(song._id)}
-                />
-              ))}
+    return (
+      <div style={styles.nav}>
+        <NavBar />
+        <div style={styles.container}>
+          <div style={styles.content}>
+            <div style={styles.songListContainer}>
+              <h1>My Songs</h1>
+              <div style={styles.songList}>
+                {activeSongs.map(song => (
+                  <SongItem
+                    key={song._id}
+                    song={song}
+                    onDelete={() => this.handleDelete(song._id)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-          <div style={styles.formContainer}>
-            <AddSongForm onSongAdded={this.refreshSongs} />
+            <div style={styles.formContainer}>
+              <AddSongForm onSongAdded={this.refreshSongs} />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 }
 
 const styles = {

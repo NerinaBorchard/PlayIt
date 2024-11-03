@@ -12,6 +12,7 @@ class EditPlaylist extends Component {
       coverImage: '',
       hashtags: '',
       genres: [],
+      imageFile: null, // New state for storing the selected image file
     };
   }
 
@@ -43,6 +44,13 @@ class EditPlaylist extends Component {
   handleChange = (e) => {
     const { name, value } = e.target;
     this.setState({ [name]: value });
+  };
+
+  handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      this.setState({ imageFile: file, coverImage: URL.createObjectURL(file) });
+    }
   };
 
   handleSubmit = async (e) => {

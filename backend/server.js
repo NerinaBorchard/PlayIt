@@ -87,6 +87,7 @@ const Comment = mongoose.model('Comment', commentSchema);
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
   profile: {
     username: { type: String, required: true },
     name: { type: String, required: true },
@@ -135,7 +136,8 @@ app.post('/api/login', async (req, res) => {
         email: user.email,
         playlists: user.playlists,
         songs: user.songs,
-        picture: user.profile.picture // Correct path to include picture in response
+        picture: user.profile.picture, // Correct path to include picture in response
+        role : user.role
       }
     });
     
@@ -553,7 +555,8 @@ app.get('/api/user/:userId', async (req, res) => {
       email: user.email,
       playlists: user.playlists,
       songs: user.songs,
-      picture: user.profile.picture
+      picture: user.profile.picture,
+      role: user.role,
     });
     
   } catch (err) {

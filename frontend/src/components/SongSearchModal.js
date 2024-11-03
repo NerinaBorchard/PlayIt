@@ -21,7 +21,9 @@ const SongSearchModal = ({ isOpen, onClose, onSongSelect }) => {
     }
   }, [isOpen]);
 
-  const filteredSongs = songs.filter(song =>
+  // Filter out deleted songs
+  const activeSongs = songs.filter(song => !song.deleted);
+  const filteredSongs = activeSongs.filter(song =>
     song.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -75,6 +77,7 @@ const SongSearchModal = ({ isOpen, onClose, onSongSelect }) => {
     )
   );
 };
+
 
 const modalStyles = {
   overlay: {

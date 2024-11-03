@@ -82,18 +82,17 @@ class PlaylistDetails extends Component {
       console.log('Songs added to playlist:', selectedSongs.map(song => song.title));
       this.setState({ showModal: false });
     } catch (error) {
-      console.error('Error adding songs to playlist?:', error);
+      console.error('Error adding songs to playlist:', error);
     }
   };
-  
-  
 
   render() {
     const { playlist, songs } = this.props;
     const { isBookmarked, showModal, songsAdd } = this.state;
     const user = JSON.parse(localStorage.getItem('user'));
     const userId = user?.id;
-    const isCreator = userId === playlist.creator._id;
+    const userRole = user?.role; // Get user role
+    const isCreator = userId === playlist.creator._id || userRole === 'admin'; // Allow admins to have creator access
 
     return (
       <div style={styles.leftSection}>
@@ -108,7 +107,7 @@ class PlaylistDetails extends Component {
             {isBookmarked ? <FaBookmark style={styles.icon} /> : <FaRegBookmark style={styles.icon} />}
           </div>
 
-          {isCreator && (
+          {isCreator && ( // Check if the user is the creator or admin
             <>
               <FaPlusCircle style={styles.icon} onClick={this.handleAddSong} />
               <Link to={`/editPlaylist/${playlist._id}`}>
@@ -135,7 +134,6 @@ class PlaylistDetails extends Component {
     );
   }
 }
-
 
 const styles = {
   iconContainer: {
@@ -178,4 +176,3 @@ const styles = {
 };
 
 export default PlaylistDetails;
-
