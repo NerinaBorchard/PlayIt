@@ -174,6 +174,14 @@ var userSchema = new mongoose.Schema({
   songs: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Song'
+  }],
+  friends: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  friendRequests: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }]
 });
 var UserModel = mongoose.model('User', userSchema);
@@ -1164,35 +1172,167 @@ app["delete"]('/api/user/:id', /*#__PURE__*/function () {
     return _ref21.apply(this, arguments);
   };
 }());
-app.get('/api/genres', /*#__PURE__*/function () {
+
+// Send Friend Request
+app.post('/api/users/:userId/friendRequest', /*#__PURE__*/function () {
   var _ref22 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee22(req, res) {
-    var genres;
+    var userId, currentUserId;
     return _regeneratorRuntime().wrap(function _callee22$(_context22) {
       while (1) switch (_context22.prev = _context22.next) {
         case 0:
-          _context22.prev = 0;
-          _context22.next = 3;
+          userId = req.params.userId;
+          currentUserId = req.user._id; // Replace with your logic to get the current user ID
+          _context22.prev = 2;
+          _context22.next = 5;
+          return User.findByIdAndUpdate(userId, {
+            $addToSet: {
+              friendRequests: currentUserId
+            }
+          });
+        case 5:
+          res.status(200).json({
+            message: 'Friend request sent'
+          });
+          _context22.next = 11;
+          break;
+        case 8:
+          _context22.prev = 8;
+          _context22.t0 = _context22["catch"](2);
+          res.status(500).json({
+            error: 'Failed to send friend request'
+          });
+        case 11:
+        case "end":
+          return _context22.stop();
+      }
+    }, _callee22, null, [[2, 8]]);
+  }));
+  return function (_x43, _x44) {
+    return _ref22.apply(this, arguments);
+  };
+}());
+
+// Accept Friend Request
+app.post('/api/users/:userId/acceptRequest', /*#__PURE__*/function () {
+  var _ref23 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee23(req, res) {
+    var userId, currentUserId;
+    return _regeneratorRuntime().wrap(function _callee23$(_context23) {
+      while (1) switch (_context23.prev = _context23.next) {
+        case 0:
+          userId = req.params.userId;
+          currentUserId = req.user._id; // Replace with your logic to get the current user ID
+          _context23.prev = 2;
+          _context23.next = 5;
+          return User.findByIdAndUpdate(currentUserId, {
+            $addToSet: {
+              friends: userId
+            },
+            $pull: {
+              friendRequests: userId
+            }
+          });
+        case 5:
+          _context23.next = 7;
+          return User.findByIdAndUpdate(userId, {
+            $addToSet: {
+              friends: currentUserId
+            }
+          });
+        case 7:
+          res.status(200).json({
+            message: 'Friend request accepted'
+          });
+          _context23.next = 13;
+          break;
+        case 10:
+          _context23.prev = 10;
+          _context23.t0 = _context23["catch"](2);
+          res.status(500).json({
+            error: 'Failed to accept friend request'
+          });
+        case 13:
+        case "end":
+          return _context23.stop();
+      }
+    }, _callee23, null, [[2, 10]]);
+  }));
+  return function (_x45, _x46) {
+    return _ref23.apply(this, arguments);
+  };
+}());
+
+// Fetch user profile with friend status
+app.get('/api/users/:userId', /*#__PURE__*/function () {
+  var _ref24 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee24(req, res) {
+    var userId, currentUserId, user, isFriend, hasRequested;
+    return _regeneratorRuntime().wrap(function _callee24$(_context24) {
+      while (1) switch (_context24.prev = _context24.next) {
+        case 0:
+          userId = req.params.userId;
+          currentUserId = req.user._id; // Replace with your logic to get the current user ID
+          _context24.prev = 2;
+          _context24.next = 5;
+          return User.findById(userId).populate('friends').populate('friendRequests');
+        case 5:
+          user = _context24.sent;
+          isFriend = user.friends.some(function (friend) {
+            return friend._id.equals(currentUserId);
+          });
+          hasRequested = user.friendRequests.some(function (request) {
+            return request._id.equals(currentUserId);
+          });
+          res.status(200).json({
+            user: user,
+            isFriend: isFriend,
+            hasRequested: hasRequested
+          });
+          _context24.next = 14;
+          break;
+        case 11:
+          _context24.prev = 11;
+          _context24.t0 = _context24["catch"](2);
+          res.status(500).json({
+            error: 'Failed to fetch user profile'
+          });
+        case 14:
+        case "end":
+          return _context24.stop();
+      }
+    }, _callee24, null, [[2, 11]]);
+  }));
+  return function (_x47, _x48) {
+    return _ref24.apply(this, arguments);
+  };
+}());
+app.get('/api/genres', /*#__PURE__*/function () {
+  var _ref25 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee25(req, res) {
+    var genres;
+    return _regeneratorRuntime().wrap(function _callee25$(_context25) {
+      while (1) switch (_context25.prev = _context25.next) {
+        case 0:
+          _context25.prev = 0;
+          _context25.next = 3;
           return GenreModel.find();
         case 3:
-          genres = _context22.sent;
+          genres = _context25.sent;
           // Assuming you have a Genre model
           res.json(genres);
-          _context22.next = 10;
+          _context25.next = 10;
           break;
         case 7:
-          _context22.prev = 7;
-          _context22.t0 = _context22["catch"](0);
+          _context25.prev = 7;
+          _context25.t0 = _context25["catch"](0);
           res.status(500).json({
             message: 'Error fetching genres'
           });
         case 10:
         case "end":
-          return _context22.stop();
+          return _context25.stop();
       }
-    }, _callee22, null, [[0, 7]]);
+    }, _callee25, null, [[0, 7]]);
   }));
-  return function (_x43, _x44) {
-    return _ref22.apply(this, arguments);
+  return function (_x49, _x50) {
+    return _ref25.apply(this, arguments);
   };
 }());
 

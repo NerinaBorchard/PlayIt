@@ -78,7 +78,7 @@ class ProfilePage extends Component {
 
     try {
       const response = await axios.get(`/api/bookPlaylists?userId=${userId}`);
-      this.setState({ bookmarked: response.data }); // Set the bookmarked playlists in state
+      this.setState({ bookmarked: response.data });
     } catch (error) {
       console.error('Error fetching bookmarked playlists:', error);
     }
@@ -102,9 +102,16 @@ class ProfilePage extends Component {
             <div style={styles.profileDetails}>
               <h1 style={styles.username}>@{user.username}</h1>
               <h2 style={styles.name}>{user.name}</h2>
-              <p style={styles.followStats}>
-                <Link to="/followersFollowing">Followers: {user.followers || 0}</Link> | <Link to="/followersFollowing">Following: {user.following || 0}</Link>
-              </p>
+              <div style={styles.followStats}>
+                <div style={styles.statItem}>
+                  <p style={styles.statNumber}>{user.followers || 0}</p>
+                  <p style={styles.statLabel}>Followers</p>
+                </div>
+                <div style={styles.statItem}>
+                  <p style={styles.statNumber}>{user.following || 0}</p>
+                  <p style={styles.statLabel}>Following</p>
+                </div>
+              </div>
             </div>
             <Link to="/editProfile" style={styles.editButton}>
               <FiEdit2 size={20} color="#fff" />
@@ -184,8 +191,24 @@ const styles = {
     margin: '5px 0',
   },
   followStats: {
+    display: 'flex',
+    gap: '20px',
+    justifyContent: 'center',
+    marginTop: '10px',
+  },
+  statItem: {
+    textAlign: 'center',
+  },
+  statNumber: {
+    fontSize: '20px',
+    fontWeight: 'bold',
+    margin: '0',
+    color: '#333',
+  },
+  statLabel: {
     fontSize: '16px',
-    color: '#ccc',
+    margin: '0',
+    color: '#777',
   },
   editButton: {
     position: 'absolute',

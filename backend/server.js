@@ -94,6 +94,8 @@ const userSchema = new mongoose.Schema({
   },
   playlists: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Playlist' }],
   songs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song' }],
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 const UserModel = mongoose.model('User', userSchema);
@@ -615,6 +617,53 @@ app.delete('/api/user/:id', async (req, res) => {
   } catch (error) {
     console.error('Error deleting user profile:', error);
     res.status(500).json({ message: "Failed to delete user profile." });
+  }
+});
+
+
+// Send Friend Request
+app.post('/api/users/:userId/friendRequest', async (req, res) => {
+  const { userId } = req.params;
+  const currentUserId = req.user._id; // Replace with your logic to get the current user ID
+
+  try {
+    await User.findByIdAndUpdate(userId, { $addToSet: { friendRequests: currentUserId } });
+    res.status(200).json({ message: 'Friend request sent' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to send friend request' });
+  }
+});
+
+// Accept Friend Request
+app.post('/api/users/:userId/acceptRequest', async (req, res) => {
+  const { userId } = req.params;
+  const currentUserId = req.user._id; // Replace with your logic to get the current user ID
+
+  try {
+    await User.findByIdAndUpdate(currentUserId, {
+      $addToSet: { friends: userId },
+      $pull: { friendRequests: userId },
+    });
+    await User.findByIdAndUpdate(userId, { $addToSet: { friends: currentUserId } });
+    res.status(200).json({ message: 'Friend request accepted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to accept friend request' });
+  }
+});
+
+// Fetch user profile with friend status
+app.get('/api/users/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const currentUserId = req.user._id; // Replace with your logic to get the current user ID
+
+  try {
+    const user = await User.findById(userId).populate('friends').populate('friendRequests');
+    const isFriend = user.friends.some(friend => friend._id.equals(currentUserId));
+    const hasRequested = user.friendRequests.some(request => request._id.equals(currentUserId));
+
+    res.status(200).json({ user, isFriend, hasRequested });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch user profile' });
   }
 });
 

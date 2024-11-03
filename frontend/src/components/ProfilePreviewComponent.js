@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 
 const styles = {
   container: {
@@ -25,16 +26,18 @@ const styles = {
 class ProfilePreviewComponent extends Component {
   render() {
     const { profile } = this.props.user;
-    const { username, name, picture } = profile;
+    const { username, name, picture, id } = profile; // Ensure 'id' is included in the profile
 
     return (
-      <div style={styles.container}>
-        <img src={picture} alt={username} style={styles.profileImage} />
-        <div>
-          <p style={styles.username}>{username}</p>
-          <p style={styles.name}>{name}</p>
+      <Link to={`/profile/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}> {/* Use Link for navigation */}
+        <div style={styles.container}>
+          <img src={picture} alt={username} style={styles.profileImage} />
+          <div>
+            <p style={styles.username}>{username}</p>
+            <p style={styles.name}>{name}</p>
+          </div>
         </div>
-      </div>
+      </Link>
     );
   }
 }
