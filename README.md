@@ -14,4 +14,4 @@ docker build -t myapp .
 
 
 # Run the Docker container
-docker run -p 3000:3000 my-app
+docker run -p 3001:3001 myapp

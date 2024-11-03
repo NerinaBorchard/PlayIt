@@ -18,7 +18,8 @@ class SongForm extends Component {
   };
 
   validateSpotifyLink = (link) => {
-    const spotifyUrlPattern = /^(https?:\/\/(open\.)?spotify\.com\/(track|album|artist)\/[a-zA-Z0-9]{22})$/;
+    const spotifyUrlPattern = /^(https?:\/\/(open\.)?spotify\.com\/(track|album|artist)\/[a-zA-Z0-9]{22}(\?.*)?)$/;
+
     return spotifyUrlPattern.test(link);
   };
 

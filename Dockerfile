@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install all dependencies, including devDependencies
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 # Copy the project files to the container
 COPY . .
@@ -28,7 +28,7 @@ WORKDIR /app
 COPY --from=dependencies /app /app
 
 # Expose the port the app runs on
-EXPOSE 3000
+EXPOSE 3001
 
 # Start the application
 CMD ["npm", "run", "start"]

@@ -47,7 +47,7 @@ const styles = {
     marginRight: 'auto',
   },
   commentList: {
-    maxHeight: '150px',
+    maxHeight: '400px',
     overflowY: 'auto',
     marginBottom: '10px',
   },

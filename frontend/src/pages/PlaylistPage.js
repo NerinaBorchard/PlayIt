@@ -21,20 +21,23 @@ class Playlist extends React.Component {
     try {
       const userData = JSON.parse(localStorage.getItem('user'));
       const userId = userData?.id;
-
+  
       if (!userId) {
         console.error('User ID not found');
         return;
       }
-
+  
       const response = await axios.get('/api/play');
       const allPlaylists = response.data;
       const userPlaylists = allPlaylists.filter(playlist => playlist.creator === userId);
-      this.setState({ playlists: userPlaylists });
+      
+      // Store the number of user playlists
+      this.setState({ playlists: userPlaylists, userPlaylistCount: userPlaylists.length });
     } catch (error) {
       console.error('Error fetching playlists:', error);
     }
   };
+  
 
   // Callback function to refresh songs
   refreshPlaylists = () => {
@@ -68,7 +71,8 @@ class Playlist extends React.Component {
 
             </div>
             <div style={styles.playlistForm}>
-              <PlaylistForm  onPlaylistAdded={this.refreshPlaylists} />
+              <PlaylistForm onPlaylistAdded={this.refreshPlaylists} playlistCount={this.state.userPlaylistCount} />
+
             </div>
           </div>
         </div>

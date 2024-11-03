@@ -62,50 +62,58 @@ class PlaylistForm extends Component {
     };
   }
 
-    handleSubmit = async (e) => {
-      e.preventDefault();
-      const { name, genre, description, hashtags, image } = this.state;
-      const userData = JSON.parse(localStorage.getItem('user'));
-      const creatorId = userData?.id;
-
-      // Default image URL
-      const defaultImageUrl = 'https://img.freepik.com/free-photo/vivid-blurred-colorful-wallpaper-background_58702-4216.jpg?t=st=1730496577~exp=1730500177~hmac=96d88cbbdaa633fe2050cd4039fefbf75acd6dd72b6c08ed5258f14237c9353a&w=996';
-      
-      // Use the default URL if image is empty
-      const finalImage = image || defaultImageUrl;
-
-      try {
-        const response = await fetch('/api/playlists', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name,
-            genre,
-            description,
-            hashtags: hashtags.split(',').map(tag => tag.trim()),
-            coverImage: finalImage,
-            creator: creatorId,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to add playlist');
-        }
-
-        const data = await response.json();
-        console.log('New playlist added:', data);
-
-        // Call the onPlaylistAdded prop to refresh the playlist list
-      this.props.onPlaylistAdded();
-
-        this.setState({ name: '', genre: '', description: '', hashtags: '', image: '' });
-      } catch (error) {
-        console.error('Error:', error);
-        this.setState({ message: error.message, error: true });
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    const { name, genre, description, hashtags, image } = this.state;
+    const userData = JSON.parse(localStorage.getItem('user'));
+    const creatorId = userData?.id;
+  
+    // Retrieve the playlist count from props
+    const playlistCount = this.props.playlistCount || 0; // Default to 0 if not provided
+    
+    // Set a default name based on existing playlists
+    const playlistName = name.trim() || `My Playlist ${playlistCount + 1}`; // Increment count
+  
+    // Default image URL
+    const defaultImageUrl = 'https://img.freepik.com/free-photo/vivid-blurred-colorful-wallpaper-background_58702-4216.jpg?t=st=1730496577~exp=1730500177~hmac=96d88cbbdaa633fe2050cd4039fefbf75acd6dd72b6c08ed5258f14237c9353a&w=996';
+  
+    // Use the default URL if image is empty
+    const finalImage = image || defaultImageUrl;
+  
+    try {
+      const response = await fetch('/api/playlists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: playlistName,
+          genre,
+          description,
+          hashtags: hashtags.split(',').map(tag => tag.trim()),
+          coverImage: finalImage,
+          creator: creatorId,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to add playlist');
       }
-    };
+  
+      const data = await response.json();
+      console.log('New playlist added:', data);
+  
+      // Call the onPlaylistAdded prop to refresh the playlist list
+      this.props.onPlaylistAdded();
+  
+      this.setState({ name: '', genre: '', description: '', hashtags: '', image: '' });
+    } catch (error) {
+      console.error('Error:', error);
+      this.setState({ message: error.message, error: true });
+    }
+  };
+  
+  
 
     componentDidMount() {
       // Fetch genres from the API
@@ -138,7 +146,6 @@ class PlaylistForm extends Component {
               value={name} 
               onChange={this.handleChange} 
               style={styles.input} 
-              required
             />
           </div>
           <div style={styles.formGroup}>
