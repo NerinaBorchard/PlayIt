@@ -44,17 +44,20 @@ class Song extends Component {
 
   handleDelete = async (id) => {
     try {
-      // Delete song from the backend
-      await axios.delete(`/api/songs/${id}`);
+      // Call the endpoint to mark the song as deleted
+      await axios.put(`/api/songs/${id}/delete`, { deleted: true });
       
-      // Update state to remove the deleted song
+      // Update the state to mark the song as deleted locally
       this.setState((prevState) => ({
-        songs: prevState.songs.filter(song => song._id !== id),
+        songs: prevState.songs.map(song => 
+          song._id === id ? { ...song, deleted: true } : song
+        ),
       }));
     } catch (error) {
-      console.error('Error deleting song:', error);
+      console.error('Error updating song:', error);
     }
-  };
+  };  
+  
 
   // Callback function to refresh songs
   refreshSongs = () => {
@@ -62,34 +65,37 @@ class Song extends Component {
   };
 
 
-  render() {
-    const { songs } = this.state;
+render() {
+  const { songs } = this.state;
 
-    return (
-      <div style={styles.nav}>
-        <NavBar />
-        <div style={styles.container}>
-          <div style={styles.content}>
-            <div style={styles.songListContainer}>
-              <h1>My Songs</h1>
-              <div style={styles.songList}>
-                {songs.map(song => (
-                  <SongItem
-                    key={song._id}
-                    song={song}
-                    onDelete={() => this.handleDelete(song._id)}
-                  />
-                ))}
-              </div>
+  // Filter out deleted songs
+  const activeSongs = songs.filter(song => !song.deleted);
+
+  return (
+    <div style={styles.nav}>
+      <NavBar />
+      <div style={styles.container}>
+        <div style={styles.content}>
+          <div style={styles.songListContainer}>
+            <h1>My Songs</h1>
+            <div style={styles.songList}>
+              {activeSongs.map(song => (
+                <SongItem
+                  key={song._id}
+                  song={song}
+                  onDelete={() => this.handleDelete(song._id)}
+                />
+              ))}
             </div>
-            <div style={styles.formContainer}>
-              <AddSongForm  onSongAdded={this.refreshSongs} />
-            </div>
+          </div>
+          <div style={styles.formContainer}>
+            <AddSongForm onSongAdded={this.refreshSongs} />
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 }
 
 const styles = {

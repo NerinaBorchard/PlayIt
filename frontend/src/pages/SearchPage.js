@@ -101,24 +101,30 @@ class SearchPage extends Component {
       },
     };
 
-    // Enhanced filtering logic based on `view` and `searchQuery`
+    // Enhanced filtering logic based on `view`, `searchQuery`, and `deleted` status
     const filteredItems = (() => {
       const lowerCaseQuery = searchQuery.toLowerCase();
 
       if (view === 'songs') {
         return songs.filter(song => 
-          song.title.toLowerCase().includes(lowerCaseQuery) ||
-          song.artist.toLowerCase().includes(lowerCaseQuery)    // Filter by artist name
+          !song.deleted && (
+            song.title.toLowerCase().includes(lowerCaseQuery) ||
+            song.artist.toLowerCase().includes(lowerCaseQuery)
+          )
         );
       } else if (view === 'playlists') {
         return playlists.filter(playlist => 
-          playlist.name.toLowerCase().includes(lowerCaseQuery) ||
-          playlist.creator.toLowerCase().includes(lowerCaseQuery)  // Filter by playlist creator
+          !playlist.deleted && (
+            playlist.name.toLowerCase().includes(lowerCaseQuery) ||
+            playlist.creator.toLowerCase().includes(lowerCaseQuery)
+          )
         );
       } else if (view === 'users') {
         return users.filter(user => 
-          user.profile.username.toLowerCase().includes(lowerCaseQuery) || 
-          user.profile.name.toLowerCase().includes(lowerCaseQuery)
+          !user.deleted && (
+            user.profile.username.toLowerCase().includes(lowerCaseQuery) || 
+            user.profile.name.toLowerCase().includes(lowerCaseQuery)
+          )
         );
       }
       return [];
